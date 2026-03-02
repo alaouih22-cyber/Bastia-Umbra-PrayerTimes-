@@ -1,21 +1,14 @@
 {
   "name": "Muslim Pro Bastia",
   "short_name": "MuslimPro",
-  "description": "Orari Preghiera Bastia Umbra",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#004F3F",
   "theme_color": "#004F3F",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/2619/2619277.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/2619/2619277.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]
