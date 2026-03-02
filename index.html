@@ -68,28 +68,32 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* STRISCIA HADITH (SINISTRA -> DESTRA INFINITA) */
+        /* HADITH STRIP (FIX DEFINITIVO SINISTRA -> DESTRA) */
         .hadith-footer {
             width: 100%; background: var(--mp-dark);
             padding: 15px 0; border-top: 3px solid var(--mp-gold);
             overflow: hidden; flex-shrink: 0;
-            direction: ltr !important; 
+            direction: ltr !important; /* Forza asse per scorrimento fluido */
             position: relative;
         }
         .hadith-track {
-            display: flex; width: max-content;
-            animation: marquee-ltr 30s linear infinite;
+            display: flex;
+            width: max-content;
+            animation: scroll-left-to-right 30s linear infinite;
         }
         .hadith-text {
-            color: var(--mp-gold); font-weight: 600; font-size: 16px;
-            padding: 0 60px; direction: rtl; white-space: nowrap;
+            color: var(--mp-gold);
+            font-weight: 600; font-size: 16px;
+            padding: 0 60px;
+            direction: rtl; /* Testo arabo corretto */
+            white-space: nowrap;
         }
-        @keyframes marquee-ltr {
+        @keyframes scroll-left-to-right {
             0% { transform: translateX(-50%); }
             100% { transform: translateX(0%); }
         }
 
-        /* SIDEBAR */
+        /* SIDEBAR SETTINGS */
         .sidebar {
             position: fixed; top: 0; left: -330px; width: 310px; height: 100%;
             background: var(--mp-dark); z-index: 2000; transition: 0.5s;
@@ -105,8 +109,10 @@
 </head>
 <body onclick="unlockAudio()">
 
+    <!-- BOTTONE MENU -->
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
 
+    <!-- HEADER -->
     <div class="header">
         <h1 class="ramadan-title">رمضان مبارك</h1>
     </div>
@@ -115,27 +121,27 @@
     <div class="sidebar" id="sidebar">
         <h2>إعدادات Muslim Pro</h2>
         
-        <label style="color:var(--mp-gold)">🔔 Tipo di Notifica Banner</label>
+        <label style="color:var(--mp-gold)">🔔 نوع التنبيه (Banner)</label>
         <select id="notif-type" class="mp-select">
-            <option value="athan">Athan + Banner</option>
-            <option value="bip">Suono breve + Banner</option>
+            <option value="athan">أذان + إشعار Banner</option>
+            <option value="bip">رنين + إشعار Banner</option>
         </select>
 
-        <label style="display:block; margin-top:20px; color:var(--mp-gold)">🔊 Voce Athan</label>
+        <label style="display:block; margin-top:20px; color:var(--mp-gold)">🔊 صوت الأذان</label>
         <select id="athan-source" class="mp-select">
-            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">مكة المكرمة</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">المدينة المنورة</option>
         </select>
 
-        <button class="mp-btn btn-gold" id="btn-permesso">ATTIVA NOTIFICHE AUTOMATICHE</button>
-        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">PROVA BANNER (TEST)</button>
-        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white;" onclick="toggleMenu()">CHIUDI</button>
+        <button class="mp-btn btn-gold" id="btn-firebase">تفعيل الإشعارات التلقائية</button>
+        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">تجربة الإشعار (Test)</button>
+        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white;" onclick="toggleMenu()">إغلاق</button>
     </div>
 
     <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="dash-card">
-            <small style="color:#888;">Data</small>
+            <small style="color:#888;">التاريخ</small>
             <span class="date-hijri">13 رمضان 1447</span>
             <span style="font-size:11px; color:#666;" id="current-gregorian">--/--/----</span>
         </div>
@@ -145,6 +151,7 @@
         </div>
     </div>
 
+    <!-- LISTA ORARI -->
     <div class="prayer-list" id="list-container"></div>
 
     <!-- HADITH FOOTER -->
@@ -152,12 +159,13 @@
         <div class="hadith-track" id="hadith-box"></div>
     </div>
 
-    <!-- FIREBASE & LOGICA -->
+    <!-- LOGICA FIREBASE & APP -->
     <script type="module">
+        // Importazione Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
-        // CONFIGURAZIONE FIREBASE (Inserisci qui i tuoi dati)
+        // CONFIGURAZIONE FIREBASE (Sostituisci con le tue chiavi)
         const firebaseConfig = {
             apiKey: "INSERISCI_API_KEY",
             authDomain: "INSERISCI_DOMAIN",
@@ -170,25 +178,25 @@
         const app = initializeApp(firebaseConfig);
         const messaging = getMessaging(app);
 
-        // Richiesta permessi e registrazione Token
-        document.getElementById('btn-permesso').onclick = async () => {
+        // Attivazione Notifiche Banner tramite Firebase Token
+        document.getElementById('btn-firebase').onclick = async () => {
             const permission = await Notification.requestPermission();
             if (permission === 'granted') {
                 try {
-                    const token = await getToken(messaging, { vapidKey: 'INSERISCI_CHIAVE_VAPID_DA_FIREBASE' });
+                    const token = await getToken(messaging, { vapidKey: 'INSERISCI_CHIAVE_VAPID' });
                     console.log("Token Firebase:", token);
-                    alert("✅ Notifiche Banner Attivate correttamente!");
-                } catch (e) { console.error("Errore Token:", e); }
+                    alert("✅ تم تفعيل الإشعارات التلقائية بنجاح!");
+                } catch (e) { console.error("Errore Firebase Token:", e); }
             }
             toggleMenu();
         };
 
-        // Gestione messaggi Firebase in primo piano
+        // Gestione Banner quando l'app è aperta
         onMessage(messaging, (payload) => {
             sendPushBanner(payload.notification.title, payload.notification.body);
         });
 
-        // --- LOGICA PREGHIERA ---
+        // --- DATI PREGHIERA ---
         const times = { f:"05:27", dh:"12:24", a:"15:29", m:"18:00", i:"19:19" };
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
@@ -204,11 +212,12 @@
         window.unlockAudio = () => { audioUnlocked = true; };
         window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('open'); };
 
+        // Registrazione SW per Banner in Background
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
         }
 
-        // Funzione per il Banner Professionale (Native)
+        // Funzione Banner Native (Professionale)
         window.sendPushBanner = (title, body) => {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
@@ -216,27 +225,26 @@
                         body: body,
                         icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
                         badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-                        vibrate: [300, 100, 300, 100, 300],
-                        requireInteraction: true, // Il banner resta finché non lo clicchi
-                        tag: 'prayer-time'
+                        vibrate: [300, 100, 300, 100, 400],
+                        requireInteraction: true, // Il banner resta finché non interagisci
+                        tag: 'prayer-alert'
                     });
                 });
             }
-            // Suono
+            // Riproduzione Audio (Athan o Bip)
             const mode = document.getElementById('notif-type').value;
             const source = document.getElementById('athan-source').value;
             const audio = new Audio(mode === 'athan' ? source : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-            if(audioUnlocked) audio.play().catch(e => console.log("Audio in attesa"));
+            if(audioUnlocked) audio.play().catch(e => console.log("Audio bloccato"));
         };
 
-        window.testNotif = () => { sendPushBanner("Muslim Pro Test", "È ora della preghiera (Banner di prova)"); };
+        window.testNotif = () => { sendPushBanner("تجربة Muslim Pro", "حان وقت صلاة التجربة الآن"); };
 
+        // Loop principale aggiornamento Timer e Banner Automatici
         function update() {
             const now = new Date();
-            const h = now.getHours().toString().padStart(2,'0');
-            const m = now.getMinutes().toString().padStart(2,'0');
-            const s = now.getSeconds();
-            const timeStr = h + ":" + m;
+            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const sec = now.getSeconds();
             
             document.getElementById('current-gregorian').innerText = now.toLocaleDateString('it-IT');
 
@@ -244,14 +252,14 @@
             let keys = Object.keys(times);
 
             keys.forEach(k => {
-                const [ph, pm] = times[k].split(":");
-                const pDate = new Date(); pDate.setHours(ph, pm, 0);
+                const [h,m] = times[k].split(":");
+                const pDate = new Date(); pDate.setHours(h,m,0);
                 let active = (timeStr === times[k]);
 
-                // TRIGGER AUTOMATICO BANNER (Al secondo 0)
-                if (timeStr === times[k] && s === 0 && window.lastT !== k) {
+                // --- TRIGGER AUTOMATICO BANNER (Al secondo 0 di ogni preghiera) ---
+                if (timeStr === times[k] && sec === 0 && window.lastT !== k) {
                     window.lastT = k;
-                    sendPushBanner(`حَانَ الآنَ مَوْعِدُ صَلَاةِ ${pNames[k]}`, "È ora della preghiera a Bastia Umbra");
+                    sendPushBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "موعد الصلاة الآن في باستيا أومبريا");
                 }
 
                 if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
@@ -265,6 +273,7 @@
                 </div>`;
             });
 
+            // Calcolo prossima preghiera se oggi sono finite
             if (!nextP) {
                 const [fh, fm] = times.f.split(":");
                 nextP = new Date(); nextP.setDate(now.getDate() + 1); nextP.setHours(fh, fm, 0);
@@ -281,7 +290,7 @@
             document.getElementById('list-container').innerHTML = html;
         }
 
-        // Setup Ticker Hadith (Raddoppiato per loop continuo)
+        // Popolamento striscia Hadith con duplicazione per effetto infinito
         const hBox = document.getElementById('hadith-box');
         const hContent = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
         hBox.innerHTML = hContent + hContent;
