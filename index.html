@@ -37,15 +37,14 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .ramadan-title { color: var(--mp-gold); font-size: 30px; font-weight: 900; }
-        .menu-btn { position: absolute; left: 20px; top: 20px; color: var(--mp-gold); font-size: 30px; cursor: pointer; z-index: 100; }
+        .menu-btn { position: absolute; left: 20px; top: 20px; color: var(--mp-gold); font-size: 35px; cursor: pointer; z-index: 100; }
 
         /* DASHBOARD */
         .dashboard {
             width: 92%; max-width: 500px; 
             margin: -25px 0 15px 0; 
-            display: flex; flex-direction: column; gap: 10px; z-index: 10; flex-shrink: 0;
+            display: flex; gap: 12px; z-index: 10; flex-shrink: 0;
         }
-        .dash-row { display: flex; gap: 12px; width: 100%; }
         .dash-card {
             flex: 1; background: var(--white); border-radius: 20px; padding: 15px;
             border: 1.5px solid var(--mp-gold);
@@ -55,8 +54,8 @@
         .timer-main { font-size: 24px; font-weight: 900; color: var(--mp-dark); }
         .date-hijri { font-size: 14px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; display: block; }
 
-        /* NUOVA BARRA PROGRESSO */
-        .progress-container { width: 100%; background: #e0e0e0; height: 8px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        /* BARRA PROGRESSO */
+        .progress-container { width: 100%; background: #e0e0e0; height: 6px; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--mp-gold); transition: width 1s linear; }
 
         /* LISTA PREGHIERE */
@@ -73,28 +72,7 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* NUOVE SCHEDE TASBIH E QIBLA */
-        .extra-card {
-            background: var(--mp-dark); color: white; border-radius: 20px; padding: 20px;
-            text-align: center; margin-bottom: 12px; border: 2px solid var(--mp-gold);
-        }
-        .tasbih-btn {
-            width: 80px; height: 80px; border-radius: 50%; background: var(--mp-gold);
-            color: var(--mp-dark); font-size: 30px; font-weight: 900; margin: 10px auto;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .qibla-compass {
-            width: 120px; height: 120px; border: 3px solid var(--mp-gold);
-            border-radius: 50%; margin: 10px auto; position: relative;
-            background: url('https://cdn-icons-png.flaticon.com/512/149/149022.png') center/contain;
-        }
-        .qibla-needle {
-            width: 4px; height: 50px; background: red; position: absolute;
-            left: 50%; top: 10%; transform-origin: bottom center; transform: rotate(0deg);
-        }
-
-        /* HADITH STRIP INFINITO */
+        /* HADITH STRIP INFINITO (LTR) */
         .hadith-footer {
             width: 100%; background: var(--mp-dark);
             padding: 15px 0; border-top: 3px solid var(--mp-gold);
@@ -103,28 +81,52 @@
         }
         .hadith-track {
             display: flex; width: max-content;
-            animation: marquee 120s linear infinite;
+            animation: marquee 300s linear infinite; /* Molto lungo per leggere tutto */
         }
         .hadith-text {
-            color: var(--mp-gold); font-weight: 600; font-size: 16px;
-            padding: 0 60px; direction: rtl; white-space: nowrap;
+            color: var(--mp-gold); font-weight: 600; font-size: 15px;
+            padding: 0 80px; direction: rtl; white-space: nowrap;
         }
+        .it-text { color: #fff; font-size: 13px; font-style: italic; margin-right: 10px; }
+
         @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
         }
 
         /* SIDEBAR */
         .sidebar {
             position: fixed; top: 0; left: -330px; width: 310px; height: 100%;
             background: var(--mp-dark); z-index: 2000; transition: 0.5s;
-            padding: 40px 25px; color: white; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            padding: 40px 20px; color: white; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            overflow-y: auto;
         }
         .sidebar.open { left: 0; }
-        .sidebar h2 { color: var(--mp-gold); margin-bottom: 25px; font-size: 24px; border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; }
-        .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: bold; }
+        .sidebar h2 { color: var(--mp-gold); margin-bottom: 20px; font-size: 22px; border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; text-align: center;}
+        
+        .sidebar-section {
+            background: rgba(255,255,255,0.05);
+            padding: 15px; border-radius: 15px; border: 1px solid var(--mp-gold);
+            margin-bottom: 20px; text-align: center;
+        }
+
+        .tasbih-btn {
+            width: 70px; height: 70px; border-radius: 50%; background: var(--mp-gold);
+            color: var(--mp-dark); font-size: 24px; font-weight: 900; margin: 10px auto;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .qibla-compass {
+            width: 100px; height: 100px; border: 2px solid var(--mp-gold);
+            border-radius: 50%; margin: 10px auto; position: relative;
+            background: url('https://cdn-icons-png.flaticon.com/512/149/149022.png') center/contain;
+        }
+        .qibla-needle {
+            width: 3px; height: 40px; background: #ff4d4d; position: absolute;
+            left: 50%; top: 10%; transform-origin: bottom center;
+        }
+
+        .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: bold; }
         .mp-select { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); }
-        .mp-btn { cursor: pointer; text-align: center; font-size: 16px; transition: 0.3s; }
         .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
     </style>
 </head>
@@ -136,67 +138,52 @@
         <h1 class="ramadan-title">رمضان مبارك</h1>
     </div>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR AGGIORNATA -->
     <div class="sidebar" id="sidebar">
-        <h2>إعدادات Muslim Pro</h2>
+        <h2>أدوات Muslim Pro</h2>
         
-        <label style="color:var(--mp-gold)">🔔 نوع التنبيه (Notifica)</label>
-        <select id="notif-type" class="mp-select">
-            <option value="athan">أذان + إشعار Banner</option>
-            <option value="bip">رنين + إشعار Banner</option>
-        </select>
+        <div class="sidebar-section">
+            <span style="color:var(--mp-gold); font-weight: bold;">القبلة (Qibla)</span>
+            <div class="qibla-compass"><div class="qibla-needle" id="needle"></div></div>
+            <small id="qibla-dir" style="font-size: 11px;">Punta il telefono verso la Mecca</small>
+        </div>
 
-        <label style="display:block; margin-top:20px; color:var(--mp-gold)">🔊 صوت الأذان (Voce)</label>
-        <select id="athan-source" class="mp-select">
-            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">مكة المكرمة</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">المدينة المنورة</option>
-        </select>
+        <div class="sidebar-section">
+            <span style="color:var(--mp-gold); font-weight: bold;">مسبحة (Tasbih)</span>
+            <div class="tasbih-btn" id="t-count" onclick="countTasbih()">0</div>
+            <small onclick="resetTasbih()" style="cursor:pointer; text-decoration: underline; font-size: 11px;">Reset</small>
+        </div>
 
-        <button class="mp-btn btn-gold" onclick="enableNotifs()">تفعيل الإشعارات</button>
-        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">تجربة (Test Banner)</button>
-        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important;" onclick="toggleMenu()">إغلاق</button>
+        <div class="sidebar-section">
+            <span style="color:var(--mp-gold); font-weight: bold;">إعدادات الإشعارات</span>
+            <select id="notif-type" class="mp-select">
+                <option value="athan">أذان + إشعار Banner</option>
+                <option value="bip">رنين + إشعار Banner</option>
+            </select>
+            <button class="mp-btn btn-gold" onclick="enableNotifs()">تفعيل الإشعارات (Attiva)</button>
+        </div>
+
+        <button onclick="window.open('https://www.google.com/maps/search/mosque+near+me')" class="mp-btn" style="background:white; color:black;">🕌 أقرب مسجد (Mappa)</button>
+        
+        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important; margin-bottom: 30px;" onclick="toggleMenu()">إغلاق (Chiudi)</button>
     </div>
 
     <!-- DASHBOARD -->
     <div class="dashboard">
-        <div class="dash-row">
-            <div class="dash-card">
-                <small>التاريخ</small>
-                <span class="date-hijri" id="hijri-txt">-- رمضان 1447</span>
-                <span style="font-size:11px; color:#666;" id="g-date">--/--/----</span>
-            </div>
-            <div class="dash-card">
-                <small id="next-name">الصلاة القادمة</small>
-                <div class="timer-main" id="timer-next">00:00:00</div>
-                <!-- Barra Progresso -->
-                <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
-            </div>
+        <div class="dash-card">
+            <small>التاريخ</small>
+            <span class="date-hijri" id="hijri-txt">-- رمضان 1447</span>
+            <span style="font-size:11px; color:#666;" id="g-date">--/--/----</span>
+        </div>
+        <div class="dash-card">
+            <small id="next-name">الصلاة القادمة</small>
+            <div class="timer-main" id="timer-next">00:00:00</div>
+            <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
         </div>
     </div>
 
-    <!-- LISTA PREGHIERE + EXTRA -->
-    <div class="prayer-list" id="list-container">
-        <!-- Qui verranno inserite le preghiere -->
-    </div>
-
-    <!-- SEZIONE TASBIH E QIBLA AGGIUNTE -->
-    <div style="width: 94%; display: flex; gap: 10px; padding: 0 5px 15px 5px;">
-        <div class="extra-card" style="flex: 1;">
-            <span style="color:var(--mp-gold); font-weight: bold;">مسبحة (Tasbih)</span>
-            <div class="tasbih-btn" id="t-count" onclick="countTasbih()">0</div>
-            <small onclick="resetTasbih()" style="cursor:pointer; text-decoration: underline;">Reset</small>
-        </div>
-        <div class="extra-card" style="flex: 1;">
-            <span style="color:var(--mp-gold); font-weight: bold;">القبلة (Qibla)</span>
-            <div class="qibla-compass"><div class="qibla-needle" id="needle"></div></div>
-            <small id="qibla-dir">Punta il telefono</small>
-        </div>
-    </div>
-
-    <!-- TASTO MAPPA MOSCHEE -->
-    <button onclick="window.open('https://www.google.com/maps/search/mosque+near+me')" class="mp-btn btn-gold" style="width: 90%; margin-bottom: 20px; border-radius: 20px;">
-        🕌 ابحث عن أقرب مسجد (Trova Moschea)
-    </button>
+    <!-- LISTA PREGHIERE -->
+    <div class="prayer-list" id="list-container"></div>
 
     <!-- HADITH FOOTER -->
     <div class="hadith-footer">
@@ -240,9 +227,28 @@
 
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
-        const hadiths = [
-            "إنما الأعمال بالنيات", "بني الإسلام على خمس", "الدين النصيحة", "اتق الله حيثما كنت",
-            "لا تغضب", "الكلمة الطيبة صدقة", "خيركم من تعلم القرآن وعلمه"
+
+        const hadithFull = [
+            {ar: "إنما الأعمال بالنيات وإنما لكل امرئ ما نوى", it: "Le azioni dipendono dalle intenzioni, e ogni uomo avrà ciò che ha inteso."},
+            {ar: "بني الإسلام على خمس: شهادة أن لا إله إلا الله وأن محمدا رسول الله", it: "L'Islam è edificato su cinque pilastri: la testimonianza che non c'è altro dio che Allah..."},
+            {ar: "من كان يؤمن بالله واليوم الآخر فليقل خيرا أو ليصمت", it: "Chi crede in Allah e nell'Ultimo Giorno, dica il bene o taccia."},
+            {ar: "الدين النصيحة", it: "La religione è sincerità e buon consiglio."},
+            {ar: "اتق الله حيثما كنت، وأتبع السيئة الحسنة تمحها", it: "Temi Allah ovunque tu sia, e fa seguire alla cattiva azione una buona affinché la cancelli."},
+            {ar: "الكلمة الطيبة صدقة", it: "La parola buona è carità."},
+            {ar: "خيركم من تعلم القرآن وعلمه", it: "Il migliore tra voi è chi impara il Corano e lo insegna."},
+            {ar: "لا تغضب", it: "Non arrabbiarti."},
+            {ar: "المؤمن مـرآة المؤمن", it: "Il credente è lo specchio del credente."},
+            {ar: "من سلك طريقا يلتمس فيه علما سهل الله له به طريقا إلى الجنة", it: "Chi intraprende una via per cercare la conoscenza, Allah gli faciliterà la via per il Paradiso."},
+            {ar: "لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه", it: "Nessuno di voi è credente finché non ama per suo fratello ciò che ama per se stesso."},
+            {ar: "الطهور شطر الإيمان", it: "La purificazione è metà della fede."},
+            {ar: "الحياء من الإيمان", it: "La modestia fa parte della fede."},
+            {ar: "الدال على الخير كفاعله", it: "Chi indica il bene è come colui che lo compie."},
+            {ar: "أحب الأعمال إلى الله أدومها وإن قل", it: "Le azioni più amate da Allah sono le più costanti, anche se piccole."},
+            {ar: "من صام رمضان إيمانا واحتسابا غفر له ما تقدم من ذنبه", it: "Chi digiuna il mese di Ramadan con fede e speranza, gli saranno perdonati i peccati passati."},
+            {ar: "إن الله جميل يحب الجمال", it: "In verità Allah è Bello e ama la bellezza."},
+            {ar: "تبسمك في وجه أخيك لك صدقة", it: "Il tuo sorriso al fratello è carità."},
+            {ar: "يسروا ولا تعسروا، وبشروا ولا تنفروا", it: "Rendete le cose facili e non difficili, date buone notizie e non allontanate le persone."},
+            {ar: "الصيام جنة", it: "Il digiuna è uno scudo."}
         ];
 
         let audioUnlocked = false;
@@ -251,41 +257,43 @@
 
         function unlockAudio() { audioUnlocked = true; }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-        function enableNotifs() { Notification.requestPermission(); toggleMenu(); }
 
-        // --- TASBIH LOGIC ---
-        function countTasbih() {
+        // TASBIH
+        window.countTasbih = () => {
             tasbihCount++;
             document.getElementById('t-count').innerText = tasbihCount;
             if (navigator.vibrate) navigator.vibrate(50);
             if (tasbihCount % 33 === 0) navigator.vibrate([100, 50, 100]);
-        }
-        function resetTasbih() { tasbihCount = 0; document.getElementById('t-count').innerText = 0; }
+        };
+        window.resetTasbih = () => { tasbihCount = 0; document.getElementById('t-count').innerText = 0; };
 
-        // --- QIBLA LOGIC ---
+        // QIBLA
         window.addEventListener('deviceorientationabsolute', (e) => {
             let north = e.webkitCompassHeading || 360 - e.alpha;
-            let qibla = 119; // Angolo approssimativo per l'Italia verso la Mecca
+            let qibla = 119; // Meccah for Italy
             document.getElementById('needle').style.transform = `rotate(${qibla - north}deg)`;
         });
 
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
+        // NOTIFICHE
+        window.enableNotifs = () => {
+            Notification.requestPermission().then(p => {
+                if(p==='granted') alert("Notifiche attivate correttamente!");
+            });
+            toggleMenu();
+        };
 
-        function triggerBanner(title, body) {
+        function sendBanner(title, body) {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png', vibrate: [500, 200, 500], requireInteraction: true });
+                    reg.showNotification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png', vibrate: [400, 100, 400], requireInteraction: true });
                 });
             }
             const mode = document.getElementById('notif-type').value;
-            const source = document.getElementById('athan-source').value;
-            const audio = new Audio(mode === 'athan' ? source : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+            const audio = new Audio(mode === 'athan' ? "https://www.islamcan.com/audio/adhan/azan1.mp3" : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
             if(audioUnlocked) audio.play();
         }
 
-        function testNotif() { triggerBanner("تجربة Muslim Pro", "Banner Test"); }
-
-        function updatePrecise() {
+        function update() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
             const dayData = timetable[dateKey] || timetable["2-3"];
@@ -304,7 +312,7 @@
                 
                 if (timeStr === time && now.getSeconds() === 0 && lastNotifiedTime !== timeStr + k) {
                     lastNotifiedTime = timeStr + k;
-                    triggerBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "موعد الصلاة في باستيا أومبريا");
+                    sendBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "Bastia Umbra - È ora della preghiera");
                 }
 
                 if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
@@ -323,33 +331,29 @@
                 const tom = new Date(); tom.setDate(now.getDate() + 1);
                 const tomKey = tom.getDate() + "-" + (tom.getMonth() + 1);
                 const tomData = timetable[tomKey] || timetable["18-2"];
-                const [th, tm] = tomData.f.split(":");
-                nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(th, tm, 0);
+                nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                 nextN = pNames.f;
             }
 
-            // Calcolo barra progresso
             if (lastP && nextP) {
-                let total = nextP - lastP;
-                let elapsed = now - lastP;
-                let perc = Math.min((elapsed / total) * 100, 100);
+                let perc = Math.min(((now - lastP) / (nextP - lastP)) * 100, 100);
                 document.getElementById('p-bar').style.width = perc + "%";
             }
 
             const diff = nextP - now;
-            const hh = Math.floor(diff/3600000).toString().padStart(2,"0");
-            const mm = Math.floor((diff%3600000)/60000).toString().padStart(2,"0");
-            const ss = Math.floor((diff%60000)/1000).toString().padStart(2,"0");
-            document.getElementById('timer-next').innerText = `${hh}:${mm}:${ss}`;
+            document.getElementById('timer-next').innerText = `${Math.floor(diff/3600000).toString().padStart(2,"0")}:${Math.floor((diff%3600000)/60000).toString().padStart(2,"0")}:${Math.floor((diff%60000)/1000).toString().padStart(2,"0")}`;
             document.getElementById('next-name').innerText = "الصلاة القادمة: " + nextN;
             document.getElementById('list-container').innerHTML = html;
         }
 
+        // TICKER HADITH
         const hTrack = document.getElementById('h-track');
-        hTrack.innerHTML = [...hadiths, ...hadiths].map(t => `<span class="hadith-text">${t}</span>`).join('');
+        const hContent = [...hadithFull, ...hadithFull].map(h => `<span class="hadith-text">${h.ar} <span class="it-text">[${h.it}]</span></span>`).join('');
+        hTrack.innerHTML = hContent;
 
-        setInterval(updatePrecise, 500);
-        updatePrecise();
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
+        setInterval(update, 500);
+        update();
     </script>
 </body>
 </html>
