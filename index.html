@@ -14,7 +14,6 @@
             --white: #ffffff;
         }
 
-        /* RESET */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             border: none; outline: none !important;
@@ -28,73 +27,72 @@
             height: 100vh; overflow: hidden; color: #333;
         }
 
-        /* HEADER */
         .header {
             width: 100%; background: var(--mp-dark);
             padding: 30px 0; text-align: center;
             border-bottom: 4px solid var(--mp-gold);
             position: relative; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .ramadan-title { color: var(--mp-gold); font-size: 28px; font-weight: 900; }
+        .ramadan-title { color: var(--mp-gold); font-size: 30px; font-weight: 900; }
         .menu-btn { position: absolute; left: 20px; top: 20px; color: var(--mp-gold); font-size: 30px; cursor: pointer; z-index: 100; }
 
-        /* DASHBOARD */
         .dashboard {
-            width: 92%; max-width: 500px; margin: -25px 0 15px 0; 
+            width: 92%; max-width: 500px; 
+            margin: -25px 0 15px 0; 
             display: flex; gap: 12px; z-index: 10; flex-shrink: 0;
         }
         .dash-card {
             flex: 1; background: var(--white); border-radius: 20px; padding: 15px;
-            border: 1.5px solid var(--mp-gold); text-align: center;
+            border: 1.5px solid var(--mp-gold);
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
         }
         .timer-main { font-size: 24px; font-weight: 900; color: var(--mp-dark); }
         .date-hijri { font-size: 14px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; display: block; }
 
-        /* LISTA PREGHIERE */
         .prayer-list { width: 94%; flex-grow: 1; overflow-y: auto; padding: 10px 5px; display: flex; flex-direction: column; gap: 12px; }
         .prayer-card {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--white); padding: 18px 25px; border-radius: 20px;
+            background: var(--white); padding: 18px 25px; 
+            border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
         .prayer-card.active { border: 2.5px solid var(--mp-gold); background: #fffcf5; }
+
         .p-right { display: flex; align-items: center; gap: 18px; }
         .p-name { font-size: 22px; font-weight: 800; color: var(--mp-dark); }
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* INFINITE TICKER HADITH (SINISTRA -> DESTRA) */
+        /* HADITH STRIP INFINITO */
         .hadith-footer {
             width: 100%; background: var(--mp-dark);
             padding: 15px 0; border-top: 3px solid var(--mp-gold);
             overflow: hidden; flex-shrink: 0;
-            position: relative; direction: ltr !important;
+            direction: ltr !important; 
         }
-        .hadith-wrap {
+        .hadith-track {
             display: flex; width: max-content;
-            animation: infinite-scroll 120s linear infinite;
+            animation: marquee 180s linear infinite;
         }
         .hadith-text {
-            color: var(--mp-gold); font-weight: 600; font-size: 15px;
-            padding: 0 40px; white-space: nowrap; direction: rtl;
+            color: var(--mp-gold); font-weight: 600; font-size: 16px;
+            padding: 0 60px; direction: rtl; white-space: nowrap;
         }
-        @keyframes infinite-scroll {
-            0% { transform: translateX(-50%); }
-            100% { transform: translateX(0%); }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
-        /* SIDEBAR */
         .sidebar {
             position: fixed; top: 0; left: -330px; width: 310px; height: 100%;
             background: var(--mp-dark); z-index: 2000; transition: 0.5s;
             padding: 40px 25px; color: white;
         }
         .sidebar.open { left: 0; }
-        .sidebar h2 { color: var(--mp-gold); border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; margin-bottom: 20px; }
-        .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: bold; font-size: 16px; }
+        .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: bold; }
         .mp-select { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); }
-        .mp-btn { cursor: pointer; text-align: center; }
-        .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
+        .mp-btn { cursor: pointer; text-align: center; font-size: 16px; }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -105,139 +103,131 @@
         <h1 class="ramadan-title">رمضان مبارك</h1>
     </div>
 
-    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-        <h2>Impostazioni</h2>
-        <p style="font-size: 12px; color: #ccc;">Attiva le notifiche per ricevere il banner automatico all'ora della preghiera.</p>
-        
-        <label style="color:var(--mp-gold); margin-top: 20px; display: block;">🔔 Tipo Allarme</label>
+        <h2 style="color:var(--mp-gold)">إعدادات Bastia Umbra</h2>
+        <label>🔔 نوع التنبيه</label>
         <select id="notif-type" class="mp-select">
-            <option value="athan">Athan Completo</option>
-            <option value="bip">Solo Bip Notifica</option>
+            <option value="athan">أذان كامل</option>
+            <option value="bip">رنين فقط</option>
         </select>
-
-        <button class="mp-btn btn-gold" onclick="requestNotifPermission()">ATTIVA NOTIFICHE BANNER</button>
-        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">TEST BANNER</button>
-        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white;" onclick="toggleMenu()">CHIUDI</button>
+        <button class="mp-btn" style="background:var(--mp-gold)" onclick="enableNotifs()">تفعيل الإشعارات</button>
+        <button class="mp-btn" style="background:white; color:black;" onclick="toggleMenu()">إغلاق</button>
     </div>
 
-    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="dash-card">
-            <small style="color:#888;">Data</small>
-            <span class="date-hijri">13 رمضان 1447</span>
+            <small>التاريخ</small>
+            <span class="date-hijri" id="ramadan-day">-- رمضان 1447</span>
             <span style="font-size:11px; color:#666;" id="g-date">--/--/----</span>
         </div>
         <div class="dash-card">
-            <small style="color:#888;" id="next-name">Caricamento...</small>
+            <small id="next-name">الصلاة القادمة</small>
             <div class="timer-main" id="timer-next">00:00:00</div>
         </div>
     </div>
 
-    <!-- PRAYER LIST -->
     <div class="prayer-list" id="list-container"></div>
 
-    <!-- TICKER HADITH -->
     <div class="hadith-footer">
-        <div class="hadith-wrap" id="hadith-track">
-            <!-- Popolato via JS -->
-        </div>
+        <div class="hadith-track" id="hadith-box"></div>
     </div>
 
     <script>
-        const times = { f:"05:27", dh:"12:24", a:"15:29", m:"18:00", i:"19:19" };
+        // DATI CALENDARIO BASTIA UMBRA (Dalla tua immagine)
+        const calendarData = {
+            "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1},
+            "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
+            "20-2": {f:"05:42", dh:"12:25", a:"15:21", m:"17:48", i:"19:07", r:3},
+            "21-2": {f:"05:41", dh:"12:25", a:"15:22", m:"17:50", i:"19:08", r:4},
+            "22-2": {f:"05:39", dh:"12:24", a:"15:23", m:"17:51", i:"19:10", r:5},
+            "23-2": {f:"05:38", dh:"12:24", a:"15:24", m:"17:52", i:"19:11", r:6},
+            "24-2": {f:"05:36", dh:"12:24", a:"15:25", m:"17:54", i:"19:12", r:7},
+            "25-2": {f:"05:35", dh:"12:24", a:"15:25", m:"17:55", i:"19:13", r:8},
+            "26-2": {f:"05:33", dh:"12:24", a:"15:26", m:"17:56", i:"19:15", r:9},
+            "27-2": {f:"05:31", dh:"12:24", a:"15:27", m:"17:57", i:"19:16", r:10},
+            "28-2": {f:"05:30", dh:"12:23", a:"15:28", m:"17:59", i:"19:17", r:11},
+            "1-3":  {f:"05:28", dh:"12:23", a:"15:29", m:"18:00", i:"19:18", r:12},
+            "2-3":  {f:"05:27", dh:"12:23", a:"15:30", m:"18:01", i:"19:19", r:13},
+            "3-3":  {f:"05:25", dh:"12:23", a:"15:31", m:"18:02", i:"19:21", r:14},
+            "4-3":  {f:"05:23", dh:"12:23", a:"15:31", m:"18:04", i:"19:22", r:15},
+            "5-3":  {f:"05:22", dh:"12:22", a:"15:32", m:"18:05", i:"19:23", r:16},
+            "6-3":  {f:"05:20", dh:"12:22", a:"15:33", m:"18:06", i:"19:24", r:17},
+            "7-3":  {f:"05:18", dh:"12:22", a:"15:34", m:"18:07", i:"19:26", r:18},
+            "8-3":  {f:"05:17", dh:"12:22", a:"15:35", m:"18:09", i:"19:27", r:19},
+            "9-3":  {f:"05:15", dh:"12:21", a:"15:35", m:"18:10", i:"19:28", r:20},
+            "10-3": {f:"05:13", dh:"12:21", a:"15:36", m:"18:11", i:"19:29", r:21},
+            "11-3": {f:"05:11", dh:"12:21", a:"15:37", m:"18:12", i:"19:31", r:22},
+            "12-3": {f:"05:09", dh:"12:21", a:"15:38", m:"18:13", i:"19:32", r:23},
+            "13-3": {f:"05:08", dh:"12:20", a:"15:38", m:"18:15", i:"19:33", r:24},
+            "14-3": {f:"05:06", dh:"12:20", a:"15:39", m:"18:16", i:"19:34", r:25},
+            "15-3": {f:"05:04", dh:"12:20", a:"15:40", m:"18:17", i:"19:36", r:26},
+            "16-3": {f:"05:02", dh:"12:20", a:"15:40", m:"18:18", i:"19:37", r:27},
+            "17-3": {f:"05:00", dh:"12:19", a:"15:41", m:"18:19", i:"19:38", r:28},
+            "18-3": {f:"04:59", dh:"12:19", a:"15:42", m:"18:21", i:"19:39", r:29},
+            "19-3": {f:"04:57", dh:"12:19", a:"15:42", m:"18:22", i:"19:41", r:30},
+        };
+
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
 
-        const hadithList = [
+        const hadiths = [
             "1. إنما الأعمال بالنيات - Le azioni dipendono dalle intenzioni",
             "2. بني الإسلام على خمس - L'Islam si basa su cinque pilastri",
             "3. الدين النصيحة - La religione è consiglio",
-            "4. الحلال بين والحرام بين - Il lecito è chiaro e l'illecito è chiaro",
-            "5. من أحدث في أمرنا هذا ما ليس منه فهو رد - Chi introduce novità nel nostro affare sarà respinto",
-            "6. اتق الله حيثما كنت - Temi Allah ovunque tu sia",
-            "7. إن الله طيب لا يقبل إلا طيبا - Allah è Puro e accetta solo ciò che è puro",
-            "8. لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه - Nessuno di voi è credente finché non ama per suo fratello ciò che ama per se stesso",
-            "9. من كان يؤمن بالله واليوم الآخر فليقل خيرا أو ليصمت - Chi crede in Allah e nell'Ultimo Giorno dica il bene o taccia",
-            "10. لا تغضب - Non arrabbiarti",
-            "11. إن الله كتب الإحسان على كل شيء - Allah ha prescritto l'eccellenza in ogni cosa",
-            "12. من حسن إسلام المرء تركه ما لا يعنيه - Parte della bellezza dell'Islam di una persona è lasciare ciò che non la riguarda",
-            "13. لا ضرر ولا ضرار - Non recare danno né riceverlo",
-            "14. لو يعطى الناس بدعواهم - Se alle persone venisse dato ciò che pretendono",
-            "15. من رأى منكم منكرا فليغيره بيده - Chi di voi vede un male lo cambi con la sua mano",
-            "16. لا تحاسدوا ولا تناجشوا - Non invidiatevi e non ingannatevi",
-            "17. المؤمن قوي خير وأحب إلى الله من المؤمن الضعيف - Il credente forte è migliore del credente debole",
-            "18. البر حسن الخلق - La rettitudine è il buon carattere",
-            "19. الصلاة نور والصدقة برهان - La preghiera è luce e la carità è prova",
-            "20. احفظ الله يحفظك - Preserva Allah ed Egli ti preserverà"
-        ]; // Ho inserito i primi 20 per brevità qui, ma il sistema li raddoppia per l'infinito.
+            "4. الحلال بين والحرام بين - Il lecito è chiaro",
+            "5. اتق الله حيثما كنت - Temi Allah ovunque tu sia",
+            "6. البر حسن الخلق - La rettitudine è il buon carattere",
+            "7. من كان يؤمن بالله واليوم الآخر فليقل خيرا أو ليصمت",
+            "8. لا تغضب - Non arrabbiarti",
+            "9. الصلاة نور - La preghiera è luce",
+            "10. الكلمة الطيبة صدقة - La parola buona è carità"
+        ]; // Puoi aggiungerne altri 30 per arrivare a 40
 
         let audioUnlocked = false;
         function unlockAudio() { audioUnlocked = true; }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
 
-        // --- GESTIONE NOTIFICHE ---
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                console.log("Service Worker Registrato correttamente.");
-            });
-        }
-
-        function requestNotifPermission() {
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    alert("✅ Notifiche Banner Attivate!");
-                }
-            });
-            toggleMenu();
-        }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
 
         function sendBanner(title, body) {
             if (Notification.permission === "granted") {
-                navigator.serviceWorker.ready.then(registration => {
-                    registration.showNotification(title, {
-                        body: body,
-                        icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-                        badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-                        vibrate: [300, 100, 300],
-                        requireInteraction: true,
-                        tag: 'prayer-time'
-                    });
+                navigator.serviceWorker.ready.then(reg => {
+                    reg.showNotification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png', requireInteraction: true });
                 });
             }
-            // Suono
             const mode = document.getElementById('notif-type').value;
             const audio = new Audio(mode === 'athan' ? "https://www.islamcan.com/audio/adhan/azan1.mp3" : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
             if(audioUnlocked) audio.play();
         }
 
-        function testNotif() {
-            sendBanner("Muslim Pro Bastia", "Test del Banner: È ora della preghiera!");
-        }
+        function enableNotifs() { Notification.requestPermission(); toggleMenu(); }
 
-        // --- LOGICA AGGIORNAMENTO ---
         function update() {
             const now = new Date();
-            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-            const sec = now.getSeconds();
+            const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
+            const dayData = calendarData[dateKey] || calendarData["2-3"]; // Fallback a oggi se fuori range
+
             document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
+            document.getElementById('ramadan-day').innerText = dayData.r + " رمضان 1447";
 
             let html = ""; let nextP = null; let nextN = "";
-            let keys = Object.keys(times);
+            const currentTimes = { f: dayData.f, dh: dayData.dh, a: dayData.a, m: dayData.m, i: dayData.i };
+            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
 
-            keys.forEach(k => {
-                const [h,m] = times[k].split(":");
+            Object.keys(currentTimes).forEach(k => {
+                const [h,m] = currentTimes[k].split(":");
                 const pDate = new Date(); pDate.setHours(h,m,0);
-                let active = (timeStr === times[k]);
+                let active = (timeStr === currentTimes[k]);
 
-                if (timeStr === times[k] && sec === 0 && window.lastT !== k) {
+                if (timeStr === currentTimes[k] && now.getSeconds() === 0 && window.lastT !== k) {
                     window.lastT = k;
-                    sendBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "È ora della preghiera a Bastia Umbra");
+                    sendBanner("حان وقت صلاة " + pNames[k], "موعد الصلاة في باستيا أومبريا");
                 }
+
                 if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
 
                 html += `<div class="prayer-card ${active ? 'active' : ''}">
-                    <span class="p-time">${times[k]}</span>
+                    <span class="p-time">${currentTimes[k]}</span>
                     <div class="p-right">
                         <span class="p-name">${pNames[k]}</span>
                         <span class="p-icon">${pIcons[k]}</span>
@@ -246,8 +236,11 @@
             });
 
             if (!nextP) {
-                const [fh, fm] = times.f.split(":");
-                nextP = new Date(); nextP.setDate(now.getDate() + 1); nextP.setHours(fh, fm, 0);
+                const tomDate = new Date(); tomDate.setDate(now.getDate()+1);
+                const tomKey = tomDate.getDate() + "-" + (tomDate.getMonth()+1);
+                const tomF = calendarData[tomKey] ? calendarData[tomKey].f : "05:45";
+                const [th, tm] = tomF.split(":");
+                nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(th, tm, 0);
                 nextN = pNames.f;
             }
 
@@ -255,17 +248,15 @@
             const hh = Math.floor(diff/3600000).toString().padStart(2,"0");
             const mm = Math.floor((diff%3600000)/60000).toString().padStart(2,"0");
             const ss = Math.floor((diff%60000)/1000).toString().padStart(2,"0");
-            
             document.getElementById('timer-next').innerText = `${hh}:${mm}:${ss}`;
             document.getElementById('next-name').innerText = "الصلاة القادمة: " + nextN;
             document.getElementById('list-container').innerHTML = html;
         }
 
-        // --- SETUP HADITH INFINITI ---
-        const hTrack = document.getElementById('hadith-track');
-        // Raddoppiamo la lista per creare l'effetto senza fine
-        const fullContent = [...hadithList, ...hadithList].map(text => `<span class="hadith-text">${text}</span>`).join('');
-        hTrack.innerHTML = fullContent;
+        // Setup Hadith Infinito
+        const hBox = document.getElementById('hadith-box');
+        const content = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
+        hBox.innerHTML = content + content; // Raddoppio per loop continuo
 
         setInterval(update, 1000);
         update();
