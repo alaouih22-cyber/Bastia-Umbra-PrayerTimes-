@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#004F3F">
+    <title>Muslim Pro - Bastia Umbra</title>
+    <style>
+        :root {
+            --mp-dark: #004F3F;
+            --mp-gold: #C5A059;
+            --mp-bg: #F4F6F8;
+            --white: #ffffff;
+        }
+
+        /* RESET TOTALE PER ELIMINARE LA STRISCIA VERDE */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            border: none !important; outline: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--mp-bg);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh; overflow: hidden; color: #333;
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%; background: var(--mp-dark);
+            padding: 40px 0; text-align: center;
+            border-bottom: 4px solid var(--mp-gold) !important;
+            position: relative; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+        }
+        .ramadan-title { color: var(--mp-gold); font-size: 34px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .menu-btn { position: absolute; left: 20px; top: 25px; color: var(--mp-gold); font-size: 35px; cursor: pointer; z-index: 100; }
+
+        /* DASHBOARD */
+        .dashboard {
+            width: 92%; max-width: 500px; 
+            margin: -25px 0 15px 0; 
+            display: flex; gap: 12px; z-index: 10; flex-shrink: 0;
+        }
+        .dash-card {
+            flex: 1; background: var(--white); border-radius: 20px; padding: 15px;
+            border: 1.5px solid var(--mp-gold) !important;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+            text-align: center;
+        }
+        .timer-main { font-size: 28px; font-weight: 900; color: var(--mp-dark); }
+        .date-hijri { font-size: 15px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; display: block; }
+
+        /* LISTA PREGHIERE - ICONE A DESTRA E NO STRISCIA VERDE */
+        .prayer-list { width: 94%; flex-grow: 1; overflow-y: auto; padding: 10px 5px; display: flex; flex-direction: column; gap: 12px; }
+        .prayer-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--white); padding: 22px 25px; 
+            border-radius: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+            border: none !important;
+        }
+        .prayer-card.active { border: 2.5px solid var(--mp-gold) !important; background: #fffcf5 !important; }
+
+        .p-right { display: flex; align-items: center; gap: 18px; }
+        .p-name { font-size: 24px; font-weight: 800; color: var(--mp-dark); }
+        .p-icon { font-size: 32px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1)); }
+        .p-time { font-size: 26px; font-weight: 900; color: #222; }
+
+        /* HADITH SCORREVOLI (TUTTI I 40) */
+        .hadith-footer {
+            width: 100%; background: var(--mp-dark);
+            padding: 14px 0; border-top: 3px solid var(--mp-gold) !important;
+            overflow: hidden; flex-shrink: 0;
+        }
+        .hadith-track { display: flex; width: max-content; animation: scroll-hadith 300s linear infinite; }
+        .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 15px; white-space: nowrap; padding-left: 60px; }
+        @keyframes scroll-hadith { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed; top: 0; left: -330px; width: 310px; height: 100%;
+            background: var(--mp-dark); z-index: 2000; transition: 0.5s;
+            padding: 40px 25px; color: white; box-shadow: 10px 0 30px rgba(0,0,0,0.5) !important;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar h2 { color: var(--mp-gold); margin-bottom: 25px; font-size: 26px; border-bottom: 1px solid var(--mp-gold) !important; padding-bottom: 10px; }
+        .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: bold; }
+        .mp-select { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold) !important; }
+        .mp-btn { border: none !important; cursor: pointer; text-align: center; font-size: 16px; transition: 0.3s; }
+        .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
+    </style>
+</head>
+<body onclick="unlockAudio()">
+
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+    <div class="header">
+        <h1 class="ramadan-title">رمضان مبارك</h1>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <h2>إعدادات Muslim Pro</h2>
+        
+        <label style="color:var(--mp-gold)">🔔 نوع التنبيه</label>
+        <select id="notif-type" class="mp-select">
+            <option value="athan">أذان + إشعار Banner</option>
+            <option value="bip">رنين + إشعار Banner</option>
+        </select>
+
+        <label style="display:block; margin-top:20px; color:var(--mp-gold)">🔊 صوت الأذان</label>
+        <select id="athan-source" class="mp-select">
+            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">مكة المكرمة</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">المدينة المنورة</option>
+        </select>
+
+        <button class="mp-btn btn-gold" onclick="enableNotifs()">تفعيل الإشعارات</button>
+        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">تجربة (Test Notifica)</button>
+        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important;" onclick="toggleMenu()">إغلاق</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+        <div class="dash-card">
+            <small style="color:#888; font-weight:bold;">Data Oggi</small>
+            <span class="date-hijri">13 رمضان 1447</span>
+            <span style="font-size:12px; color:#666; font-weight:bold;" id="current-gregorian">02/03/2026</span>
+        </div>
+        <div class="dash-card">
+            <small style="color:#888; font-weight:bold;" id="next-name">الصلاة القادمة</small>
+            <div class="timer-main" id="timer-next">00:00:00</div>
+        </div>
+    </div>
+
+    <div class="prayer-list" id="list-container"></div>
+
+    <!-- HADITH FOOTER -->
+    <div class="hadith-footer">
+        <div class="hadith-track" id="hadith-box"></div>
+    </div>
+
+    <script>
+        // Registrazione Service Worker per Notifiche Banner e PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').then(reg => {
+                console.log("SW pronto per le notifiche banner.");
+            });
+        }
+
+        let audioUnlocked = false;
+        function unlockAudio() { audioUnlocked = true; }
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        function enableNotifs() {
+            Notification.requestPermission().then(p => { 
+                if (p === "granted") alert("✅ تم تفعيل الإشعارات بنجاح!"); 
+            });
+            toggleMenu();
+        }
+
+        // Funzione per inviare la NOTIFICA BANNER al Service Worker
+        function sendBanner(title, body) {
+            if ('serviceWorker' in navigator && Notification.permission === "granted") {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.active.postMessage({
+                        type: 'SHOW_PRAYER_BANNER',
+                        title: title,
+                        body: body
+                    });
+                });
+            }
+
+            // Riproduzione Audio
+            const mode = document.getElementById('notif-type').value;
+            const source = document.getElementById('athan-source').value;
+            const audio = new Audio(mode === 'athan' ? source : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+            audio.play();
+            if(mode === 'athan') setTimeout(() => audio.pause(), 55000);
+        }
+
+        function testNotif() { sendBanner("تجربة Muslim Pro", "هذا إشعار تجريبي للأذان"); }
+
+        // Orari di oggi
+        const times = { f:"05:27", dh:"12:24", a:"15:29", m:"18:00", i:"19:19" };
+        const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
+        const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
+
+        function update() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const sec = now.getSeconds();
+            
+            let html = ""; let nextP = null; let nextN = "";
+            for (let k in times) {
+                const [h,m] = times[k].split(":");
+                const pDate = new Date(); pDate.setHours(h,m,0);
+                let active = (timeStr === times[k]);
+                
+                if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
+                
+                // TRIGGER AUTOMATICO NOTIFICA BANNER
+                if (timeStr === times[k] && sec === 0 && window.lastT !== k) {
+                    window.lastT = k;
+                    sendBanner("حان وقت صلاة " + pNames[k], "موعد الصلاة الآن في باستيا أومبريا");
+                }
+
+                html += `<div class="prayer-card ${active ? 'active' : ''}">
+                    <span class="p-time">${times[k]}</span>
+                    <div class="p-right">
+                        <span class="p-name">${pNames[k]}</span>
+                        <span class="p-icon">${pIcons[k]}</span>
+                    </div>
+                </div>`;
+            }
+
+            if (nextP) {
+                const diff = nextP - now;
+                const hh = Math.floor(diff/3600000).toString().padStart(2,"0");
