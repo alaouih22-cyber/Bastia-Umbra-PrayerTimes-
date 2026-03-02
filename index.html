@@ -14,6 +14,7 @@
             --white: #ffffff;
         }
 
+        /* RESET */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             border: none; outline: none !important;
@@ -53,7 +54,7 @@
         .timer-main { font-size: 24px; font-weight: 900; color: var(--mp-dark); }
         .date-hijri { font-size: 14px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; display: block; }
 
-        /* LISTA PREGHIERE */
+        /* PRAYER LIST */
         .prayer-list { width: 94%; flex-grow: 1; overflow-y: auto; padding: 10px 5px; display: flex; flex-direction: column; gap: 12px; }
         .prayer-card {
             display: flex; justify-content: space-between; align-items: center;
@@ -67,31 +68,39 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* --- FIX DEFINITIVO HADITH STRIP --- */
+        /* --- الحل النهائي لشريط الأحاديث (من اليسار لليمين) --- */
         .hadith-footer {
-            width: 100%; background: var(--mp-dark);
-            padding: 12px 0; border-top: 3px solid var(--mp-gold);
-            overflow: hidden; flex-shrink: 0;
-            direction: ltr !important; /* إجباري لضمان استقرار الحركة البرمجية */
+            width: 100%; 
+            background: var(--mp-dark);
+            padding: 15px 0; 
+            border-top: 3px solid var(--mp-gold);
+            overflow: hidden; 
+            flex-shrink: 0;
+            position: relative;
+            direction: ltr !important; /* إجباري لعمل الأنيميشن بشكل سليم */
         }
-        .hadith-track { 
-            display: inline-flex; 
-            width: max-content; 
-            animation: scroll-lr 30s linear infinite; 
-        }
-        .hadith-text { 
-            color: var(--mp-gold); 
-            font-weight: 600; 
-            font-size: 16px; 
-            padding-left: 100px; /* مسافة بين الأحاديث */
+        
+        .hadith-track {
+            display: flex;
+            width: max-content;
             white-space: nowrap;
-            direction: rtl; /* النص يظل عربياً من اليمين لليسار */
+            will-change: transform;
+            animation: marquee-ltr 25s linear infinite;
         }
 
-        /* أنميشن من اليسار إلى اليمين بشكل لانهائي */
-        @keyframes scroll-lr { 
-            0% { transform: translateX(-50%); } 
-            100% { transform: translateX(0%); } 
+        .hadith-text {
+            color: var(--mp-gold);
+            font-weight: 600;
+            font-size: 16px;
+            padding: 0 50px;
+            display: inline-block;
+            direction: rtl; /* النص عربي من اليمين لليسار */
+        }
+
+        /* أنيميشن يضمن الحركة من اليسار إلى اليمين بشكل لانهائي */
+        @keyframes marquee-ltr {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
         }
 
         /* SIDEBAR */
@@ -151,7 +160,9 @@
 
     <!-- HADITH FOOTER -->
     <div class="hadith-footer">
-        <div class="hadith-track" id="hadith-box"></div>
+        <div class="hadith-track" id="hadith-box">
+            <!-- سيتم ملء هذا بالجافا سكريبت -->
+        </div>
     </div>
 
     <script>
@@ -240,11 +251,15 @@
             document.getElementById('list-container').innerHTML = html;
         }
 
-        // --- تهيئة شريط الأحاديث (مضاعفة المحتوى لضمان التكرار اللانهائي) ---
-        const hBox = document.getElementById('hadith-box');
-        const content = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
-        hBox.innerHTML = content + content; // مضاعفة النص
+        // إعداد الشريط بشكل يضمن التكرار اللانهائي
+        function setupHadith() {
+            const hBox = document.getElementById('hadith-box');
+            // نكرر الأحاديث مرتين بجانب بعضهما البعض لخلق حلقة مستمرة
+            const content = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
+            hBox.innerHTML = content + content;
+        }
 
+        setupHadith();
         setInterval(update, 1000);
         update();
     </script>
