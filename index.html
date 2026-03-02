@@ -14,7 +14,6 @@
             --white: #ffffff;
         }
 
-        /* RESET */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             border: none; outline: none !important;
@@ -54,7 +53,7 @@
         .timer-main { font-size: 24px; font-weight: 900; color: var(--mp-dark); }
         .date-hijri { font-size: 14px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; display: block; }
 
-        /* PRAYER LIST */
+        /* PREGHIERE */
         .prayer-list { width: 94%; flex-grow: 1; overflow-y: auto; padding: 10px 5px; display: flex; flex-direction: column; gap: 12px; }
         .prayer-card {
             display: flex; justify-content: space-between; align-items: center;
@@ -68,36 +67,26 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* --- الحل النهائي لشريط الأحاديث (من اليسار لليمين) --- */
+        /* HADITH TICKER FIX (DA SINISTRA A DESTRA) */
         .hadith-footer {
-            width: 100%; 
-            background: var(--mp-dark);
-            padding: 15px 0; 
-            border-top: 3px solid var(--mp-gold);
-            overflow: hidden; 
-            flex-shrink: 0;
+            width: 100%; background: var(--mp-dark);
+            padding: 15px 0; border-top: 3px solid var(--mp-gold);
+            overflow: hidden; flex-shrink: 0;
+            direction: ltr !important; /* Forza movimento da sinistra */
             position: relative;
-            direction: ltr !important; /* إجباري لعمل الأنيميشن بشكل سليم */
         }
-        
         .hadith-track {
             display: flex;
             width: max-content;
-            white-space: nowrap;
-            will-change: transform;
-            animation: marquee-ltr 25s linear infinite;
+            animation: marquee-ltr 30s linear infinite;
         }
-
         .hadith-text {
             color: var(--mp-gold);
-            font-weight: 600;
-            font-size: 16px;
-            padding: 0 50px;
-            display: inline-block;
-            direction: rtl; /* النص عربي من اليمين لليسار */
+            font-weight: 600; font-size: 16px;
+            padding: 0 60px;
+            direction: rtl; /* Testo arabo corretto */
+            white-space: nowrap;
         }
-
-        /* أنيميشن يضمن الحركة من اليسار إلى اليمين بشكل لانهائي */
         @keyframes marquee-ltr {
             0% { transform: translateX(-50%); }
             100% { transform: translateX(0%); }
@@ -128,46 +117,44 @@
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <h2>إعدادات Muslim Pro</h2>
-        <label style="color:var(--mp-gold)">🔔 نوع التنبيه التلقائي</label>
+        <label style="color:var(--mp-gold)">🔔 Tipo di Notifica Banner</label>
         <select id="notif-type" class="mp-select">
-            <option value="athan">أذان + إشعار Banner</option>
-            <option value="bip">رنين + إشعار Banner</option>
+            <option value="athan">Athan + Banner</option>
+            <option value="bip">Suono breve + Banner</option>
         </select>
-        <label style="display:block; margin-top:20px; color:var(--mp-gold)">🔊 صوت الأذان</label>
+        <label style="display:block; margin-top:20px; color:var(--mp-gold)">🔊 Voce Athan</label>
         <select id="athan-source" class="mp-select">
-            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">مكة المكرمة</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">المدينة المنورة</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah</option>
         </select>
-        <button class="mp-btn btn-gold" onclick="enableNotifs()">تفعيل الإشعارات التلقائية</button>
-        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">تجربة الإشعار</button>
-        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white;" onclick="toggleMenu()">إغلاق</button>
+        <button class="mp-btn btn-gold" onclick="enableNotifs()">ATTIVA NOTIFICHE BANNER</button>
+        <button class="mp-btn" style="background:white; color:black;" onclick="testNotif()">PROVA NOTIFICA (TEST)</button>
+        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white;" onclick="toggleMenu()">CHIUDI</button>
     </div>
 
-    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="dash-card">
-            <small style="color:#888;">التاريخ</small>
-            <span class="date-hijri">13 رمضان 1447</span>
-            <span style="font-size:11px; color:#666;" id="current-gregorian">--/--/----</span>
+            <small style="color:#888;">Data</small>
+            <span class="date-hijri" id="h-date">13 Ramadan 1447</span>
+            <span style="font-size:11px; color:#666;" id="g-date">--/--/----</span>
         </div>
         <div class="dash-card">
-            <small style="color:#888;" id="next-name">الصلاة القادمة</small>
+            <small style="color:#888;" id="next-name">Prossima Preghiera</small>
             <div class="timer-main" id="timer-next">00:00:00</div>
         </div>
     </div>
 
     <div class="prayer-list" id="list-container"></div>
 
-    <!-- HADITH FOOTER -->
     <div class="hadith-footer">
-        <div class="hadith-track" id="hadith-box">
-            <!-- سيتم ملء هذا بالجافا سكريبت -->
-        </div>
+        <div class="hadith-track" id="hadith-box"></div>
     </div>
 
     <script>
+        // --- CONFIGURAZIONE ---
         const times = { f:"05:27", dh:"12:24", a:"15:29", m:"18:00", i:"19:19" };
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
+        const pNamesIT = { f:"Fajr", dh:"Dhuhr", a:"Asr", m:"Maghrib", i:"Isha" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
         const hadiths = [
             "قال رسول الله ﷺ: بُني الإسلام على خمس...",
@@ -181,36 +168,58 @@
         function unlockAudio() { audioUnlocked = true; }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
 
+        // --- SERVICE WORKER PER NOTIFICHE PUSH ---
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
+            navigator.serviceWorker.register('./sw.js').then(reg => {
+                console.log("SW Pronto per Notifiche Push");
+            });
         }
 
-        function sendBanner(title, body) {
+        // --- FUNZIONE NOTIFICA PROFESSIONALE ---
+        function sendPushBanner(title, body) {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
                     reg.showNotification(title, {
                         body: body,
                         icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
                         badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-                        vibrate: [200, 100, 200],
-                        requireInteraction: true
+                        vibrate: [300, 100, 300, 100, 300],
+                        tag: 'prayer-time',
+                        renotify: true,
+                        requireInteraction: true // Il banner resta finché non lo clicchi
                     });
                 });
             }
+
+            // Suono
             const mode = document.getElementById('notif-type').value;
             const source = document.getElementById('athan-source').value;
             const audio = new Audio(mode === 'athan' ? source : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-            if(audioUnlocked) audio.play();
+            if(audioUnlocked) audio.play().catch(e => console.log("Audio bloccato dal sistema"));
         }
 
-        function testNotif() { sendBanner("تجربة مسلم برو", "إشعار الصلاة التلقائي"); }
-        function enableNotifs() { Notification.requestPermission(); toggleMenu(); }
+        function enableNotifs() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    alert("✅ Notifiche attivate! Ora riceverai i banner automatici.");
+                } else {
+                    alert("❌ Hai negato le notifiche. Controlla le impostazioni del browser.");
+                }
+            });
+            toggleMenu();
+        }
 
+        function testNotif() {
+            sendPushBanner("Muslim Pro Bastia", "È ora della preghiera (Esempio Test)");
+        }
+
+        // --- LOGICA ORARI E CONTROLLO AUTOMATICO ---
         function update() {
             const now = new Date();
             const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
             const sec = now.getSeconds();
-            document.getElementById('current-gregorian').innerText = now.toLocaleDateString('it-IT');
+
+            document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
 
             let html = ""; let nextP = null; let nextN = "";
             let keys = Object.keys(times);
@@ -220,10 +229,12 @@
                 const pDate = new Date(); pDate.setHours(h,m,0);
                 let active = (timeStr === times[k]);
 
+                // --- TRIGGER AUTOMATICO BANNER ---
                 if (timeStr === times[k] && sec === 0 && window.lastT !== k) {
                     window.lastT = k;
-                    sendBanner("حان وقت صلاة " + pNames[k], "موعد الصلاة الآن");
+                    sendPushBanner(`حَانَ الآنَ مَوْعِدُ صَلَاةِ ${pNames[k]}`, `È ora della preghiera di ${pNamesIT[k]} a Bastia Umbra`);
                 }
+
                 if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
 
                 html += `<div class="prayer-card ${active ? 'active' : ''}">
@@ -251,15 +262,11 @@
             document.getElementById('list-container').innerHTML = html;
         }
 
-        // إعداد الشريط بشكل يضمن التكرار اللانهائي
-        function setupHadith() {
-            const hBox = document.getElementById('hadith-box');
-            // نكرر الأحاديث مرتين بجانب بعضهما البعض لخلق حلقة مستمرة
-            const content = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
-            hBox.innerHTML = content + content;
-        }
+        // Setup Ticker Hadith
+        const hBox = document.getElementById('hadith-box');
+        const content = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
+        hBox.innerHTML = content + content;
 
-        setupHadith();
         setInterval(update, 1000);
         update();
     </script>
