@@ -1,13 +1,16 @@
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+// File: sw.js
+self.addEventListener('push', function(event) {
+    const data = event.data.json();
+    const options = {
+        body: data.body,
+        icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
+        badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
+        vibrate: [200, 100, 200]
+    };
+    event.waitUntil(self.registration.showNotification(data.title, options));
+});
 
-// Gestione click sulla notifica
-self.addEventListener('notificationclick', event => {
+self.addEventListener('notificationclick', function(event) {
     event.notification.close();
-    event.waitUntil(
-        clients.matchAll({ type: 'window' }).then(clientList => {
-            if (clientList.length > 0) return clientList[0].focus();
-            return clients.openWindow('./');
-        })
-  );
+    event.waitUntil(clients.openWindow('/'));
 });
