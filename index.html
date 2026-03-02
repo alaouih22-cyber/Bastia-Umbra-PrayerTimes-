@@ -14,11 +14,7 @@
             --white: #ffffff;
         }
 
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            border: none; outline: none !important;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; border: none; outline: none !important; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--mp-bg);
@@ -64,7 +60,7 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* HADITH STRIP INFINITO */
+        /* TICKER HADITH INFINITO */
         .hadith-footer {
             width: 100%; background: var(--mp-dark);
             padding: 15px 0; border-top: 3px solid var(--mp-gold);
@@ -73,10 +69,10 @@
         }
         .hadith-track {
             display: flex; width: max-content;
-            animation: marquee 180s linear infinite;
+            animation: marquee 120s linear infinite;
         }
         .hadith-text {
-            color: var(--mp-gold); font-weight: 600; font-size: 16px;
+            color: var(--mp-gold); font-weight: 600; font-size: 15px;
             padding: 0 60px; direction: rtl; white-space: nowrap;
         }
         @keyframes marquee {
@@ -92,7 +88,6 @@
         .sidebar.open { left: 0; }
         .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: bold; }
         .mp-select { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); }
-        .mp-btn { cursor: pointer; text-align: center; font-size: 16px; }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -103,21 +98,23 @@
         <h1 class="ramadan-title">رمضان مبارك</h1>
     </div>
 
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--mp-gold)">إعدادات Bastia Umbra</h2>
-        <label>🔔 نوع التنبيه</label>
+        <h2 style="color:var(--mp-gold)">Bastia Umbra</h2>
+        <label>🔔 Notifica</label>
         <select id="notif-type" class="mp-select">
-            <option value="athan">أذان كامل</option>
-            <option value="bip">رنين فقط</option>
+            <option value="athan">Athan</option>
+            <option value="bip">Solo Bip</option>
         </select>
-        <button class="mp-btn" style="background:var(--mp-gold)" onclick="enableNotifs()">تفعيل الإشعارات</button>
-        <button class="mp-btn" style="background:white; color:black;" onclick="toggleMenu()">إغلاق</button>
+        <button class="mp-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="requestPermission()">ATTIVA NOTIFICHE</button>
+        <button class="mp-btn" style="background:white; color:black;" onclick="toggleMenu()">CHIUDI</button>
     </div>
 
+    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="dash-card">
             <small>التاريخ</small>
-            <span class="date-hijri" id="ramadan-day">-- رمضان 1447</span>
+            <span class="date-hijri" id="hijri-txt">-- رمضان 1447</span>
             <span style="font-size:11px; color:#666;" id="g-date">--/--/----</span>
         </div>
         <div class="dash-card">
@@ -129,12 +126,12 @@
     <div class="prayer-list" id="list-container"></div>
 
     <div class="hadith-footer">
-        <div class="hadith-track" id="hadith-box"></div>
+        <div class="hadith-track" id="h-track"></div>
     </div>
 
     <script>
-        // DATI CALENDARIO BASTIA UMBRA (Dalla tua immagine)
-        const calendarData = {
+        // TABELLA ORARI COMPLETA BASTIA UMBRA (Feb/Mar 2026)
+        const timetable = {
             "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1},
             "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
             "20-2": {f:"05:42", dh:"12:25", a:"15:21", m:"17:48", i:"19:07", r:3},
@@ -164,35 +161,40 @@
             "16-3": {f:"05:02", dh:"12:20", a:"15:40", m:"18:18", i:"19:37", r:27},
             "17-3": {f:"05:00", dh:"12:19", a:"15:41", m:"18:19", i:"19:38", r:28},
             "18-3": {f:"04:59", dh:"12:19", a:"15:42", m:"18:21", i:"19:39", r:29},
-            "19-3": {f:"04:57", dh:"12:19", a:"15:42", m:"18:22", i:"19:41", r:30},
+            "19-3": {f:"04:57", dh:"12:19", a:"15:42", m:"18:22", i:"19:41", r:30}
         };
 
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
-
         const hadiths = [
-            "1. إنما الأعمال بالنيات - Le azioni dipendono dalle intenzioni",
-            "2. بني الإسلام على خمس - L'Islam si basa su cinque pilastri",
-            "3. الدين النصيحة - La religione è consiglio",
-            "4. الحلال بين والحرام بين - Il lecito è chiaro",
-            "5. اتق الله حيثما كنت - Temi Allah ovunque tu sia",
-            "6. البر حسن الخلق - La rettitudine è il buon carattere",
-            "7. من كان يؤمن بالله واليوم الآخر فليقل خيرا أو ليصمت",
-            "8. لا تغضب - Non arrabbiarti",
-            "9. الصلاة نور - La preghiera è luce",
-            "10. الكلمة الطيبة صدقة - La parola buona è carità"
-        ]; // Puoi aggiungerne altri 30 per arrivare a 40
+            "إنما الأعمال بالنيات - Le azioni dipendono dalle intenzioni",
+            "بني الإسلام على خمس - L'Islam si basa su cinque pilastri",
+            "الدين النصيحة - La religione è consiglio",
+            "اتق الله حيثما كنت - Temi Allah ovunque tu sia",
+            "من كان يؤمن بالله واليوم الآخر فليقل خيرا أو ليصمت",
+            "الكلمة الطيبة صدقة - La parola buona è carità",
+            "خيركم من تعلم القرآن وعلمه - Il migliore è chi impara il Corano e lo insegna"
+        ];
 
         let audioUnlocked = false;
+        let lastNotifiedTime = "";
+
         function unlockAudio() { audioUnlocked = true; }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+        function requestPermission() { Notification.requestPermission(); toggleMenu(); }
 
         if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
 
-        function sendBanner(title, body) {
+        function triggerBanner(title, body) {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png', requireInteraction: true });
+                    reg.showNotification(title, {
+                        body: body,
+                        icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
+                        vibrate: [500, 200, 500],
+                        requireInteraction: true,
+                        tag: 'prayer-time'
+                    });
                 });
             }
             const mode = document.getElementById('notif-type').value;
@@ -200,34 +202,35 @@
             if(audioUnlocked) audio.play();
         }
 
-        function enableNotifs() { Notification.requestPermission(); toggleMenu(); }
-
-        function update() {
+        function updatePrecise() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
-            const dayData = calendarData[dateKey] || calendarData["2-3"]; // Fallback a oggi se fuori range
+            const dayData = timetable[dateKey] || timetable["2-3"];
+            
+            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const seconds = now.getSeconds();
 
             document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
-            document.getElementById('ramadan-day').innerText = dayData.r + " رمضان 1447";
+            document.getElementById('hijri-txt').innerText = dayData.r + " رمضان 1447";
 
             let html = ""; let nextP = null; let nextN = "";
-            const currentTimes = { f: dayData.f, dh: dayData.dh, a: dayData.a, m: dayData.m, i: dayData.i };
-            const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const keys = ["f", "dh", "a", "m", "i"];
 
-            Object.keys(currentTimes).forEach(k => {
-                const [h,m] = currentTimes[k].split(":");
+            keys.forEach(k => {
+                const time = dayData[k];
+                const [h,m] = time.split(":");
                 const pDate = new Date(); pDate.setHours(h,m,0);
-                let active = (timeStr === currentTimes[k]);
-
-                if (timeStr === currentTimes[k] && now.getSeconds() === 0 && window.lastT !== k) {
-                    window.lastT = k;
-                    sendBanner("حان وقت صلاة " + pNames[k], "موعد الصلاة في باستيا أومبريا");
+                
+                // NOTIFICA ESATTA AL SECONDO 00
+                if (timeStr === time && seconds === 0 && lastNotifiedTime !== timeStr + k) {
+                    lastNotifiedTime = timeStr + k;
+                    triggerBanner("حان وقت صلاة " + pNames[k], "موعد الصلاة الآن في باستيا أومبريا");
                 }
 
                 if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
-
-                html += `<div class="prayer-card ${active ? 'active' : ''}">
-                    <span class="p-time">${currentTimes[k]}</span>
+                
+                html += `<div class="prayer-card ${timeStr === time ? 'active' : ''}">
+                    <span class="p-time">${time}</span>
                     <div class="p-right">
                         <span class="p-name">${pNames[k]}</span>
                         <span class="p-icon">${pIcons[k]}</span>
@@ -236,10 +239,10 @@
             });
 
             if (!nextP) {
-                const tomDate = new Date(); tomDate.setDate(now.getDate()+1);
-                const tomKey = tomDate.getDate() + "-" + (tomDate.getMonth()+1);
-                const tomF = calendarData[tomKey] ? calendarData[tomKey].f : "05:45";
-                const [th, tm] = tomF.split(":");
+                const tom = new Date(); tom.setDate(now.getDate() + 1);
+                const tomKey = tom.getDate() + "-" + (tom.getMonth() + 1);
+                const tomData = timetable[tomKey] || timetable["18-2"];
+                const [th, tm] = tomData.f.split(":");
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(th, tm, 0);
                 nextN = pNames.f;
             }
@@ -253,13 +256,14 @@
             document.getElementById('list-container').innerHTML = html;
         }
 
-        // Setup Hadith Infinito
-        const hBox = document.getElementById('hadith-box');
-        const content = hadiths.map(h => `<span class="hadith-text">${h}</span>`).join('');
-        hBox.innerHTML = content + content; // Raddoppio per loop continuo
+        // Setup Hadith
+        const hTrack = document.getElementById('h-track');
+        const content = [...hadiths, ...hadiths].map(t => `<span class="hadith-text">${t}</span>`).join('');
+        hTrack.innerHTML = content;
 
-        setInterval(update, 1000);
-        update();
+        // Controllo ogni 500ms per non perdere lo "00" dei secondi
+        setInterval(updatePrecise, 500);
+        updatePrecise();
     </script>
 </body>
 </html>
