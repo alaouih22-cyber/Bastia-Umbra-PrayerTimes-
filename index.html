@@ -35,12 +35,15 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* HADITH STRIP (SINISTRA -> DESTRA) */
-        .hadith-footer { width: 100%; background: var(--mp-dark); padding: 15px 0; border-top: 3px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; }
-        .hadith-track { display: flex; width: max-content; animation: marquee 350s linear infinite; }
+        /* HADITH STRIP (DA DESTRA A SINISTRA E VELOCE) */
+        .hadith-footer { width: 100%; background: var(--mp-dark); padding: 15px 0; border-top: 3px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; position: relative; }
+        .hadith-track { display: flex; width: max-content; animation: marquee-rtl 150s linear infinite; }
         .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 15px; padding: 0 80px; direction: rtl; white-space: nowrap; }
         .it-text { color: #fff; font-size: 13px; font-style: italic; margin-right: 10px; }
-        @keyframes marquee { 0% { transform: translateX(-50%); } 100% { transform: translateX(0%); } }
+        @keyframes marquee-rtl { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
 
         /* SIDEBAR */
         .sidebar { position: fixed; top: 0; left: -330px; width: 310px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.5s; padding: 40px 20px; color: white; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
@@ -65,35 +68,24 @@
 </head>
 <body onclick="unlockAudio(); startWakeLock();">
 
-    <!-- AUDIO SILENZIOSO PER MANTENERE IL TELEFONO SVEGLIO -->
-    <audio id="silent-audio" loop>
-        <source src="https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3" type="audio/mp3">
-    </audio>
+    <audio id="silent-audio" loop><source src="https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3" type="audio/mp3"></audio>
 
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
 
-    <div class="header">
-        <h1 class="ramadan-title">رمضان مبارك</h1>
-    </div>
+    <div class="header"><h1 class="ramadan-title">رمضان مبارك</h1></div>
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <h2>أدوات Muslim Pro</h2>
-        
         <button class="mp-btn btn-gold" onclick="openModal('qibla-modal')">🧭 اتجاه القبلة (Qibla)</button>
         <button class="mp-btn btn-gold" onclick="openModal('tasbih-modal')">📿 المسبحة (Tasbih)</button>
         <button class="mp-btn" style="background: white; color: black;" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 أقرب مسجد (Mappa)</button>
-
         <div style="margin-top: 30px; border-top: 1px solid #444; padding-top: 20px;">
             <label style="color:var(--mp-gold); font-size: 14px;">🔔 نوع التنبيه</label>
-            <select id="notif-type" class="mp-select">
-                <option value="athan">أذان + إشعار Banner</option>
-                <option value="bip">رنين + إشعار Banner</option>
-            </select>
+            <select id="notif-type" class="mp-select"><option value="athan">أذان + إشعار Banner</option><option value="bip">رنين + إشعار Banner</option></select>
             <button class="mp-btn btn-gold" onclick="requestPermission()">تفعيل الإشعارات (Attiva)</button>
             <button class="mp-btn" style="background: #ff3e3e; color: white;" onclick="testNotif()">تجربة الإشعار (Test)</button>
         </div>
-        
         <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important;" onclick="toggleMenu()">إغلاق (Chiudi)</button>
     </div>
 
@@ -120,75 +112,45 @@
 
     <script>
         const timetable = {
-            "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1},
-            "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
-            "20-2": {f:"05:42", dh:"12:25", a:"15:21", m:"17:48", i:"19:07", r:3},
-            "21-2": {f:"05:41", dh:"12:25", a:"15:22", m:"17:50", i:"19:08", r:4},
-            "22-2": {f:"05:39", dh:"12:24", a:"15:23", m:"17:51", i:"19:10", r:5},
-            "23-2": {f:"05:38", dh:"12:24", a:"15:24", m:"17:52", i:"19:11", r:6},
-            "24-2": {f:"05:36", dh:"12:24", a:"15:25", m:"17:54", i:"19:12", r:7},
-            "25-2": {f:"05:35", dh:"12:24", a:"15:25", m:"17:55", i:"19:13", r:8},
-            "26-2": {f:"05:33", dh:"12:24", a:"15:26", m:"17:56", i:"19:15", r:9},
-            "27-2": {f:"05:31", dh:"12:24", a:"15:27", m:"17:57", i:"19:16", r:10},
-            "28-2": {f:"05:30", dh:"12:23", a:"15:28", m:"17:59", i:"19:17", r:11},
-            "1-3":  {f:"05:28", dh:"12:23", a:"15:29", m:"18:00", i:"19:18", r:12},
-            "2-3":  {f:"05:27", dh:"12:23", a:"15:30", m:"18:01", i:"19:19", r:13},
-            "3-3":  {f:"05:25", dh:"12:23", a:"15:31", m:"18:02", i:"19:21", r:14},
-            "4-3":  {f:"05:23", dh:"12:23", a:"15:31", m:"18:04", i:"19:22", r:15},
-            "5-3":  {f:"05:22", dh:"12:22", a:"15:32", m:"18:05", i:"19:23", r:16},
-            "6-3":  {f:"05:20", dh:"12:22", a:"15:33", m:"18:06", i:"19:24", r:17},
-            "7-3":  {f:"05:18", dh:"12:22", a:"15:34", m:"18:07", i:"19:26", r:18},
-            "8-3":  {f:"05:17", dh:"12:22", a:"15:35", m:"18:09", i:"19:27", r:19},
-            "9-3":  {f:"05:15", dh:"12:21", a:"15:35", m:"18:10", i:"19:28", r:20},
-            "10-3": {f:"05:13", dh:"12:21", a:"15:36", m:"18:11", i:"19:29", r:21},
-            "11-3": {f:"05:11", dh:"12:21", a:"15:37", m:"18:12", i:"19:31", r:22},
-            "12-3": {f:"05:09", dh:"12:21", a:"15:38", m:"18:13", i:"19:32", r:23},
-            "13-3": {f:"05:08", dh:"12:20", a:"15:38", m:"18:15", i:"19:33", r:24},
-            "14-3": {f:"05:06", dh:"12:20", a:"15:39", m:"18:16", i:"19:34", r:25},
-            "15-3": {f:"05:04", dh:"12:20", a:"15:40", m:"18:17", i:"19:36", r:26},
-            "16-3": {f:"05:02", dh:"12:20", a:"15:40", m:"18:18", i:"19:37", r:27},
-            "17-3": {f:"05:00", dh:"12:19", a:"15:41", m:"18:19", i:"19:38", r:28},
-            "18-3": {f:"04:59", dh:"12:19", a:"15:42", m:"18:21", i:"19:39", r:29},
-            "19-3": {f:"04:57", dh:"12:19", a:"15:42", m:"18:22", i:"19:41", r:30}
+            "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1}, "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
+            "20-2": {f:"05:42", dh:"12:25", a:"15:21", m:"17:48", i:"19:07", r:3}, "21-2": {f:"05:41", dh:"12:25", a:"15:22", m:"17:50", i:"19:08", r:4},
+            "22-2": {f:"05:39", dh:"12:24", a:"15:23", m:"17:51", i:"19:10", r:5}, "23-2": {f:"05:38", dh:"12:24", a:"15:24", m:"17:52", i:"19:11", r:6},
+            "24-2": {f:"05:36", dh:"12:24", a:"15:25", m:"17:54", i:"19:12", r:7}, "25-2": {f:"05:35", dh:"12:24", a:"15:25", m:"17:55", i:"19:13", r:8},
+            "26-2": {f:"05:33", dh:"12:24", a:"15:26", m:"17:56", i:"19:15", r:9}, "27-2": {f:"05:31", dh:"12:24", a:"15:27", m:"17:57", i:"19:16", r:10},
+            "28-2": {f:"05:30", dh:"12:23", a:"15:28", m:"17:59", i:"19:17", r:11}, "1-3":  {f:"05:28", dh:"12:23", a:"15:29", m:"18:00", i:"19:18", r:12},
+            "2-3":  {f:"05:27", dh:"12:23", a:"15:30", m:"18:01", i:"19:19", r:13}, "3-3":  {f:"05:25", dh:"12:23", a:"15:31", m:"18:02", i:"19:21", r:14},
+            "4-3":  {f:"05:23", dh:"12:23", a:"15:31", m:"18:04", i:"19:22", r:15}, "5-3":  {f:"05:22", dh:"12:22", a:"15:32", m:"18:05", i:"19:23", r:16},
+            "6-3":  {f:"05:20", dh:"12:22", a:"15:33", m:"18:06", i:"19:24", r:17}, "7-3":  {f:"05:18", dh:"12:22", a:"15:34", m:"18:07", i:"19:26", r:18},
+            "8-3":  {f:"05:17", dh:"12:22", a:"15:35", m:"18:09", i:"19:27", r:19}, "9-3":  {f:"05:15", dh:"12:21", a:"15:35", m:"18:10", i:"19:28", r:20},
+            "10-3": {f:"05:13", dh:"12:21", a:"15:36", m:"18:11", i:"19:29", r:21}, "11-3": {f:"05:11", dh:"12:21", a:"15:37", m:"18:12", i:"19:31", r:22},
+            "12-3": {f:"05:09", dh:"12:21", a:"15:38", m:"18:13", i:"19:32", r:23}, "13-3": {f:"05:08", dh:"12:20", a:"15:38", m:"18:15", i:"19:33", r:24},
+            "14-3": {f:"05:06", dh:"12:20", a:"15:39", m:"18:16", i:"19:34", r:25}, "15-3": {f:"05:04", dh:"12:20", a:"15:40", m:"18:17", i:"19:36", r:26},
+            "16-3": {f:"05:02", dh:"12:20", a:"15:40", m:"18:18", i:"19:37", r:27}, "17-3": {f:"05:00", dh:"12:19", a:"15:41", m:"18:19", i:"19:38", r:28},
+            "18-3": {f:"04:59", dh:"12:19", a:"15:42", m:"18:21", i:"19:39", r:29}, "19-3": {f:"04:57", dh:"12:19", a:"15:42", m:"18:22", i:"19:41", r:30}
         };
 
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
         const hadithFull = [
             {ar: "إنما الأعمال بالنيات", it: "Le azioni dipendono dalle intenzioni"},
-            {ar: "بني الإسلام على خمس", it: "L'Islam si basa su cinque pilastri"},
+            {ar: "بني الإسلام على خمس", it: "L'Islam è edificato su cinque pilastri"},
             {ar: "الكلمة الطيبة صدقة", it: "La parola buona è carità"},
             {ar: "لا تغضب", it: "Non arrabbiarti"},
-            {ar: "خيركم من تعلم القرآن وعلمه", it: "Il migliore è chi impara il Corano"}
+            {ar: "خيركم من تعلم القرآن وعلمه", it: "Il migliore tra voi è chi impara il Corano e lo insegna"},
+            {ar: "الطهور شطر الإيمان", it: "La purificazione è metà della fede"},
+            {ar: "من كان يؤمن بالله واليوم الآخر فليقل خيراً أو ليصمت", it: "Chi crede in Allah e nell'Ultimo Giorno dica il bene o taccia"}
         ];
 
         let audioUnlocked = false; let lastNotifiedTime = ""; let tasbihCount = 0;
 
-        function unlockAudio() {
-            if (!audioUnlocked) {
-                document.getElementById('silent-audio').play(); // Avvia il trucco del silenzio
-                audioUnlocked = true;
-            }
-        }
-
-        // --- SISTEMA ANTI-SOSPENSIONE (WAKE LOCK) ---
-        async function startWakeLock() {
-            try {
-                if ('wakeLock' in navigator) {
-                    await navigator.wakeLock.request('screen');
-                    console.log("Sveglia attiva: il telefono non dormirà.");
-                }
-            } catch (err) { console.log("WakeLock non supportato."); }
-        }
+        function unlockAudio() { if (!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked = true; } }
+        async function startWakeLock() { try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (err) {} }
 
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; toggleMenu(); }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        function countTasbih() {
-            tasbihCount++; document.getElementById('t-count').innerText = tasbihCount;
-            if (navigator.vibrate) navigator.vibrate(50);
-        }
+        function countTasbih() { tasbihCount++; document.getElementById('t-count').innerText = tasbihCount; if (navigator.vibrate) navigator.vibrate(50); }
         function resetTasbih() { tasbihCount = 0; document.getElementById('t-count').innerText = 0; }
 
         window.addEventListener('deviceorientationabsolute', (e) => {
@@ -201,17 +163,13 @@
         function triggerBanner(title, body) {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification(title, {
-                        body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-                        vibrate: [500, 100, 500, 100, 500], requireInteraction: true, tag: 'prayer'
-                    });
+                    reg.showNotification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png', vibrate: [500, 100, 500], requireInteraction: true, tag: 'prayer' });
                 });
             }
-            const audio = new Audio(document.getElementById('notif-type').value === 'athan' ? "https://www.islamcan.com/audio/adhan/azan1.mp3" : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-            audio.play();
+            new Audio(document.getElementById('notif-type').value === 'athan' ? "https://www.islamcan.com/audio/adhan/azan1.mp3" : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play();
         }
 
-        function testNotif() { triggerBanner("تجربة Muslim Pro", "Banner di Prova manuale"); }
+        function testNotif() { triggerBanner("تجربة Muslim Pro", "Banner di Prova"); }
 
         function update() {
             const now = new Date();
