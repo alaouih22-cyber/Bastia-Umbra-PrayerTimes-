@@ -15,11 +15,7 @@
         }
 
         /* RESET */
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            border: none; outline: none !important;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; border: none; outline: none !important; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--mp-bg);
@@ -30,104 +26,69 @@
 
         /* HEADER */
         .header {
-            width: 100%; background: var(--mp-dark);
-            padding: 30px 0; text-align: center;
-            border-bottom: 4px solid var(--mp-gold);
-            position: relative; flex-shrink: 0;
+            width: 100%; background: var(--mp-dark); padding: 30px 0; text-align: center;
+            border-bottom: 4px solid var(--mp-gold); position: relative; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .ramadan-title { color: var(--mp-gold); font-size: 30px; font-weight: 900; }
         .menu-btn { position: absolute; left: 20px; top: 20px; color: var(--mp-gold); font-size: 35px; cursor: pointer; z-index: 100; }
 
         /* DASHBOARD */
-        .dashboard {
-            width: 92%; max-width: 500px; 
-            margin: -25px 0 15px 0; 
-            display: flex; gap: 12px; z-index: 10; flex-shrink: 0;
-        }
+        .dashboard { width: 92%; max-width: 500px; margin: -25px 0 15px 0; display: flex; gap: 12px; z-index: 10; flex-shrink: 0; }
         .dash-card {
             flex: 1; background: var(--white); border-radius: 20px; padding: 15px;
-            border: 1.5px solid var(--mp-gold);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
+            border: 1.5px solid var(--mp-gold); box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center;
         }
         .timer-main { font-size: 24px; font-weight: 900; color: var(--mp-dark); }
         .date-hijri { font-size: 14px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; display: block; }
-
-        /* BARRA PROGRESSO */
         .progress-container { width: 100%; background: #e0e0e0; height: 6px; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--mp-gold); transition: width 1s linear; }
 
-        /* LISTA PREGHIERE */
+        /* PRAYER LIST */
         .prayer-list { width: 94%; flex-grow: 1; overflow-y: auto; padding: 10px 5px; display: flex; flex-direction: column; gap: 12px; }
-        .prayer-card {
-            display: flex; justify-content: space-between; align-items: center;
-            background: var(--white); padding: 18px 25px; 
-            border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        }
+        .prayer-card { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 18px 25px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
         .prayer-card.active { border: 2.5px solid var(--mp-gold); background: #fffcf5; }
-
         .p-right { display: flex; align-items: center; gap: 18px; }
         .p-name { font-size: 22px; font-weight: 800; color: var(--mp-dark); }
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* HADITH STRIP INFINITO (LTR) */
-        .hadith-footer {
-            width: 100%; background: var(--mp-dark);
-            padding: 15px 0; border-top: 3px solid var(--mp-gold);
-            overflow: hidden; flex-shrink: 0;
-            direction: ltr !important; 
-        }
-        .hadith-track {
-            display: flex; width: max-content;
-            animation: marquee 300s linear infinite; /* Molto lungo per leggere tutto */
-        }
-        .hadith-text {
-            color: var(--mp-gold); font-weight: 600; font-size: 15px;
-            padding: 0 80px; direction: rtl; white-space: nowrap;
-        }
+        /* TICKER HADITH */
+        .hadith-footer { width: 100%; background: var(--mp-dark); padding: 15px 0; border-top: 3px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; }
+        .hadith-track { display: flex; width: max-content; animation: marquee 350s linear infinite; }
+        .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 15px; padding: 0 80px; direction: rtl; white-space: nowrap; }
         .it-text { color: #fff; font-size: 13px; font-style: italic; margin-right: 10px; }
-
-        @keyframes marquee {
-            0% { transform: translateX(-50%); }
-            100% { transform: translateX(0%); }
-        }
+        @keyframes marquee { 0% { transform: translateX(-50%); } 100% { transform: translateX(0%); } }
 
         /* SIDEBAR */
         .sidebar {
             position: fixed; top: 0; left: -330px; width: 310px; height: 100%;
             background: var(--mp-dark); z-index: 2000; transition: 0.5s;
             padding: 40px 20px; color: white; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-            overflow-y: auto;
         }
         .sidebar.open { left: 0; }
-        .sidebar h2 { color: var(--mp-gold); margin-bottom: 20px; font-size: 22px; border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; text-align: center;}
-        
-        .sidebar-section {
-            background: rgba(255,255,255,0.05);
-            padding: 15px; border-radius: 15px; border: 1px solid var(--mp-gold);
-            margin-bottom: 20px; text-align: center;
-        }
-
-        .tasbih-btn {
-            width: 70px; height: 70px; border-radius: 50%; background: var(--mp-gold);
-            color: var(--mp-dark); font-size: 24px; font-weight: 900; margin: 10px auto;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .qibla-compass {
-            width: 100px; height: 100px; border: 2px solid var(--mp-gold);
-            border-radius: 50%; margin: 10px auto; position: relative;
-            background: url('https://cdn-icons-png.flaticon.com/512/149/149022.png') center/contain;
-        }
-        .qibla-needle {
-            width: 3px; height: 40px; background: #ff4d4d; position: absolute;
-            left: 50%; top: 10%; transform-origin: bottom center;
-        }
-
-        .mp-select, .mp-btn { width: 100%; padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: bold; }
-        .mp-select { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); }
+        .sidebar h2 { color: var(--mp-gold); margin-bottom: 25px; border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; text-align: center; }
+        .mp-btn { width: 100%; padding: 14px; border-radius: 12px; margin-top: 15px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
         .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
+        .mp-select { width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); margin-top: 5px; }
+
+        /* MODAL WINDOWS (QIBLA & TASBIH) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 3000; display: none;
+            flex-direction: column; align-items: center; justify-content: center; color: white;
+        }
+        .modal-card { background: var(--mp-dark); width: 90%; max-width: 400px; padding: 30px; border-radius: 30px; border: 2px solid var(--mp-gold); text-align: center; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: var(--mp-gold); cursor: pointer; }
+
+        /* PROFESSIONAL COMPASS */
+        .compass-ui { width: 250px; height: 250px; margin: 20px auto; position: relative; border: 5px solid var(--mp-gold); border-radius: 50%; background: #002b22; box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
+        .compass-disk { width: 100%; height: 100%; background: url('https://i.imgur.com/vOnG7C1.png') center/cover; transition: transform 0.1s ease-out; }
+        .qibla-indicator { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #ff3e3e; font-size: 40px; font-weight: bold; z-index: 5; text-shadow: 0 0 10px red; }
+
+        /* TASBIH UI */
+        .tasbih-display { font-size: 80px; font-weight: 900; color: var(--mp-gold); margin: 20px 0; }
+        .tasbih-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--mp-gold); color: var(--mp-dark); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 40px; box-shadow: 0 0 30px var(--mp-gold); cursor: pointer; active { transform: scale(0.95); } }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -138,34 +99,49 @@
         <h1 class="ramadan-title">رمضان مبارك</h1>
     </div>
 
-    <!-- SIDEBAR AGGIORNATA -->
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <h2>أدوات Muslim Pro</h2>
         
-        <div class="sidebar-section">
-            <span style="color:var(--mp-gold); font-weight: bold;">القبلة (Qibla)</span>
-            <div class="qibla-compass"><div class="qibla-needle" id="needle"></div></div>
-            <small id="qibla-dir" style="font-size: 11px;">Punta il telefono verso la Mecca</small>
-        </div>
+        <button class="mp-btn btn-gold" onclick="openModal('qibla-modal')">🧭 اتجاه القبلة (Qibla)</button>
+        <button class="mp-btn btn-gold" onclick="openModal('tasbih-modal')">📿 المسبحة (Tasbih)</button>
+        <button class="mp-btn" style="background: white; color: black;" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 أقرب مسجد (Mappa)</button>
 
-        <div class="sidebar-section">
-            <span style="color:var(--mp-gold); font-weight: bold;">مسبحة (Tasbih)</span>
-            <div class="tasbih-btn" id="t-count" onclick="countTasbih()">0</div>
-            <small onclick="resetTasbih()" style="cursor:pointer; text-decoration: underline; font-size: 11px;">Reset</small>
-        </div>
-
-        <div class="sidebar-section">
-            <span style="color:var(--mp-gold); font-weight: bold;">إعدادات الإشعارات</span>
+        <div style="margin-top: 30px; border-top: 1px solid #444; padding-top: 20px;">
+            <label style="color:var(--mp-gold); font-size: 14px;">🔔 نوع التنبيه</label>
             <select id="notif-type" class="mp-select">
                 <option value="athan">أذان + إشعار Banner</option>
                 <option value="bip">رنين + إشعار Banner</option>
             </select>
             <button class="mp-btn btn-gold" onclick="enableNotifs()">تفعيل الإشعارات (Attiva)</button>
+            <button class="mp-btn" style="background: #ff3e3e; color: white;" onclick="testNotif()">تجربة الإشعار (Test Banner)</button>
         </div>
-
-        <button onclick="window.open('https://www.google.com/maps/search/mosque+near+me')" class="mp-btn" style="background:white; color:black;">🕌 أقرب مسجد (Mappa)</button>
         
-        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important; margin-bottom: 30px;" onclick="toggleMenu()">إغلاق (Chiudi)</button>
+        <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important;" onclick="toggleMenu()">إغلاق (Chiudi)</button>
+    </div>
+
+    <!-- QIBLA MODAL -->
+    <div class="modal-overlay" id="qibla-modal">
+        <div class="modal-card">
+            <span class="close-modal" onclick="closeModal('qibla-modal')">&times;</span>
+            <h3 style="color: var(--mp-gold);">اتجاه القبلة</h3>
+            <div class="compass-ui">
+                <div class="qibla-indicator">▼</div>
+                <div class="compass-disk" id="compass-disk"></div>
+            </div>
+            <p id="qibla-status" style="font-size: 14px;">حرّك الهاتف لمعايرة الاتجاه</p>
+        </div>
+    </div>
+
+    <!-- TASBIH MODAL -->
+    <div class="modal-overlay" id="tasbih-modal">
+        <div class="modal-card">
+            <span class="close-modal" onclick="closeModal('tasbih-modal')">&times;</span>
+            <h3 style="color: var(--mp-gold);">المسبحة الإلكترونية</h3>
+            <div class="tasbih-display" id="t-count">0</div>
+            <div class="tasbih-circle" onclick="countTasbih()">اضغط</div>
+            <p onclick="resetTasbih()" style="margin-top: 20px; cursor: pointer; text-decoration: underline;">إعادة ضبط (Reset)</p>
+        </div>
     </div>
 
     <!-- DASHBOARD -->
@@ -182,16 +158,14 @@
         </div>
     </div>
 
-    <!-- LISTA PREGHIERE -->
     <div class="prayer-list" id="list-container"></div>
 
-    <!-- HADITH FOOTER -->
     <div class="hadith-footer">
         <div class="hadith-track" id="h-track"></div>
     </div>
 
     <script>
-        // TABELLA ORARI BASTIA UMBRA
+        // TABELLA ORARI BASTIA UMBRA 18/2 - 19/3
         const timetable = {
             "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1},
             "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
@@ -227,28 +201,12 @@
 
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
-
-        const hadithFull = [
-            {ar: "إنما الأعمال بالنيات وإنما لكل امرئ ما نوى", it: "Le azioni dipendono dalle intenzioni, e ogni uomo avrà ciò che ha inteso."},
-            {ar: "بني الإسلام على خمس: شهادة أن لا إله إلا الله وأن محمدا رسول الله", it: "L'Islam è edificato su cinque pilastri: la testimonianza che non c'è altro dio che Allah..."},
-            {ar: "من كان يؤمن بالله واليوم الآخر فليقل خيرا أو ليصمت", it: "Chi crede in Allah e nell'Ultimo Giorno, dica il bene o taccia."},
-            {ar: "الدين النصيحة", it: "La religione è sincerità e buon consiglio."},
-            {ar: "اتق الله حيثما كنت، وأتبع السيئة الحسنة تمحها", it: "Temi Allah ovunque tu sia, e fa seguire alla cattiva azione una buona affinché la cancelli."},
-            {ar: "الكلمة الطيبة صدقة", it: "La parola buona è carità."},
-            {ar: "خيركم من تعلم القرآن وعلمه", it: "Il migliore tra voi è chi impara il Corano e lo insegna."},
-            {ar: "لا تغضب", it: "Non arrabbiarti."},
-            {ar: "المؤمن مـرآة المؤمن", it: "Il credente è lo specchio del credente."},
-            {ar: "من سلك طريقا يلتمس فيه علما سهل الله له به طريقا إلى الجنة", it: "Chi intraprende una via per cercare la conoscenza, Allah gli faciliterà la via per il Paradiso."},
-            {ar: "لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه", it: "Nessuno di voi è credente finché non ama per suo fratello ciò che ama per se stesso."},
-            {ar: "الطهور شطر الإيمان", it: "La purificazione è metà della fede."},
-            {ar: "الحياء من الإيمان", it: "La modestia fa parte della fede."},
-            {ar: "الدال على الخير كفاعله", it: "Chi indica il bene è come colui che lo compie."},
-            {ar: "أحب الأعمال إلى الله أدومها وإن قل", it: "Le azioni più amate da Allah sono le più costanti, anche se piccole."},
-            {ar: "من صام رمضان إيمانا واحتسابا غفر له ما تقدم من ذنبه", it: "Chi digiuna il mese di Ramadan con fede e speranza, gli saranno perdonati i peccati passati."},
-            {ar: "إن الله جميل يحب الجمال", it: "In verità Allah è Bello e ama la bellezza."},
-            {ar: "تبسمك في وجه أخيك لك صدقة", it: "Il tuo sorriso al fratello è carità."},
-            {ar: "يسروا ولا تعسروا، وبشروا ولا تنفروا", it: "Rendete le cose facili e non difficili, date buone notizie e non allontanate le persone."},
-            {ar: "الصيام جنة", it: "Il digiuna è uno scudo."}
+        const hadiths = [
+            {ar: "إنما الأعمال بالنيات", it: "Le azioni dipendono dalle intenzioni"},
+            {ar: "بني الإسلام على خمس", it: "L'Islam è edificato su cinque pilastri"},
+            {ar: "الكلمة الطيبة صدقة", it: "La parola buona è carità"},
+            {ar: "لا تغضب", it: "Non arrabbiarti"},
+            {ar: "خيركم من تعلم القرآن وعلمه", it: "Il migliore tra voi è chi impara il Corano e lo insegna"}
         ];
 
         let audioUnlocked = false;
@@ -257,41 +215,46 @@
 
         function unlockAudio() { audioUnlocked = true; }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; toggleMenu(); }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         // TASBIH
-        window.countTasbih = () => {
-            tasbihCount++;
-            document.getElementById('t-count').innerText = tasbihCount;
+        function countTasbih() {
+            tasbihCount++; document.getElementById('t-count').innerText = tasbihCount;
             if (navigator.vibrate) navigator.vibrate(50);
             if (tasbihCount % 33 === 0) navigator.vibrate([100, 50, 100]);
-        };
-        window.resetTasbih = () => { tasbihCount = 0; document.getElementById('t-count').innerText = 0; };
+        }
+        function resetTasbih() { tasbihCount = 0; document.getElementById('t-count').innerText = 0; }
 
-        // QIBLA
+        // QIBLA PRO (Rotating Disk)
         window.addEventListener('deviceorientationabsolute', (e) => {
             let north = e.webkitCompassHeading || 360 - e.alpha;
-            let qibla = 119; // Meccah for Italy
-            document.getElementById('needle').style.transform = `rotate(${qibla - north}deg)`;
+            let qibla = 119; // Angolo per Bastia Umbra verso Makkah
+            let rotation = north - qibla;
+            document.getElementById('compass-disk').style.transform = `rotate(${-rotation}deg)`;
         });
 
-        // NOTIFICHE
-        window.enableNotifs = () => {
-            Notification.requestPermission().then(p => {
-                if(p==='granted') alert("Notifiche attivate correttamente!");
-            });
-            toggleMenu();
-        };
-
-        function sendBanner(title, body) {
+        // BANNER NOTIFICATIONS (OFFLINE READY)
+        function triggerBanner(title, body) {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png', vibrate: [400, 100, 400], requireInteraction: true });
+                    reg.showNotification(title, {
+                        body: body,
+                        icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
+                        badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
+                        vibrate: [500, 100, 500],
+                        requireInteraction: true,
+                        tag: 'prayer-time'
+                    });
                 });
             }
             const mode = document.getElementById('notif-type').value;
             const audio = new Audio(mode === 'athan' ? "https://www.islamcan.com/audio/adhan/azan1.mp3" : "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
             if(audioUnlocked) audio.play();
         }
+
+        function testNotif() { triggerBanner("تجربة Muslim Pro", "حان وقت صلاة التجربة الآن (Banner Test)"); }
+        function enableNotifs() { Notification.requestPermission(); toggleMenu(); }
 
         function update() {
             const now = new Date();
@@ -312,7 +275,7 @@
                 
                 if (timeStr === time && now.getSeconds() === 0 && lastNotifiedTime !== timeStr + k) {
                     lastNotifiedTime = timeStr + k;
-                    sendBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "Bastia Umbra - È ora della preghiera");
+                    triggerBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "Bastia Umbra - È ora della preghiera");
                 }
 
                 if (pDate > now && !nextP) { nextP = pDate; nextN = pNames[k]; }
@@ -346,10 +309,8 @@
             document.getElementById('list-container').innerHTML = html;
         }
 
-        // TICKER HADITH
         const hTrack = document.getElementById('h-track');
-        const hContent = [...hadithFull, ...hadithFull].map(h => `<span class="hadith-text">${h.ar} <span class="it-text">[${h.it}]</span></span>`).join('');
-        hTrack.innerHTML = hContent;
+        hTrack.innerHTML = [...hadiths, ...hadiths].map(h => `<span class="hadith-text">${h.ar} <span class="it-text">[${h.it}]</span></span>`).join('');
 
         if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
         setInterval(update, 500);
