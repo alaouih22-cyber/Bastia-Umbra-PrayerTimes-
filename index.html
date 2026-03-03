@@ -72,7 +72,7 @@
         .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
         .mp-select { width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); margin-top: 5px; }
 
-        /* MODAL WINDOWS (QIBLA & TASBIH) */
+        /* MODAL WINDOWS */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 3000; display: none;
@@ -81,14 +81,14 @@
         .modal-card { background: var(--mp-dark); width: 90%; max-width: 400px; padding: 30px; border-radius: 30px; border: 2px solid var(--mp-gold); text-align: center; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: var(--mp-gold); cursor: pointer; }
 
-        /* PROFESSIONAL COMPASS */
-        .compass-ui { width: 250px; height: 250px; margin: 20px auto; position: relative; border: 5px solid var(--mp-gold); border-radius: 50%; background: #002b22; box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
+        /* COMPASS */
+        .compass-ui { width: 220px; height: 220px; margin: 20px auto; position: relative; border: 5px solid var(--mp-gold); border-radius: 50%; background: #002b22; }
         .compass-disk { width: 100%; height: 100%; background: url('https://i.imgur.com/vOnG7C1.png') center/cover; transition: transform 0.1s ease-out; }
-        .qibla-indicator { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #ff3e3e; font-size: 40px; font-weight: bold; z-index: 5; text-shadow: 0 0 10px red; }
+        .qibla-indicator { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #ff3e3e; font-size: 40px; font-weight: bold; z-index: 5; }
 
-        /* TASBIH UI */
+        /* TASBIH */
         .tasbih-display { font-size: 80px; font-weight: 900; color: var(--mp-gold); margin: 20px 0; }
-        .tasbih-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--mp-gold); color: var(--mp-dark); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 40px; box-shadow: 0 0 30px var(--mp-gold); cursor: pointer; active { transform: scale(0.95); } }
+        .tasbih-circle { width: 130px; height: 130px; border-radius: 50%; background: var(--mp-gold); color: var(--mp-dark); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 30px; box-shadow: 0 0 20px var(--mp-gold); cursor: pointer; }
     </style>
 </head>
 <body onclick="unlockAudio()">
@@ -113,34 +113,30 @@
                 <option value="athan">أذان + إشعار Banner</option>
                 <option value="bip">رنين + إشعار Banner</option>
             </select>
-            <button class="mp-btn btn-gold" onclick="enableNotifs()">تفعيل الإشعارات (Attiva)</button>
+            <button class="mp-btn btn-gold" onclick="requestPermission()">تفعيل الإشعارات (Attiva)</button>
             <button class="mp-btn" style="background: #ff3e3e; color: white;" onclick="testNotif()">تجربة الإشعار (Test Banner)</button>
         </div>
         
         <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important;" onclick="toggleMenu()">إغلاق (Chiudi)</button>
     </div>
 
-    <!-- QIBLA MODAL -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="qibla-modal">
         <div class="modal-card">
             <span class="close-modal" onclick="closeModal('qibla-modal')">&times;</span>
             <h3 style="color: var(--mp-gold);">اتجاه القبلة</h3>
-            <div class="compass-ui">
-                <div class="qibla-indicator">▼</div>
-                <div class="compass-disk" id="compass-disk"></div>
-            </div>
-            <p id="qibla-status" style="font-size: 14px;">حرّك الهاتف لمعايرة الاتجاه</p>
+            <div class="compass-ui"><div class="qibla-indicator">▼</div><div class="compass-disk" id="compass-disk"></div></div>
+            <p style="font-size: 13px;">حرّك الهاتف لمعايرة الاتجاه</p>
         </div>
     </div>
 
-    <!-- TASBIH MODAL -->
     <div class="modal-overlay" id="tasbih-modal">
         <div class="modal-card">
             <span class="close-modal" onclick="closeModal('tasbih-modal')">&times;</span>
             <h3 style="color: var(--mp-gold);">المسبحة الإلكترونية</h3>
             <div class="tasbih-display" id="t-count">0</div>
             <div class="tasbih-circle" onclick="countTasbih()">اضغط</div>
-            <p onclick="resetTasbih()" style="margin-top: 20px; cursor: pointer; text-decoration: underline;">إعادة ضبط (Reset)</p>
+            <p onclick="resetTasbih()" style="margin-top: 15px; cursor: pointer; text-decoration: underline;">إعادة ضبط (Reset)</p>
         </div>
     </div>
 
@@ -160,12 +156,10 @@
 
     <div class="prayer-list" id="list-container"></div>
 
-    <div class="hadith-footer">
-        <div class="hadith-track" id="h-track"></div>
-    </div>
+    <div class="hadith-footer"><div class="hadith-track" id="h-track"></div></div>
 
     <script>
-        // TABELLA ORARI BASTIA UMBRA 18/2 - 19/3
+        // TABELLA BASTIA UMBRA
         const timetable = {
             "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1},
             "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
@@ -226,15 +220,16 @@
         }
         function resetTasbih() { tasbihCount = 0; document.getElementById('t-count').innerText = 0; }
 
-        // QIBLA PRO (Rotating Disk)
+        // QIBLA
         window.addEventListener('deviceorientationabsolute', (e) => {
             let north = e.webkitCompassHeading || 360 - e.alpha;
-            let qibla = 119; // Angolo per Bastia Umbra verso Makkah
-            let rotation = north - qibla;
-            document.getElementById('compass-disk').style.transform = `rotate(${-rotation}deg)`;
+            let qibla = 119;
+            document.getElementById('compass-disk').style.transform = `rotate(${- (north - qibla)}deg)`;
         });
 
-        // BANNER NOTIFICATIONS (OFFLINE READY)
+        // --- SISTEMA NOTIFICHE PROFESSIONALE ---
+        function requestPermission() { Notification.requestPermission(); toggleMenu(); }
+
         function triggerBanner(title, body) {
             if (Notification.permission === "granted") {
                 navigator.serviceWorker.ready.then(reg => {
@@ -242,9 +237,11 @@
                         body: body,
                         icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
                         badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-                        vibrate: [500, 100, 500],
+                        vibrate: [500, 110, 500, 110, 450, 110, 200],
                         requireInteraction: true,
-                        tag: 'prayer-time'
+                        tag: 'prayer-alert',
+                        renotify: true,
+                        priority: "high"
                     });
                 });
             }
@@ -254,13 +251,13 @@
         }
 
         function testNotif() { triggerBanner("تجربة Muslim Pro", "حان وقت صلاة التجربة الآن (Banner Test)"); }
-        function enableNotifs() { Notification.requestPermission(); toggleMenu(); }
 
         function update() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
             const dayData = timetable[dateKey] || timetable["2-3"];
             const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const seconds = now.getSeconds();
 
             document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
             document.getElementById('hijri-txt').innerText = dayData.r + " رمضان 1447";
@@ -273,7 +270,8 @@
                 const [h,m] = time.split(":");
                 const pDate = new Date(); pDate.setHours(h,m,0);
                 
-                if (timeStr === time && now.getSeconds() === 0 && lastNotifiedTime !== timeStr + k) {
+                // TRIGGER BANNER ESATTO AL SECONDO 00
+                if (timeStr === time && seconds === 0 && lastNotifiedTime !== timeStr + k) {
                     lastNotifiedTime = timeStr + k;
                     triggerBanner("حَانَ الآنَ مَوْعِدُ صَلَاةِ " + pNames[k], "Bastia Umbra - È ora della preghiera");
                 }
