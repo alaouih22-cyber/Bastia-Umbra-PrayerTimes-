@@ -1,42 +1,41 @@
-// MUSLIM PRO BASTIA - SERVICE WORKER PRO
-const CACHE_NAME = 'muslim-pro-v4';
+importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
 
-self.addEventListener('install', (e) => {
-    self.skipWaiting();
+firebase.initializeApp({
+    apiKey: "INSERISCI_LA_TUA_API_KEY",
+    projectId: "TUO-PROGETTO_ID",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
 });
 
-self.addEventListener('activate', (e) => {
-    e.waitUntil(clients.claim());
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage(function(payload) {
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
+        vibrate: [500, 110, 500],
+        requireInteraction: true,
+        tag: 'prayer-push'
+    };
+    return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// Ascolta l'evento dal file HTML per mostrare il Banner
-self.addEventListener('message', (event) => {
+self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SHOW_PRAYER_BANNER') {
         const options = {
             body: event.data.body,
             icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-            badge: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-            vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40],
-            tag: 'prayer-alert',
-            renotify: true,
-            requireInteraction: true, // Il banner non scompare finché non lo tocchi
-            priority: 2, // Massima priorità per Android
-            data: { url: './' }
+            vibrate: [500, 110, 500],
+            requireInteraction: true,
+            tag: 'prayer-alert'
         };
-
-        event.waitUntil(
-            self.registration.showNotification(event.data.title, options)
-        );
+        self.registration.showNotification(event.data.title, options);
     }
 });
 
-// Cosa succede quando clicchi sul Banner
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
     event.notification.close();
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            if (clientList.length > 0) return clientList[0].focus();
-            return clients.openWindow('./');
-        })
-    );
+    event.waitUntil(clients.openWindow('./'));
 });
