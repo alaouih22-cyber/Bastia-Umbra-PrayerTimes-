@@ -1,36 +1,10 @@
 {
   "name": "Muslim Pro Bastia",
-  "short_name": "MuslimPro",
-  "description": "Orari Preghiera Bastia Umbra",
-  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#004F3F",
-  "theme_color": "#004F3F",
   "orientation": "portrait",
-  "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Qibla",
-      "url": "./index.html#qibla",
-      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Tasbih",
-      "url": "./index.html#tasbih",
-      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
-    }
-  ]
+  "id": "com.muslimprobastia.app", 
+  "scope": "/",
+  "start_url": "/index.html",
+  "theme_color": "#004F3F",
+  "background_color": "#004F3F"
 }
