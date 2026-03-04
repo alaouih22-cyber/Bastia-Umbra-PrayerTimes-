@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Meta tag per farla sembrare una VERA APP (Toglie la barra browser) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#004F3F">
     <title>Muslim Pro Bastia</title>
+    
     <style>
         :root { --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F4F6F8; --white: #ffffff; }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
@@ -23,19 +31,19 @@
             width: 100%; background: var(--mp-dark);
             padding: 45px 0 20px 0; text-align: center;
             border-bottom: 4px solid var(--mp-gold);
-            flex-shrink: 0; z-index: 100;
+            flex-shrink: 0; z-index: 100; position: relative;
         }
         .ramadan-title { color: var(--mp-gold); font-size: 26px; font-weight: 900; }
-        .menu-btn { position: absolute; left: 20px; top: 40px; color: var(--mp-gold); font-size: 32px; cursor: pointer; }
+        .menu-btn { position: absolute; left: 20px; top: 40px; color: var(--mp-gold); font-size: 32px; cursor: pointer; z-index: 101; }
 
-        /* DASHBOARD - FIX PER EVITARE SOVRAPPOSIZIONI */
+        /* DASHBOARD (FIX PER NON SOVRAPPORRE) */
         .dashboard {
             width: 94%; margin: 15px auto;
             display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
             flex-shrink: 0;
         }
         .dash-card {
-            background: var(--white); border-radius: 20px; padding: 15px;
+            background: var(--white); border-radius: 18px; padding: 12px;
             border: 1.5px solid var(--mp-gold); text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             display: flex; flex-direction: column; justify-content: center;
@@ -46,7 +54,7 @@
         .progress-container { width: 100%; background: #eee; height: 6px; border-radius: 5px; margin-top: 8px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--mp-gold); transition: width 0.5s; }
 
-        /* LISTA PREGHIERE */
+        /* LISTA PREGHIERE SCORREVOLE */
         .prayer-list {
             width: 94%; margin: 0 auto;
             flex-grow: 1; overflow-y: auto;
@@ -64,48 +72,63 @@
         .p-icon { font-size: 24px; }
         .p-time { font-size: 20px; font-weight: 900; color: #222; }
 
+        /* SIDEBAR (RIPRISTINATA) */
+        .sidebar { 
+            position: fixed; top: 0; left: -310px; width: 300px; height: 100%; 
+            background: var(--mp-dark); z-index: 2000; transition: 0.4s; 
+            padding: 50px 20px; color: white; overflow-y: auto;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+        .sidebar.open { left: 0; }
+        .sidebar h2 { color: var(--mp-gold); text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; }
+        .mp-btn { width: 100%; padding: 14px; border-radius: 12px; margin-top: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 15px; }
+        .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
+
+        /* MODAL WINDOWS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .modal-card { background: var(--mp-dark); width: 90%; max-width: 400px; padding: 30px; border-radius: 25px; border: 2px solid var(--mp-gold); text-align: center; }
+
+        /* BUSSOLA E TASBIH */
+        .compass-ui { width: 200px; height: 200px; margin: 0 auto; border: 2px solid gold; border-radius: 50%; position: relative; }
+        #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s; }
+
         /* HADITH TICKER */
         .hadith-footer { width: 100%; background: var(--mp-dark); padding: 12px 0; border-top: 2px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; }
         .hadith-track { display: flex; width: max-content; animation: marquee-rtl 180s linear infinite; }
         .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 14px; padding: 0 50px; direction: rtl; white-space: nowrap; }
         @keyframes marquee-rtl { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        /* SIDEBAR & MODAL */
-        .sidebar { position: fixed; top: 0; left: -310px; width: 300px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.4s; padding: 40px 20px; color: white; overflow-y: auto; }
-        .sidebar.open { left: 0; }
-        .mp-btn { width: 100%; padding: 14px; border-radius: 12px; margin-top: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 15px; }
-        .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .modal-card { background: var(--mp-dark); width: 90%; padding: 30px; border-radius: 25px; border: 2px solid var(--mp-gold); text-align: center; }
     </style>
 </head>
 <body onclick="unlockAudio(); startWakeLock();">
 
+    <!-- AUDIO SILENZIOSO -->
     <audio id="silent-audio" loop><source src="https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3" type="audio/mp3"></audio>
 
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
     <div class="header"><h1 class="ramadan-title">رمضان مبارك</h1></div>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR RIPRISTINATA -->
     <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--mp-gold); text-align:center; margin-bottom:25px;">Muslim Pro Bastia</h2>
+        <h2>Muslim Pro Bastia</h2>
         <button class="mp-btn btn-gold" onclick="openModal('qibla-modal')">🧭 اتجاه القبلة (Qibla)</button>
         <button class="mp-btn btn-gold" onclick="openModal('tasbih-modal')">📿 المسبحة (Tasbih)</button>
         <button class="mp-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 أقرب مسجد</button>
-        <hr style="margin:25px 0; border:0.5px solid #555;">
+        <hr style="margin:20px 0; border:0.5px solid #555;">
         <label style="font-size:14px; color:var(--mp-gold)">🔔 نوع التنبيه</label>
         <select id="notif-type" style="width:100%; padding:12px; border-radius:8px; margin-top:8px;">
             <option value="athan">أذان كامل</option>
             <option value="bip">رنين فقط</option>
         </select>
         <button class="mp-btn btn-gold" onclick="requestPermission()">تفعيل الإشعارات</button>
+        <button class="mp-btn" style="background: #ff4747; color: white;" onclick="testNotif()">تجربة الإشعار (Test)</button>
         <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important" onclick="toggleMenu()">إغلاق</button>
     </div>
 
     <!-- MODALS -->
-    <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3 style="color:var(--mp-gold); margin-bottom:20px;">Qibla</h3><div style="width:180px; height:180px; border:2px solid gold; border-radius:50%; margin:0 auto; position:relative;"><div id="compass-disk" style="width:100%; height:100%; background:url('icon.png') center/cover; border-radius:50%;"></div></div><br><button class="mp-btn btn-gold" onclick="closeModal('qibla-modal')">OK</button></div></div>
-    <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3 style="color:var(--mp-gold)">Tasbih</h3><div id="t-count" style="font-size:60px; margin:25px 0; color:white;">0</div><button class="mp-btn btn-gold" style="height:120px; width:120px; border-radius:50%; margin:0 auto;" onclick="countTasbih()">+1</button><br><br><small onclick="resetTasbih()" style="cursor:pointer; color:var(--mp-gold)">Reset</small><br><br><button class="mp-btn" style="background:white" onclick="closeModal('tasbih-modal')">CHIUDI</button></div></div>
+    <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3 style="color:var(--mp-gold); margin-bottom:20px;">Qibla</h3><div class="compass-ui"><div id="compass-disk"></div></div><br><button class="mp-btn btn-gold" onclick="closeModal('qibla-modal')">OK</button></div></div>
+    <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3 style="color:var(--mp-gold)">Tasbih</h3><div id="t-count" style="font-size:60px; margin:20px 0; color:white;">0</div><button class="mp-btn btn-gold" style="height:100px; width:100px; border-radius:50%; margin:0 auto;" onclick="countTasbih()">+1</button><br><br><small onclick="resetTasbih()" style="cursor:pointer; color:var(--mp-gold)">Reset</small><br><br><button class="mp-btn" style="background:white" onclick="closeModal('tasbih-modal')">CHIUDI</button></div></div>
 
+    <!-- MAIN DASHBOARD -->
     <div class="dashboard">
         <div class="dash-card"><small>التاريخ</small><span class="date-hijri" id="hijri-txt">-- رمضان</span><span style="font-size:10px; color:#888;" id="g-date">--/--/----</span></div>
         <div class="dash-card"><small id="next-name">الصلاة القادمة</small><div class="timer-main" id="timer-next">00:00:00</div><div class="progress-container"><div class="progress-bar" id="p-bar"></div></div></div>
@@ -151,12 +174,15 @@
         });
 
         function requestPermission() { Notification.requestPermission(); toggleMenu(); }
+
         function triggerBanner(title) {
             if(Notification.permission === "granted" && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage({type:'SHOW_PRAYER_BANNER', title:title, body:'Bastia Umbra - È ora della preghiera'});
             }
             new Audio(document.getElementById('notif-type').value==='athan'?"https://www.islamcan.com/audio/adhan/azan1.mp3":"https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play();
         }
+
+        function testNotif() { triggerBanner("تجربة Muslim Pro"); }
 
         function update() {
             const now = new Date();
