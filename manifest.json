@@ -1,12 +1,14 @@
 {
   "name": "Muslim Pro Bastia",
   "short_name": "MuslimPro",
-  "description": "Orari Preghiera Bastia Umbra",
+  "description": "Orari Preghiera e Ramadan 2026 - Bastia Umbra",
+  "id": "com.muslimprobastia.twa",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#004F3F",
   "theme_color": "#004F3F",
   "orientation": "portrait",
+  "scope": "./",
   "icons": [
     {
       "src": "icon.png",
@@ -14,5 +16,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["lifestyle", "utilities"]
 }
