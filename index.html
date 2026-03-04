@@ -8,9 +8,7 @@
     <meta name="theme-color" content="#004F3F">
     <title>Muslim Pro - Bastia Umbra</title>
     <style>
-        :root {
-            --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F4F6F8; --white: #ffffff;
-        }
+        :root { --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F4F6F8; --white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; border: none; outline: none !important; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--mp-bg); font-family: 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; color: #333; }
         
@@ -36,7 +34,7 @@
         .p-icon { font-size: 28px; }
         .p-time { font-size: 24px; font-weight: 900; color: #222; }
 
-        /* HADITH STRIP (DA DESTRA A SINISTRA) */
+        /* HADITH TICKER (DESTRA -> SINISTRA VELOCE) */
         .hadith-footer { width: 100%; background: var(--mp-dark); padding: 15px 0; border-top: 3px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; position: relative; }
         .hadith-track { display: flex; width: max-content; animation: marquee-rtl 150s linear infinite; }
         .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 15px; padding: 0 80px; direction: rtl; white-space: nowrap; }
@@ -56,17 +54,16 @@
         .modal-card { background: var(--mp-dark); width: 90%; max-width: 400px; padding: 30px; border-radius: 30px; border: 2px solid var(--mp-gold); text-align: center; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 35px; color: var(--mp-gold); cursor: pointer; }
 
+        /* COMPASS & TASBIH */
         .compass-ui { width: 250px; height: 250px; margin: 20px auto; position: relative; border: 5px solid var(--mp-gold); border-radius: 50%; background: #002b22; box-shadow: 0 0 20px rgba(197, 160, 89, 0.4); }
         .compass-disk { width: 100%; height: 100%; background: url('https://i.imgur.com/vOnG7C1.png') center/cover; transition: transform 0.1s ease-out; border-radius: 50%; }
         .qibla-indicator { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #ff3e3e; font-size: 40px; font-weight: bold; z-index: 5; text-shadow: 0 0 10px red; }
-
         .tasbih-display { font-size: 80px; font-weight: 900; color: var(--mp-gold); margin: 20px 0; }
         .tasbih-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--mp-gold); color: var(--mp-dark); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 40px; box-shadow: 0 0 30px var(--mp-gold); cursor: pointer; }
     </style>
 </head>
 <body onclick="unlockAudio(); startWakeLock();">
 
-    <!-- AUDIO SILENZIOSO ANTI-SOSPENSIONE -->
     <audio id="silent-audio" loop><source src="https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3" type="audio/mp3"></audio>
 
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -80,13 +77,13 @@
         <button class="mp-btn" style="background: white; color: black;" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 أقرب مسجد (Mappa)</button>
 
         <div style="margin-top: 30px; border-top: 1px solid #444; padding-top: 20px;">
-            <label style="color:var(--mp-gold); font-size: 14px;">🔔 نوع التنبيه (Notifica)</label>
+            <label style="color:var(--mp-gold); font-size: 14px;">🔔 نوع التنبيه</label>
             <select id="notif-type" class="mp-select">
                 <option value="athan">أذان + إشعار Banner</option>
                 <option value="bip">رنين + إشعار Banner</option>
             </select>
-            <button class="mp-btn btn-gold" onclick="requestPermission()">تفعيل الإشعارات (Attiva)</button>
-            <button class="mp-btn" style="background: #ff3e3e; color: white;" onclick="testNotif()">تجربة الإشعار (Test Banner)</button>
+            <button class="mp-btn btn-gold" onclick="requestFirebasePermission()">تفعيل الإشعارات (Push)</button>
+            <button class="mp-btn" style="background: #ff3e3e; color: white;" onclick="testNotif()">تجربة الإشعار (Test)</button>
         </div>
         <button class="mp-btn" style="background:transparent; color:white; border:1px solid white !important; margin-bottom: 20px;" onclick="toggleMenu()">إغلاق (Chiudi)</button>
     </div>
@@ -103,6 +100,38 @@
 
     <div class="prayer-list" id="list-container"></div>
     <div class="hadith-footer"><div class="hadith-track" id="h-track"></div></div>
+
+    <!-- SDK FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+        const firebaseConfig = {
+            apiKey: "INSERISCI_LA_TUA_API_KEY",
+            authDomain: "TUO-PROGETTO.firebaseapp.com",
+            projectId: "TUO-PROGETTO_ID",
+            storageBucket: "TUO-PROGETTO.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+
+        window.requestFirebasePermission = async () => {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                const token = await getToken(messaging, { vapidKey: 'INSERISCI_LA_TUA_CHIAVE_VAPID' });
+                console.log("Token:", token);
+                alert("✅ Notifiche Push Attivate!");
+            }
+            toggleMenu();
+        };
+
+        onMessage(messaging, (payload) => {
+            triggerBanner(payload.notification.title, payload.notification.body);
+        });
+    </script>
 
     <script>
         const timetable = {
@@ -150,8 +179,6 @@
             document.getElementById('compass-disk').style.transform = `rotate(${- (north - 119)}deg)`;
         });
 
-        function requestPermission() { Notification.requestPermission(); toggleMenu(); }
-
         function triggerBanner(title, body) {
             if (Notification.permission === "granted" && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage({ type: 'SHOW_PRAYER_BANNER', title: title, body: body });
@@ -164,7 +191,7 @@
         function update() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
-            const dayData = timetable[dateKey] || timetable["3-3"];
+            const dayData = timetable[dateKey] || timetable["4-3"];
             const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
 
             document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
