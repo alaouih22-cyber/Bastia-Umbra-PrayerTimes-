@@ -1,41 +1,44 @@
-importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
+const CACHE_NAME = 'muslim-pro-v5';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.json',
+  'icon.png'
+];
 
-firebase.initializeApp({
-    apiKey: "INSERISCI_LA_TUA_API_KEY",
-    projectId: "TUO-PROGETTO_ID",
-    messagingSenderId: "SENDER_ID",
-    appId: "APP_ID"
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
+  self.skipWaiting();
 });
 
-const messaging = firebase.messaging();
+self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
 
-messaging.onBackgroundMessage(function(payload) {
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-        vibrate: [500, 110, 500],
-        requireInteraction: true,
-        tag: 'prayer-push'
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((res) => res || fetch(e.request))
+  );
+});
+
+// Gestione Banner Notifiche (quello che volevi tu)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SHOW_PRAYER_BANNER') {
+    const options = {
+      body: event.data.body,
+      icon: 'icon.png',
+      badge: 'icon.png',
+      vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40],
+      tag: 'prayer-alert',
+      renotify: true,
+      requireInteraction: true,
+      priority: 2
     };
-    return self.registration.showNotification(notificationTitle, notificationOptions);
+    event.waitUntil(self.registration.showNotification(event.data.title, options));
+  }
 });
 
-self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SHOW_PRAYER_BANNER') {
-        const options = {
-            body: event.data.body,
-            icon: 'https://cdn-icons-png.flaticon.com/512/2619/2619277.png',
-            vibrate: [500, 110, 500],
-            requireInteraction: true,
-            tag: 'prayer-alert'
-        };
-        self.registration.showNotification(event.data.title, options);
-    }
-});
-
-self.addEventListener('notificationclick', event => {
-    event.notification.close();
-    event.waitUntil(clients.openWindow('./'));
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(clients.openWindow('./'));
 });
