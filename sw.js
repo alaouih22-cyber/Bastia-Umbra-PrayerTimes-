@@ -1,8 +1,7 @@
-const CACHE_NAME = 'muslim-pro-v5';
+const CACHE_NAME = 'muslim-pro-v6';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
+  'index.html',
+  'manifest.json',
   'icon.png'
 ];
 
@@ -13,7 +12,9 @@ self.addEventListener('install', (e) => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+self.addEventListener('activate', (e) => {
+  e.waitUntil(clients.claim());
+});
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
@@ -21,24 +22,15 @@ self.addEventListener('fetch', (e) => {
   );
 });
 
-// Gestione Banner Notifiche (quello che volevi tu)
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SHOW_PRAYER_BANNER') {
-    const options = {
+    self.registration.showNotification(event.data.title, {
       body: event.data.body,
       icon: 'icon.png',
       badge: 'icon.png',
-      vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40],
-      tag: 'prayer-alert',
-      renotify: true,
+      vibrate: [500, 110, 500],
       requireInteraction: true,
-      priority: 2
-    };
-    event.waitUntil(self.registration.showNotification(event.data.title, options));
+      tag: 'prayer-alert'
+    });
   }
-});
-
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(clients.openWindow('./'));
 });
