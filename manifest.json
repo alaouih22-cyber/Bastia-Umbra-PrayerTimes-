@@ -1,10 +1,50 @@
 {
-  "name": "Muslim Pro Bastia",
+  "name": "Muslim Pro Bastia Umbra",
+  "short_name": "MuslimPro",
+  "description": "Orari Preghiera, Ramadan 1447/2026, Qibla e Tasbih per la comunità di Bastia Umbra.",
+  "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "portrait",
-  "id": "com.muslimprobastia.app", 
-  "scope": "/",
-  "start_url": "/index.html",
+  "display_override": ["window-controls-overlay", "minimal-ui"],
+  "background_color": "#004F3F",
   "theme_color": "#004F3F",
-  "background_color": "#004F3F"
+  "orientation": "portrait",
+  "categories": ["lifestyle", "utilities", "productivity"],
+  "iarc_rating_id": "e58c679a-e395-4673-bc9b-35439a66d03a",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Schermata Principale"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Orari Preghiera"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tasbih",
+      "url": "./index.html#tasbih",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    }
+  ]
 }
