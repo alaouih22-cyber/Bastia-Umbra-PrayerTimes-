@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- Meta tag per Modalità VERA APP -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,19 +11,14 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#004F3F">
-    <meta name="description" content="Muslim Pro Bastia Umbra - Orari Preghiera e Ramadan 2026">
-    
     <title>Muslim Pro Bastia</title>
     
     <style>
         :root {
-            --mp-dark: #004F3F;
-            --mp-gold: #C5A059;
-            --mp-bg: #F4F6F8;
-            --white: #ffffff;
+            --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F4F6F8; --white: #ffffff;
+            --bg-gradient: linear-gradient(180deg, #004F3F 0%, #002b22 100%);
         }
 
-        /* RESET TOTALE */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
@@ -32,20 +26,20 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex; flex-direction: column;
             height: 100vh; overflow: hidden; color: #333;
+            transition: background 1s ease;
         }
 
         /* HEADER */
         .header {
-            width: 100%; background: var(--mp-dark);
+            width: 100%; background: var(--bg-gradient);
             padding: 45px 0 20px 0; text-align: center;
             border-bottom: 4px solid var(--mp-gold);
             flex-shrink: 0; z-index: 100; position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .ramadan-title { color: var(--mp-gold); font-size: 26px; font-weight: 900; }
         .menu-btn { position: absolute; left: 20px; top: 40px; color: var(--mp-gold); font-size: 32px; cursor: pointer; z-index: 101; }
 
-        /* DASHBOARD - FIX PER EVITARE SOVRAPPOSIZIONI */
+        /* DASHBOARD */
         .dashboard {
             width: 94%; margin: 15px auto;
             display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
@@ -56,15 +50,16 @@
             border: 1.5px solid var(--mp-gold); text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             display: flex; flex-direction: column; justify-content: center;
-            min-height: 110px;
+            min-height: 110px; position: relative;
         }
         .timer-main { font-size: 19px; font-weight: 900; color: var(--mp-dark); margin-top: 5px; }
         .city-time-display { font-size: 14px; color: var(--mp-gold); font-weight: bold; margin-bottom: 3px; }
         .date-hijri { font-size: 13px; font-weight: 900; color: var(--mp-dark); }
         .progress-container { width: 100%; background: #eee; height: 6px; border-radius: 5px; margin-top: 8px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--mp-gold); transition: width 0.5s; }
+        .moon-phase { position: absolute; top: 5px; right: 8px; font-size: 18px; }
 
-        /* LISTA PREGHIERE SCORREVOLE */
+        /* LISTA PREGHIERE */
         .prayer-list {
             width: 94%; margin: 0 auto;
             flex-grow: 1; overflow-y: auto;
@@ -73,7 +68,7 @@
         }
         .prayer-card {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--white); padding: 18px 25px; border-radius: 18px;
+            background: var(--white); padding: 18px 20px; border-radius: 18px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
         .prayer-card.active { border: 2.5px solid var(--mp-gold); background: #fffcf5; }
@@ -82,27 +77,26 @@
         .p-icon { font-size: 26px; }
         .p-time { font-size: 22px; font-weight: 900; color: #222; }
 
-        /* SIDEBAR COMPLETA */
-        .sidebar { 
-            position: fixed; top: 0; left: -310px; width: 300px; height: 100%; 
-            background: var(--mp-dark); z-index: 2000; transition: 0.4s; 
-            padding: 50px 20px; color: white; overflow-y: auto;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
+        /* SIDEBAR */
+        .sidebar { position: fixed; top: 0; left: -310px; width: 300px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.4s; padding: 50px 20px; color: white; overflow-y: auto; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
         .sidebar.open { left: 0; }
         .sidebar h2 { color: var(--mp-gold); text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--mp-gold); padding-bottom: 10px; }
         .mp-btn { width: 100%; padding: 14px; border-radius: 12px; margin-top: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 15px; }
         .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
         .mp-select { width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--mp-gold); margin-top: 5px; }
 
-        /* MODAL WINDOWS */
+        /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; }
         .modal-card { background: var(--mp-dark); width: 90%; max-width: 400px; padding: 30px; border-radius: 25px; border: 2px solid var(--mp-gold); text-align: center; }
 
-        /* BUSSOLA E TASBIH UI */
+        /* TOOLS UI */
         .compass-ui { width: 200px; height: 200px; margin: 0 auto; border: 3px solid gold; border-radius: 50%; position: relative; background: #002b22; }
         #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s ease-out; }
         .qibla-indicator { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); color: red; font-size: 30px; z-index: 10; }
+
+        /* ASMA UL HUSNA LIST */
+        .names-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 300px; overflow-y: auto; margin-top: 15px; padding: 5px; }
+        .name-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; border: 1px solid var(--mp-gold); }
 
         /* HADITH TICKER */
         .hadith-footer { width: 100%; background: var(--mp-dark); padding: 12px 0; border-top: 2px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; position: relative; }
@@ -124,14 +118,15 @@
         <h2>Muslim Pro Bastia</h2>
         <button class="mp-btn btn-gold" onclick="openModal('qibla-modal')">🧭 اتجاه القبلة (Qibla)</button>
         <button class="mp-btn btn-gold" onclick="openModal('tasbih-modal')">📿 المسبحة (Tasbih)</button>
+        <button class="mp-btn btn-gold" onclick="openModal('names-modal')">✨ أسماء الله الحسنى (99 Nomi)</button>
         <button class="mp-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 أقرب مسجد (Mappa)</button>
         
-        <hr style="margin:25px 0; border:0.5px solid #555;">
+        <hr style="margin:20px 0; border:0.5px solid #555;">
         
         <label style="font-size:14px; color:var(--mp-gold)">🔔 نوع التنبيه (Notifica)</label>
         <select id="notif-type" class="mp-select">
             <option value="athan">أذان كامل</option>
-            <option value="bip">رنين solo Banner</option>
+            <option value="bip">Suono solo Banner</option>
         </select>
         
         <button class="mp-btn btn-gold" onclick="requestPermission()">تفعيل الإشعارات (Attiva)</button>
@@ -141,30 +136,16 @@
     </div>
 
     <!-- MODALS -->
-    <div class="modal-overlay" id="qibla-modal">
-        <div class="modal-card">
-            <h3 style="color:var(--mp-gold); margin-bottom:20px;">Qibla</h3>
-            <div class="compass-ui"><div class="qibla-indicator">▼</div><div id="compass-disk"></div></div>
-            <p style="font-size:12px; margin-top:15px;">Ruota il telefono verso la Mecca</p>
-            <button class="mp-btn btn-gold" onclick="closeModal('qibla-modal')">CHIUDI</button>
-        </div>
-    </div>
+    <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3 style="color:var(--mp-gold); margin-bottom:20px;">Qibla</h3><div class="compass-ui"><div class="qibla-indicator">▼</div><div id="compass-disk"></div></div><button class="mp-btn btn-gold" onclick="closeModal('qibla-modal')">OK</button></div></div>
+    
+    <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3>Tasbih</h3><div id="t-count" style="font-size:60px; margin:20px 0;">0</div><button class="mp-btn btn-gold" style="height:100px; width:100px; border-radius:50%; margin:0 auto;" onclick="countTasbih()">+1</button><br><small onclick="resetTasbih()" style="cursor:pointer; color:var(--mp-gold)">Reset</small><br><br><button class="mp-btn" style="background:white" onclick="closeModal('tasbih-modal')">OK</button></div></div>
 
-    <div class="modal-overlay" id="tasbih-modal">
-        <div class="modal-card">
-            <h3 style="color:var(--mp-gold)">Tasbih</h3>
-            <div id="t-count" style="font-size:60px; margin:20px 0; color:white;">0</div>
-            <button class="mp-btn btn-gold" style="height:100px; width:100px; border-radius:50%; margin:0 auto;" onclick="countTasbih()">+1</button>
-            <br><br>
-            <small onclick="resetTasbih()" style="cursor:pointer; color:var(--mp-gold); text-decoration:underline;">Reset</small>
-            <br><br>
-            <button class="mp-btn" style="background:white" onclick="closeModal('tasbih-modal')">CHIUDI</button>
-        </div>
-    </div>
+    <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3 style="color:var(--mp-gold)">أسماء الله الحسنى</h3><div class="names-grid" id="names-list"></div><button class="mp-btn btn-gold" style="margin-top:15px" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
 
     <!-- MAIN DASHBOARD -->
     <div class="dashboard">
         <div class="dash-card">
+            <div class="moon-phase" id="moon-icon">🌙</div>
             <div id="city-display" class="city-time-display">روما: 00:00</div>
             <span class="date-hijri" id="hijri-txt">-- رمضان</span>
             <span style="font-size:10px; color:#888;" id="g-date">--/--/----</span>
@@ -177,10 +158,7 @@
     </div>
 
     <div class="prayer-list" id="list-container"></div>
-
-    <div class="hadith-footer">
-        <div class="hadith-track" id="h-track"></div>
-    </div>
+    <div class="hadith-footer"><div class="hadith-track" id="h-track"></div></div>
 
     <script>
         const timetable = {
@@ -203,83 +181,51 @@
 
         const pNames = { f:"الفجر", dh:"الظهر", a:"العصر", m:"المغرب", i:"العشاء" };
         const pIcons = { f:"🌅", dh:"☀️", a:"🌤️", m:"🌇", i:"🌙" };
-        const hadithFull = [
-            {ar: "إنما الأعمال بالنيات", it: "Le azioni dipendono dalle intenzioni"},
-            {ar: "بني الإسلام على خمس", it: "L'Islam è edificato su cinque pilastri"},
-            {ar: "الكلمة الطيبة صدقة", it: "La parola buona è carità"},
-            {ar: "لا تغضب", it: "Non arrabbiarti"},
-            {ar: "خيركم من تعلم القرآن وعلمه", it: "Il migliore tra voi è chi impara il Corano"},
-            {ar: "الطهور شطر الإيمان", it: "La purificazione è metà della fede"}
-        ];
+        const hadithFull = [{ar:"إنما الأعمال بالنيات", it:"Le azioni dipendono dalle intenzioni"}, {ar:"بني الإسلام على خمس", it:"L'Islam si basa su 5 pilastri"}, {ar:"الكلمة الطيبة صدقة", it:"La parola buona è carità"}];
+        const namesOfAllah = [{a:"الرحمن", i:"Il Misericordioso"}, {a:"الرحيم", i:"Il Compassionevole"}, {a:"الملك", i:"Il Sovrano"}, {a:"القدوس", i:"Il Santo"}];
 
         let audioUnlocked = false; let lastT = ""; let tCount = 0;
 
-        // --- SISTEMA AUDIO E ANTI-SOSPENSIONE ---
-        function unlockAudio() {
-            if (!audioUnlocked) {
-                document.getElementById('silent-audio').play().catch(e=>{});
-                audioUnlocked = true;
-            }
-        }
-        async function startWakeLock() {
-            try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (err) {}
-        }
-
-        // --- UI GESTIONE ---
+        function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
+        async function startWakeLock() { try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){} }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; toggleMenu(); }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        // --- TASBIH ---
-        function countTasbih() {
-            tCount++; document.getElementById('t-count').innerText = tCount;
-            if (navigator.vibrate) navigator.vibrate(50);
-        }
-        function resetTasbih() { tCount = 0; document.getElementById('t-count').innerText = 0; }
-
-        // --- QIBLA ---
+        function openModal(id) { document.getElementById(id).style.display='flex'; toggleMenu(); }
+        function closeModal(id) { document.getElementById(id).style.display='none'; }
+        function countTasbih() { tCount++; document.getElementById('t-count').innerText=tCount; if(navigator.vibrate) navigator.vibrate(50); }
+        function resetTasbih() { tCount=0; document.getElementById('t-count').innerText=0; }
+        
         window.addEventListener('deviceorientationabsolute', (e) => {
             let north = e.webkitCompassHeading || 360 - e.alpha;
             document.getElementById('compass-disk').style.transform = `rotate(${- (north - 119)}deg)`;
         });
 
-        // --- NOTIFICHE ---
         function requestPermission() { Notification.requestPermission(); toggleMenu(); }
-
         function triggerBanner(title) {
-            if (Notification.permission === "granted" && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'SHOW_PRAYER_BANNER',
-                    title: title,
-                    body: 'Bastia Umbra - È ora della preghiera'
-                });
+            if(Notification.permission === "granted" && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({type:'SHOW_PRAYER_BANNER', title:title, body:'Bastia Umbra - È ora della preghiera'});
             }
             new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3").play();
         }
 
-        function testNotif() { triggerBanner("تجربة Muslim Pro"); }
+        const cities = [{ n: "روما", tz: "Europe/Rome" }, { n: "الرباط", tz: "Africa/Casablanca" }, { n: "مكة", tz: "Asia/Riyadh" }];
 
-        // --- CITIES CONFIG ---
-        const cities = [
-            { n: "روما", tz: "Europe/Rome" },
-            { n: "الرباط", tz: "Africa/Casablanca" },
-            { n: "مكة المكرمة", tz: "Asia/Riyadh" }
-        ];
-
-        // --- LOOP PRINCIPALE ---
         function update() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
             const dayData = timetable[dateKey] || timetable["5-3"];
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
 
-            // ROTAZIONE CITTÀ (Ogni 30 secondi)
+            // CITIES ROTATION
             const cityIdx = Math.floor(now.getTime() / 30000) % 3;
-            const cityTime = now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' });
-            document.getElementById('city-display').innerText = `${cities[cityIdx].n}: ${cityTime}`;
+            document.getElementById('city-display').innerText = `${cities[cityIdx].n}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
+            // GREGORIAN & HIJRI
             document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
             document.getElementById('hijri-txt').innerText = dayData.r + " رمضان 1447";
+
+            // MOON PHASE (Simplified for Ramadan)
+            const moonIcons = ["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
+            document.getElementById('moon-icon').innerText = moonIcons[Math.floor((dayData.r / 30) * 8) % 8];
 
             let html = ""; let nextP = null; let nextN = ""; let lastP = null;
             const keys = ["f", "dh", "a", "m", "i"];
@@ -309,8 +255,14 @@
             document.getElementById('list-container').innerHTML = html;
         }
 
+        // POPULATE 99 NAMES
+        const nList = document.getElementById('names-list');
+        namesOfAllah.forEach(n => {
+            nList.innerHTML += `<div class="name-item"><b style="color:gold; font-size:18px">${n.a}</b><br><small>${n.i}</small></div>`;
+        });
+
         const hTrack = document.getElementById('h-track');
-        hTrack.innerHTML = [...hadithFull, ...hadithFull].map(h => `<span class="hadith-text">${h.ar} <span class="it-text">[${h.it}]</span></span>`).join('');
+        hTrack.innerHTML = [...hadithFull, ...hadithFull].map(h => `<span class="hadith-text">${h.ar} <span style="font-size:11px">[${h.it}]</span></span>`).join('');
 
         if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
         setInterval(update, 1000); update();
