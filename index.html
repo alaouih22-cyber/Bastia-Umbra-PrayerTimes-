@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#004F3F">
-    <title>Muslim Pro Supreme</title>
+    <title>Muslim Pro Elite Platinum</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;600;700;800;900&display=swap');
@@ -28,7 +29,6 @@
         .dashboard { width: 92%; margin: 15px auto; background: var(--white); border-radius: 28px; padding: 15px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); flex-shrink: 0; border: 1px solid rgba(0,0,0,0.02); }
         .dash-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .timer-main { font-size: 34px; font-weight: 900; color: var(--mp-dark); letter-spacing: -1px; }
-        .date-box { text-align: left; }
         .date-hijri { font-size: 15px; font-weight: 800; color: var(--mp-dark); }
         .city-label { font-size: 10px; font-weight: 800; color: var(--mp-gold); text-transform: uppercase; }
 
@@ -52,10 +52,10 @@
         .sidebar.open { left: 0; }
         .sidebar h2 { color: var(--mp-gold); text-align: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .sidebar-btn { width: 100%; padding: 15px; border-radius: 15px; margin-top: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 14px; text-align: center; }
-        .btn-white { background: white; color: black; }
         .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
+        .btn-white { background: white; color: black; }
 
-        /* MODALS (GRIGLIA 3x3) */
+        /* MODALS (GRIGLIA 3 COLONNE) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-card { background: #fff; width: 100%; max-width: 480px; padding: 25px; border-radius: 30px; border: 2px solid var(--mp-gold); text-align: center; max-height: 85vh; overflow-y: auto; color: #333; }
         .names-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
@@ -68,6 +68,11 @@
         .hadith-track { display: flex; width: max-content; animation: marquee-rtl 160s linear infinite; }
         .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 14px; padding: 0 60px; direction: rtl; white-space: nowrap; }
         @keyframes marquee-rtl { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* QIBLA */
+        .compass-ui { width: 180px; height: 180px; margin: 0 auto; border: 3px solid var(--mp-gold); border-radius: 50%; position: relative; background: #002b22; }
+        #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s linear; }
+        .qibla-indicator { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); color: red; font-size: 30px; z-index: 10; }
     </style>
 </head>
 <body onclick="unlockAudio(); startWakeLock();">
@@ -91,7 +96,7 @@
             <div class="date-box">
                 <div class="date-hijri" id="hijri-txt">-- رمضان 1447</div>
                 <div class="city-label" id="city-display">ROMA: 00:00</div>
-                <div id="moon-icon" style="font-size:16px">🌙</div>
+                <div id="moon-icon" style="font-size:18px">🌙</div>
             </div>
         </div>
 
@@ -102,7 +107,7 @@
             <div class="bubble-item" onclick="openModal('tasbih-modal')"><div class="bubble-circle">📿</div><span class="bubble-label">Tasbih</span></div>
             <div class="bubble-item" onclick="openModal('qibla-modal')"><div class="bubble-circle">🧭</div><span class="bubble-label">Qibla</span></div>
         </div>
-        <div class="progress-container"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
+        <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
     </div>
 
     <div class="prayer-list" id="list-container"></div>
@@ -114,16 +119,22 @@
         <button class="sidebar-btn btn-white" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
         <button class="sidebar-btn btn-gold" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
         <hr style="margin:20px 0; opacity:0.1">
-        <label style="font-size:12px; color:var(--mp-gold)">🔔 Modalità Sveglia</label>
-        <select id="notif-type" style="width:100%; padding:12px; background:#222; color:white; border-radius:10px; border:1px solid gold; margin-top:8px;">
-            <option value="athan">Athan Completo + Banner</option>
-            <option value="bip">Solo Bip + Banner</option>
-        </select>
+        
+        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">
+            <label style="font-size:12px; color:var(--mp-gold)">🔔 Modalità Sveglia</label>
+            <select id="notif-type" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:10px; border:1px solid gold; margin-top:8px;">
+                <option value="athan">Athan Completo + Banner</option>
+                <option value="bip">Solo Bip + Banner</option>
+            </select>
+        </div>
+
         <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan</label>
-        <select id="athan-voice" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
+        <select id="athan-voice" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
             <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah</option>
             <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan16.mp3">Marocco</option>
         </select>
+        
         <div style="display:flex; gap:10px; margin-top:20px;">
             <button class="sidebar-btn btn-gold" style="flex:1" onclick="requestPermission()">ATTIVA</button>
             <button class="sidebar-btn" style="flex:1; background:#ff4747; color:white" onclick="testNotif()">TEST</button>
@@ -137,18 +148,24 @@
     <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3>Qibla</h3><div style="width:180px; height:180px; border:2px solid gold; border-radius:50%; margin:0 auto; position:relative;"><div id="compass-disk" style="width:100%; height:100%; background:url('icon.png') center/cover; border-radius:50%;"></div></div><button class="sidebar-btn btn-gold" style="margin-top:20px" onclick="closeModal('qibla-modal')">OK</button></div></div>
     <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3>Tasbih</h3><div id="t-display" style="font-size:60px; margin:20px 0">0</div><div style="width:100px; height:100px; border-radius:50%; background:gold; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:30px;" onclick="countTasbih()">+1</div><br><small onclick="resetTasbih()" style="cursor:pointer">Reset</small><br><button class="sidebar-btn btn-white" onclick="closeModal('tasbih-modal')">OK</button></div></div>
     <div class="modal-overlay" id="tracker-modal"><div class="modal-card"><h3>Prayer Tracker</h3><div id="tracker-list"></div><button class="sidebar-btn btn-gold" onclick="closeModal('tracker-modal')">OK</button></div></div>
-    <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="sidebar-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
+    <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="mp-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
 
     <script>
         const timetable = {
             "1-3":{f:"05:28",dh:"12:23",a:"15:29",m:"18:00",i:"19:18",r:12},"2-3":{f:"05:27",dh:"12:23",a:"15:30",m:"18:01",i:"19:19",r:13},"3-3":{f:"05:25",dh:"12:23",a:"15:31",m:"18:02",i:"19:21",r:14},"4-3":{f:"05:23",dh:"12:23",a:"15:31",m:"18:04",i:"19:22",r:15},"5-3":{f:"05:22",dh:"12:22",a:"15:32",m:"18:05",i:"19:23",r:16},"6-3":{f:"05:20",dh:"12:22",a:"15:33",m:"18:06",i:"19:24",r:17},"7-3":{f:"05:18",dh:"12:22",a:"15:34",m:"18:07",i:"19:26",r:18},"8-3":{f:"05:17",dh:"12:22",a:"15:34",m:"18:09",i:"19:27",r:19},"9-3":{f:"05:15",dh:"12:21",a:"15:35",m:"18:10",i:"19:28",r:20},"10-3":{f:"05:13",dh:"12:21",a:"15:36",m:"18:11",i:"19:29",r:21},"11-3":{f:"05:11",dh:"12:21",a:"15:37",m:"18:12",i:"19:31",r:22},"12-3":{f:"05:09",dh:"12:21",a:"15:38",m:"18:13",i:"19:32",r:23},"13-3":{f:"05:08",dh:"12:20",a:"15:38",m:"18:15",i:"19:33",r:24},"14-3":{f:"05:06",dh:"12:20",a:"15:39",m:"18:16",i:"19:34",r:25},"15-3":{f:"05:04",dh:"12:20",a:"15:40",m:"18:17",i:"19:36",r:26},"16-3":{f:"05:02",dh:"12:20",a:"15:40",m:"18:18",i:"19:37",r:27},"17-3":{f:"05:00",dh:"12:19",a:"15:41",m:"18:19",i:"19:38",r:28},"18-3":{f:"04:59",dh:"12:19",a:"15:42",m:"18:21",i:"19:39",r:29},"19-3":{f:"04:57",dh:"12:19",a:"15:42",m:"18:22",i:"19:41",r:30}
         };
 
-        const allahNames = [{a:"الرحمن",i:"Il Misericordioso"},{a:"الرحيم",i:"Il Compassionevole"},{a:"الملك",i:"Il Sovrano"},{a:"القدوس",i:"Il Santo"},{a:"السلام",i:"La Pace"},{a:"المؤمن",i:"Il Fedele"},{a:"المهيمن",i:"Il Custode"},{a:"العزيز",i:"L'Eccelso"},{a:"الجبار",i:"Il Potente"},{a:"المتكبر",i:"Il Superbo"},{a:"الخالق",i:"Il Creatore"},{a:"البارئ",i:"L'Evolutore"},{a:"المصور",i:"Il Formatore"},{a:"الغفار",i:"L'Indulgente"},{a:"القهار",i:"Il Dominatore"},{a:"الوهاب",i:"Il Donatore"},{a:"الرزاق",i:"Il Sostentatore"},{a:"الفتاح",i:"L'Aprente"},{a:"العليم",i:"L'Onnisciente"},{a:"القابض",i:"Colui che restringe"},{a:"الباسط",i:"Colui che espande"},{a:"الخافض",i:"Colui che abbassa"},{a:"الرافع",i:"Colui che eleva"},{a:"المعز",i:"Colui che dà onore"},{a:"المذل",i:"Colui che umilia"},{a:"السميع",i:"L'Onnisenziente"},{a:"البصير",i:"L'Onneveggente"},{a:"الحكم",i:"Il Giudice"},{a:"العدل",i:"Il Giusto"},{a:"اللطيف",i:"Il Gentile"},{a:"الخبير",i:"Il Consapevole"},{a:"الحليم",i:"Il Paziente"},{a:"العظيم",i:"L'Immenso"},{a:"الغفور",i:"Il Perdonatore"},{a:"الشكور",i:"Il Riconoscente"},{a:"العلي",i:"L'Altissimo"},{a:"الكبير",i:"Il Grande"},{a:"الحفيظ",i:"Il Preservatore"},{a:"المقيت",i:"Il Nutritore"},{a:"الحسيب",i:"Il Computatore"},{a:"الجليل",i:"Il Maestoso"},{a:"الكريم",i:"Il Generoso"},{a:"الرقيب",i:"L'Osservatore"},{a:"المجيب",i:"Colui che risponde"},{a:"الواسع",i:"Il Vasto"},{a:"الحكيم",i:"Il Saggio"},{a:"الودود",i:"L'Amorevole"},{a:"المجيد",i:"Il Glorioso"},{a:"الباعث",i:"Il Risuscitatore"},{a:"الشهيد",i:"Il Testimone"},{a:"الحق",i:"La Verità"},{a:"الوكيل",i:"Il Garante"},{a:"القوي",i:"Il Forte"},{a:"المتين",i:"Il Fermo"},{a:"الولي",i:"Il Patrono"},{a:"الحميد",i:"Il Lodabile"},{a:"المحصي",i:"L'Enumeratore"},{a:"المبدئ",i:"L'Iniziatore"},{a:"المعيد",i:"Il Ristabilitore"},{a:"المحيي",i:"Colui che dà la vita"},{a:"المميت",i:"Colui che dà la morte"},{a:"الحي",i:"Il Vivente"},{a:"القيوم",i:"L'Esistente"},{a:"الواجد",i:"Il Ritrovatore"},{a:"الماجد",i:"L'Eccellente"},{a:"الواحد",i:"L'Unico"},{a:"الأحد",i:"L'Uno"},{a:"الصمد",i:"L'Eterno"},{a:"القادر",i:"L'Onnipotente"},{a:"المقتدر",i:"Colui che prevale"},{a:"المقدم",i:"Colui che precede"},{a:"المؤخر",i:"Colui che ritarda"},{a:"الأول",i:"Il Primo"},{a:"الآخر",i:"L'Ultimo"},{a:"الظاهر",i:"Il Manifesto"},{a:"الباطن",i:"Il Nascosto"},{a:"الوالي",i:"Il Governatore"},{a:"المتعالي",i:"L'Altissimo"},{a:"البر",i:"Il Buono"},{a:"التواب",i:"Colui che accetta il pentimento"},{a:"المُنْتَقِم",i:"Il Vendicatore"},{a:"العفو",i:"Colui che perdona"},{a:"الرؤوف",i:"Il Clementissimo"},{a:"مالك الملك",i:"Il Re dei Re"},{a:"ذو الجلال والإكرام",i:"Il Signore della Maestà"},{a:"المقسط",i:"L'Equo"},{a:"الجامع",i:"Il Radunatore"},{a:"الغني",i:"Il Ricco"},{a:"المغني",i:"Colui che arricchisce"},{a:"المانع",i:"Colui che impedisce"},{a:"الضار",i:"Colui che nuoce"},{a:"النافع",i:"Colui che giova"},{a:"النور",i:"La Luce"},{a:"الهادي",i:"La Guida"},{a:"البديع",i:"L'Incomparabile"},{a:"الباقi",i:"L'Eterno"},{a:"الوارث",i:"L'Erede"},{a:"الرشيد",i:"La Guida Retta"},{a:"الصبور",i:"Il Paziente"}];
-        const azkar = [{t:"Mattina",d:[{a:"أصبحنا وأصبح الملك لله",i:"Siamo giunti al mattino e il regno è di Allah"},{a:"يا حي يا قيوم برحمتك أستغيث",i:"O Vivente, per la Tua misericordia chiedo aiuto"}]},{t:"Sera",d:[{a:"أمسينـا وأمسى الملك لله",i:"Siamo giunti alla sera e il regno è di Allah"}]},{t:"Dopo Preghiera",d:[{a:"أستغفر الله (3 مرات)",i:"Chiedo perdono ad Allah (3 volte)"},{a:"اللهم أنت السلام",i:"O Allah, Tu sei la Pace"}]}];
-        const hadiths = [{ar:"إنما الأعمال بالنيات", it:"Le azioni dipendono dalle intenzioni"}, {ar:"بني الإسلام على خمس", it:"L'Islam si basa su 5 pilastri"}, {ar:"الكلمة الطيبة صدقة", it:"La parola buona è carità"}];
+        const allahNames = [{a:"الرحمن",i:"Il Misericordioso"},{a:"الرحيم",i:"Il Compassionevole"},{a:"الملك",i:"Il Sovrano"},{a:"القدوس",i:"Il Santo"},{a:"السلام",i:"La Pace"},{a:"المؤمن",i:"Il Fedele"},{a:"المهيمن",i:"Il Custode"},{a:"العزيز",i:"L'Eccelso"},{a:"الجبار",i:"Il Potente"},{a:"المتكبر",i:"Il Superbo"},{a:"الخالق",i:"Il Creatore"},{a:"البارئ",i:"L'Evolutore"},{a:"المصور",i:"Il Formatore"},{a:"الغفار",i:"L'Indulgente"},{a:"القهار",i:"Il Dominatore"},{a:"الوهاب",i:"Il Donatore"},{a:"الرزاق",i:"Il Sostentatore"},{a:"الفتاح",i:"L'Aprente"},{a:"العليم",i:"L'Onnisciente"},{a:"القابض",i:"Il Restringitore"},{a:"الباسط",i:"L'Espansore"},{a:"الخافض",i:"L'Abbassatore"},{a:"الرافع",i:"L'Elevatore"},{a:"المعز",i:"Colui che Onora"},{a:"المذل",i:"Colui che Umilia"},{a:"السميع",i:"L'Onnisenziente"},{a:"البصير",i:"L'Onneveggente"},{a:"الحكم",i:"Il Giudice"},{a:"العدل",i:"Il Giusto"},{a:"اللطيف",i:"Il Gentile"},{a:"الخبير",i:"Il Consapevole"},{a:"الحليم",i:"Il Paziente"},{a:"العظيم",i:"L'Immenso"},{a:"الغفور",i:"Il Perdonatore"},{a:"الشكور",i:"Il Riconoscente"},{a:"العلي",i:"L'Altissimo"},{a:"الكبير",i:"Il Grande"},{a:"الحفيظ",i:"Il Preservatore"},{a:"المقيت",i:"Il Nutritore"},{a:"الحسيب",i:"Il Computatore"},{a:"الجليل",i:"Il Maestoso"},{a:"الكريم",i:"Il Generoso"},{a:"الرقيب",i:"L'Osservatore"},{a:"المجيب",i:"Colui che risponde"},{a:"الواسع",i:"Il Vasto"},{a:"الحكيم",i:"Il Saggio"},{a:"الودود",i:"L'Amorevole"},{a:"المجيد",i:"Il Glorioso"},{a:"الباعث",i:"Il Risuscitatore"},{a:"الشهيد",i:"Il Testimone"},{a:"الحق",i:"La Verità"},{a:"الوكيل",i:"Il Garante"},{a:"القوي",i:"Il Forte"},{a:"المتين",i:"Il Fermo"},{a:"الولي",i:"Il Patrono"},{a:"الحميد",i:"Il Lodabile"},{a:"المحصي",i:"L'Enumeratore"},{a:"المبدئ",i:"L'Iniziatore"},{a:"المعيد",i:"Il Ristabilitore"},{a:"المحيي",i:"Colui che dà la vita"},{a:"المميت",i:"Colui che dà la morte"},{a:"الحي",i:"Il Vivente"},{a:"القيوم",i:"L'Esistente"},{a:"الواجد",i:"Il Ritrovatore"},{a:"الماجد",i:"L'Eccellente"},{a:"الواحد",i:"L'Unico"},{a:"الأحد",i:"L'Uno"},{a:"الصمد",i:"L'Eterno"},{a:"القادر",i:"L'Onnipotente"},{a:"المقتدر",i:"Colui che prevale"},{a:"المقدم",i:"Colui che precede"},{a:"المؤخر",i:"Colui che ritarda"},{a:"الأول",i:"Il Primo"},{a:"الآخر",i:"L'Ultimo"},{a:"الظاهر",i:"Il Manifesto"},{a:"الباطن",i:"Il Nascosto"},{a:"الوالي",i:"Il Governatore"},{a:"المتعالي",i:"L'Altissimo"},{a:"البر",i:"Il Buono"},{a:"التواب",i:"Chi accetta il pentimento"},{a:"المنتقم",i:"Il Vendicatore"},{a:"العفو",i:"L'Indulgente"},{a:"الرؤوف",i:"Il Clementissimo"},{a:"مالك الملك",i:"Il Re dei Re"},{a:"ذو الجلال",i:"Il Signore della Maestà"},{a:"المقسط",i:"L'Equo"},{a:"الجامع",i:"Il Radunatore"},{a:"الغني",i:"Il Ricco"},{a:"المغني",i:"L'Arricchitore"},{a:"المانع",i:"Colui che impedisce"},{a:"الضار",i:"Colui che nuoce"},{a:"النافع",i:"Colui che giova"},{a:"النور",i:"La Luce"},{a:"الهادي",i:"La Guida"},{a:"البديع",i:"L'Incomparabile"},{a:"الباقي",i:"L'Eterno"},{a:"الوارث",i:"L'Erede"},{a:"الرشيد",i:"La Guida Retta"},{a:"الصبور",i:"Il Paziente"}];
+        const azkar = [
+            {t:"Mattina", d:[{a:"أصبحنا وأصبح الملك لله", i:"Siamo giunti al mattino e il regno è di Allah"}, {a:"يا حي يا قيوم برحمتك أستغيث", i:"O Vivente, per la Tua misericordia chiedo aiuto"}]},
+            {t:"Sera", d:[{a:"أمسينـا وأمسى الملك لله", i:"Siamo giunti alla sera e il regno è di Allah"}]},
+            {t:"Dopo Salah", d:[{a:"أستغفر الله (3 مرات)", i:"Chiedo perdono ad Allah (3 volte)"}, {a:"اللهم أنت السلام", i:"O Allah, Tu sei la Pace"}]}
+        ];
+        const hadiths = [{ar:"إنما الأعمال بالنيات", it:"Le azioni dipendono dalle intenzioni"}, {ar:"بني الإسلام على خمس", it:"L'Islam si basa su 5 pilastri"}];
 
         let audioUnlocked = false; let lastT = ""; let tCount = 0;
+        function savePrefs() { localStorage.setItem('notifMode', document.getElementById('notif-type').value); localStorage.setItem('voice', document.getElementById('athan-voice').value); }
+        function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('notifMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('voice') || 'https://www.islamcan.com/audio/adhan/azan1.mp3'; }
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
         async function startWakeLock() { try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){} }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
@@ -164,29 +181,36 @@
 
         function requestPermission() { Notification.requestPermission(); toggleMenu(); }
         function triggerBanner(title) {
-            if(Notification.permission === "granted" && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({type:'SHOW_PRAYER_BANNER', title:title, body:'Bastia Umbra - È ora della preghiera'});
+            if(Notification.permission === "granted" && navigator.serviceWorker.ready) {
+                navigator.serviceWorker.ready.then(reg => {
+                    reg.showNotification(title, { body: 'Bastia Umbra - È ora della preghiera', icon: 'icon.png', vibrate: [500, 110, 500], requireInteraction: true });
+                });
             }
-            const voice = document.getElementById('athan-voice').value;
             const mode = document.getElementById('notif-type').value;
+            const voice = document.getElementById('athan-voice').value;
             if(mode === 'athan') new Audio(voice).play();
             else new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play();
         }
 
+        function testNotif() { triggerBanner("Muslim Pro Test"); }
+
         function update() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
-            const dayData = timetable[dateKey];
-            if(!dayData) { document.getElementById('hijri-txt').innerText = "Data non trovata"; return; }
-
+            const dayData = timetable[dateKey] || timetable["6-3"];
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+
             const cities = [{ n: "Roma", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             const cityIdx = Math.floor(now.getTime() / 30000) % 3;
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
             document.getElementById('hijri-txt').innerText = dayData.r + " رمضان 1447";
+            document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
 
-            let html = ""; let nextP = null; let nextN = ""; let lastP = null;
+            const moonIcons = ["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
+            document.getElementById('moon-icon').innerText = moonIcons[Math.floor(((dayData.r-1)%30)/3.75)%8];
+
+            let html = ""; let nextP = null; let lastP = null;
             const pKeys = ["f","dh","a","m","i"];
             const pLabels = ["الفجر","الظهر","العصر","المغرب","العشاء"];
             const pIconsArr = ["🌅","☀️","🌤️","🌇","🌙"];
@@ -195,7 +219,7 @@
                 const time = dayData[k];
                 if (hhmm === time && now.getSeconds() === 0 && lastT !== hhmm+k) { lastT=hhmm+k; triggerBanner("صلاة "+ pLabels[idx]); }
                 const [h,m] = time.split(":"); const pDate = new Date(); pDate.setHours(h,m,0);
-                if (pDate > now && !nextP) { nextP = pDate; nextN = pLabels[idx].toUpperCase(); }
+                if (pDate > now && !nextP) { nextP = pDate; document.getElementById('next-name').innerText = "PROSSIMA: " + pLabels[idx].toUpperCase(); }
                 if (pDate <= now) lastP = pDate;
                 html += `<div class="prayer-card ${hhmm === time ? 'active' : ''}"><span class="p-time">${time}</span><div class="p-right"><span class="p-name">${pLabels[idx]}</span><span class="p-icon">${pIconsArr[idx]}</span></div></div>`;
             });
@@ -203,13 +227,12 @@
             if (!nextP) {
                 const tomData = timetable[(now.getDate()+1) + "-" + (now.getMonth() + 1)] || timetable["1-3"];
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
-                nextN = "الفجر";
+                document.getElementById('next-name').innerText = "PROSSIMA: FAJR";
             }
             if (lastP && nextP) document.getElementById('p-bar').style.width = Math.min(((now - lastP) / (nextP - lastP)) * 100, 100) + "%";
 
             const diff = nextP - now;
             document.getElementById('timer-next').innerText = `${Math.floor(diff/3600000).toString().padStart(2,"0")}:${Math.floor((diff%3600000)/60000).toString().padStart(2,"0")}:${Math.floor((diff%60000)/1000).toString().padStart(2,"0")}`;
-            document.getElementById('next-name').innerText = "PROSSIMA: " + nextN;
             document.getElementById('list-container').innerHTML = html;
         }
 
@@ -229,7 +252,7 @@
             });
         }
 
-        setInterval(update, 1000); update();
+        loadPrefs(); setInterval(update, 1000); update();
         if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     </script>
 </body>
