@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#004F3F">
@@ -48,7 +45,7 @@
         .header-logo { width: 55px; height: 55px; border-radius: 12px; background: url('icon.png') center/cover; border: 2px solid var(--mp-gold); order: 3; }
         .header-aya { color: white; font-size: 11px; opacity: 0.8; width: 100%; text-align: center; position: absolute; bottom: 5px; left: 0; }
 
-        /* DASHBOARD */
+        /* DASHBOARD SUPREME */
         .dashboard {
             width: 92%; margin: 15px auto;
             background: var(--white); border-radius: 28px;
@@ -61,7 +58,7 @@
         .date-hijri { font-size: 16px; font-weight: 800; color: var(--mp-dark); }
         .city-label { font-size: 11px; font-weight: 800; color: var(--mp-gold); text-transform: uppercase; }
 
-        /* BOLLE DASHBOARD */
+        /* BOLLE DASHBOARD (GRANDI) */
         .action-bubbles { display: flex; justify-content: space-between; gap: 5px; margin: 10px 0; }
         .bubble-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
         .bubble-circle { width: 52px; height: 52px; background: #f8fcfb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 1.5px solid var(--mp-gold); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -83,16 +80,16 @@
         .p-time { font-size: 22px; font-weight: 900; }
 
         /* SIDEBAR (SINISTRA) */
-        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 50px 20px; color: white; overflow-y: auto; }
+        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 50px 20px; color: white; overflow-y: auto; }
         .sidebar.open { left: 0; }
         .sidebar h2 { color: var(--mp-gold); text-align: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
 
         .mp-btn { width: 100%; padding: 15px; border-radius: 15px; margin-top: 12px; font-weight: bold; cursor: pointer; border: none; font-size: 14px; text-align: center; }
         .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
 
-        /* MODALS (GOLD CARD DESIGN) */
+        /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-card { background: #fff; width: 100%; max-width: 480px; padding: 25px; border-radius: 35px; border: 3px solid var(--mp-gold); text-align: center; max-height: 85vh; overflow-y: auto; color: #333; }
+        .modal-card { background: #fff; width: 100%; max-width: 480px; padding: 25px; border-radius: 35px; border: 2px solid var(--mp-gold); text-align: center; max-height: 85vh; overflow-y: auto; color: #333; }
         .gold-item { background: #FFFCF5; padding: 18px; border-radius: 20px; margin-bottom: 12px; border: 1.5px solid var(--mp-gold); text-align: right; box-shadow: 0 4px 10px rgba(197, 160, 89, 0.1); }
         .gold-item b { color: var(--mp-dark); font-size: 20px; display: block; margin-bottom: 5px; font-family: 'Amiri', serif; }
 
@@ -104,7 +101,7 @@
 
         /* QIBLA */
         .compass-ui { width: 220px; height: 220px; margin: 20px auto; border: 4px solid var(--mp-gold); border-radius: 50%; position: relative; background: #002b22; box-shadow: 0 0 40px rgba(197, 160, 89, 0.4); }
-        #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s linear; }
+        #compass-disk { width: 100%; height: 100%; background: url('https://i.imgur.com/vOnG7C1.png') center/cover; border-radius: 50%; transition: transform 0.1s linear; }
         .qibla-indicator { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); color: #ff3e3e; font-size: 40px; font-weight: bold; z-index: 5; }
     </style>
 </head>
@@ -133,18 +130,19 @@
             </div>
         </div>
 
-        <!-- LE 5 BOLLE GRANDI NELLA DASHBOARD -->
         <div class="action-bubbles">
             <div class="bubble-item" onclick="openModal('tracker-modal')"><div class="bubble-circle">✅</div><span class="bubble-label">Diary</span></div>
             <div class="bubble-item" onclick="openModal('duas-modal')"><div class="bubble-circle">🤲</div><span class="bubble-label">Azkar</span></div>
-            <div class="bubble-item" onclick="openModal('names-modal')"><div class="bubble-circle">✨</div><span class="bubble-label">99 Nomi</span></div>
+            <div class="bubble-item" onclick="openModal('names-modal')"><div class="bubble-circle">✨</div><span class="bubble-label">Nomi 99</span></div>
             <div class="bubble-item" onclick="openModal('tasbih-modal')"><div class="bubble-circle">📿</div><span class="bubble-label">Tasbih</span></div>
             <div class="bubble-item" onclick="openModal('qibla-modal')"><div class="bubble-circle">🧭</div><span class="bubble-label">Qibla</span></div>
         </div>
         <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
     </div>
 
+    <!-- LISTA PREGHIERE (QUI APPARIRANNO GLI ORARI) -->
     <div class="prayer-list" id="list-container"></div>
+    
     <div class="hadith-footer"><div class="hadith-track" id="h-track"></div></div>
 
     <!-- SIDEBAR SINISTRA -->
@@ -159,7 +157,6 @@
         <select id="athan-voice" class="mp-btn" style="background:#222; color:white; padding:10px">
             <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah</option>
             <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan16.mp3">Marocco (Maghreb)</option>
         </select>
         
         <button class="mp-btn btn-gold" style="margin-top:20px" onclick="requestPermission()">ATTIVA NOTIFICHE BANNER</button>
@@ -169,14 +166,15 @@
     </div>
 
     <!-- MODALS -->
-    <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list"></div><button class="mp-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
-    <div class="modal-overlay" id="duas-modal"><div class="modal-card"><h3>Azkar & Suppliche</h3><div id="duas-list"></div><button class="mp-btn btn-gold" onclick="closeModal('duas-modal')">CHIUDI</button></div></div>
+    <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; text-align:right"></div><button class="mp-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
+    <div class="modal-overlay" id="duas-modal"><div class="modal-card"><h3>Azkar & Suppliche</h3><div id="duas-list" style="text-align:right"></div><button class="mp-btn btn-gold" onclick="closeModal('duas-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3>Qibla Finder</h3><div class="compass-ui"><div class="qibla-indicator">▼</div><div id="compass-disk"></div></div><p style="font-size:12px; margin-top:15px">Ruota il telefono verso la Mecca</p><button class="mp-btn btn-gold" style="margin-top:10px" onclick="closeModal('qibla-modal')">OK</button></div></div>
     <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3>Tasbih</h3><div id="t-display" style="font-size:70px; margin:20px 0; color:var(--mp-dark)">0</div><div style="width:120px; height:120px; border-radius:50%; background:var(--mp-gold); color:white; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:35px; font-weight:900" onclick="countTasbih()">+1</div><br><small onclick="resetTasbih()" style="cursor:pointer; color:var(--mp-gold)">Reset</small><br><button class="mp-btn" style="background:#eee" onclick="closeModal('tasbih-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="tracker-modal"><div class="modal-card"><h3>Prayer Tracker</h3><div id="tracker-list"></div><button class="mp-btn btn-gold" onclick="closeModal('tracker-modal')">OK</button></div></div>
     <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat (2.5%)</h3><input type="number" id="z-val" class="mp-btn" style="background:#eee; color:black; text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="mp-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
 
     <script>
+        // DATABASE ORARI COMPLETO BASTIA UMBRA
         const timetable = {
             "18-2": {f:"05:45", dh:"12:25", a:"15:19", m:"17:46", i:"19:05", r:1}, "19-2": {f:"05:43", dh:"12:25", a:"15:20", m:"17:47", i:"19:06", r:2},
             "20-2": {f:"05:42", dh:"12:25", a:"15:21", m:"17:48", i:"19:07", r:3}, "21-2": {f:"05:41", dh:"12:25", a:"15:22", m:"17:50", i:"19:08", r:4},
@@ -195,9 +193,9 @@
             "18-3": {f:"04:59", dh:"12:19", a:"15:42", m:"18:21", i:"19:39", r:29}, "19-3": {f:"04:57", dh:"12:19", a:"15:42", m:"18:22", i:"19:41", r:30}
         };
 
-        const allahNamesArr = [{a:"الرحمن", i:"Il Misericordioso"}, {a:"الرحيم", i:"Il Compassionevole"}, {a:"الملك", i:"Il Sovrano"}, {a:"القدوس", i:"Il Santo"}, {a:"السلام", i:"La Pace"}, {a:"المؤمن", i:"Il Fedele"}, {a:"المهيمن", i:"Il Custode"}, {a:"العزيز", i:"L'Eccelso"}, {a:"الجبار", i:"Il Potente"}, {a:"المتكبر", i:"Il Superbo"}];
-        const azkarFull = [{t:"Mattina", d:[{a:"أصبحنا وأصبح الملك لله", i:"Siamo giunti al mattino e il regno è di Allah"}]}, {t:"Sera", d:[{a:"أمسينـا وأمسى الملك لله", i:"Siamo giunti alla sera e il regno è di Allah"}]}, {t:"Dopo Preghiera", d:[{a:"أستغفر الله (3 مرات)", i:"Chiedo perdono ad Allah (3 volte)"}]}];
-        const hadiths = [{ar:"إنما الأعمال بالنيات", it:"Le azioni dipendono dalle intenzioni"}, {ar:"بني الإسلام على خمس", it:"L'Islam si basa su 5 pilastri"}, {ar:"الكلمة الطيبة صدقة", it:"La parola buona è carità"}];
+        const allahNames = [{a:"الرحمن", i:"Misericordioso"}, {a:"الرحيم", i:"Compassionevole"}, {a:"الملك", i:"Sovrano"}, {a:"القدوس", i:"Santo"}, {a:"السلام", i:"Pace"}, {a:"المؤمن", i:"Il Fedele"}, {a:"المهيمن", i:"Il Custode"}, {a:"العزيز", i:"L'Eccelso"}, {a:"الجبار", i:"Il Potente"}, {a:"المتكبر", i:"Il Superbo"}];
+        const azkar = [{a:"سبحان الله وبحمده", i:"Gloria ad Allah e lode a Lui"}, {a:"أستغفر الله", i:"Chiedo perdono ad Allah"}, {a:"لا إله إلا الله", i:"Non c'è altro dio all'infuori di Allah"}];
+        const hadithFull = [{ar:"إنما الأعمال بالنيات", it:"Le azioni dipendono dalle intenzioni"}, {ar:"بني الإسلام على خمس", it:"L'Islam si basa su 5 pilastri"}, {ar:"الكلمة الطيبة صدقة", it:"La parola buona è carità"}];
 
         let audioUnlocked = false; let lastNotifiedMinute = ""; let tCount = 0;
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
@@ -218,13 +216,12 @@
             if(Notification.permission === "granted" && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage({type:'SHOW_PRAYER_BANNER', title:title, body:'Bastia Umbra - È ora della preghiera'});
             }
-            new Audio(document.getElementById('athan-voice').value).play();
+            new Audio(document.getElementById('than-voice').value).play();
         }
 
         function update() {
             const now = new Date();
-            const d = now.getDate(); const m = now.getMonth() + 1;
-            const dateKey = `${d}-${m}`;
+            const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
             const dayData = timetable[dateKey];
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
 
@@ -244,15 +241,14 @@
                 pKeys.forEach((k, idx) => {
                     const time = dayData[k];
                     if (hhmm === time && now.getSeconds() === 0 && lastNotifiedMinute !== hhmm+k) { lastNotifiedMinute=hhmm+k; triggerBanner("صلاة "+ pLabels[idx]); }
-                    const [ph,pm] = time.split(":"); const pDate = new Date(); pDate.setHours(ph,pm,0);
+                    const [h,m] = time.split(":"); const pDate = new Date(); pDate.setHours(h,m,0);
                     if (pDate > now && !nextP) { nextP = pDate; nextN = pLabels[idx]; }
                     if (pDate <= now) lastP = pDate;
                     html += `<div class="prayer-card ${hhmm === time ? 'active' : ''}"><span class="p-time">${time}</span><div class="p-right"><span class="p-name">${pLabels[idx]}</span><span class="p-icon">${pIconsArr[idx]}</span></div></div>`;
                 });
 
                 if (!nextP) {
-                    const tomKey = (d+1) + "-" + m;
-                    const tomData = timetable[tomKey] || timetable["18-2"];
+                    const tomData = timetable[(now.getDate()+1) + "-" + (now.getMonth() + 1)] || timetable["18-2"];
                     nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                     nextN = "الفجر";
                 }
@@ -265,12 +261,9 @@
             }
         }
 
-        allahNamesArr.forEach(n => document.getElementById('names-list').innerHTML += `<div class="gold-item" style="text-align:center"><b>${n.a}</b><span>${n.i}</span></div>`);
-        azkarFull.forEach(sec => {
-            document.getElementById('duas-list').innerHTML += `<h4 style="color:var(--mp-dark); margin:15px 0 10px 0; font-weight:bold">${sec.t}</h4>`;
-            sec.d.forEach(dua => document.getElementById('duas-list').innerHTML += `<div class="gold-item"><b>${dua.a}</b><span>${dua.i}</span></div>`);
-        });
-        document.getElementById('h-track').innerHTML = [...hadiths, ...hadiths].map(h => `<span class="hadith-text">${h.ar} <span style="font-size:11px">[${h.it}]</span></span>`).join('');
+        allahNames.forEach(n => document.getElementById('names-list').innerHTML += `<div class="gold-item" style="text-align:center"><b>${n.a}</b><span>${n.i}</span></div>`);
+        azkar.forEach(d => document.getElementById('duas-list').innerHTML += `<div class="gold-item"><b>${d.a}</b><span>${d.i}</span></div>`);
+        document.getElementById('h-track').innerHTML = [...hadithFull, ...hadithFull].map(h => `<span class="hadith-text">${h.ar} <span style="font-size:11px">[${h.it}]</span></span>`).join('');
 
         function loadTracker() {
             const list = document.getElementById('tracker-list'); list.innerHTML = "";
