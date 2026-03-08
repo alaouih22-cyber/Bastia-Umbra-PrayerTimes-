@@ -8,50 +8,63 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#004F3F">
-    <title>Muslim Pro Absolute Platinum</title>
+    <title>Muslim Pro Elite Platinum</title>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;600;700;900&display=swap');
         :root { --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F8F9FA; --white: #ffffff; }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--mp-bg); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: #1a1a1a; }
 
-        /* HEADER */
-        .header { width: 100%; background: var(--mp-dark); padding: 50px 20px 20px 20px; border-bottom: 3px solid var(--mp-gold); flex-shrink: 0; z-index: 1000; display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; text-align: center; position: relative; }
-        .menu-btn { color: var(--mp-gold); font-size: 35px; cursor: pointer; order: 1; text-align: left; }
-        .ramadan-title { font-family: 'Amiri', serif; color: var(--mp-gold); font-size: 24px; font-weight: 900; animation: shimmer 3s linear infinite; order: 2; }
-        @keyframes shimmer { to { background: linear-gradient(to right, #C5A059 20%, #FFF 50%, #C5A059 80%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; background-position: 200% center; } }
-        .header-logo { width: 50px; height: 50px; border-radius: 12px; background: url('icon.png') center/cover; border: 1px solid var(--mp-gold); order: 3; }
+        /* HEADER FISSO */
+        .header { 
+            width: 100%; background: var(--mp-dark); padding: 45px 20px 15px 20px; 
+            border-bottom: 3px solid var(--mp-gold); flex-shrink: 0; z-index: 1000; 
+            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; text-align: center;
+        }
+        .menu-btn { color: var(--mp-gold); font-size: 32px; cursor: pointer; text-align: left; }
+        .ramadan-title { font-family: 'Amiri', serif; color: var(--mp-gold); font-size: 22px; font-weight: 900; }
+        .header-logo { width: 45px; height: 45px; border-radius: 10px; background: url('icon.png') center/cover; border: 1.5px solid var(--mp-gold); }
+        .aya-strip { width: 100%; background: rgba(0,0,0,0.1); color: #444; padding: 8px 10px; text-align: center; font-size: 11px; font-style: italic; border-bottom: 1px solid #ddd; }
 
         /* DASHBOARD */
-        .dashboard { width: 92%; margin: 15px auto; background: var(--white); border-radius: 28px; padding: 15px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); flex-shrink: 0; border: 1px solid rgba(0,0,0,0.02); }
-        .dash-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .dashboard { width: 92%; margin: 12px auto; background: var(--white); border-radius: 25px; padding: 15px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); flex-shrink: 0; border: 1px solid rgba(0,0,0,0.02); }
+        .dash-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .timer-main { font-size: 34px; font-weight: 900; color: var(--mp-dark); letter-spacing: -1px; }
-        .date-hijri { font-size: 15px; font-weight: 800; }
+        .date-box { text-align: left; line-height: 1.2; }
+        .date-hijri { font-size: 14px; font-weight: 800; color: var(--mp-dark); }
         .city-label { font-size: 10px; font-weight: 800; color: var(--mp-gold); text-transform: uppercase; }
 
-        /* BOLLE AZIONI */
-        .action-bubbles { display: flex !important; flex-direction: row !important; justify-content: space-between; align-items: center; margin: 10px 0; width: 100%; gap: 5px; }
-        .bubble-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; cursor: pointer; }
-        .bubble-circle { width: 45px; height: 45px; background: #f8fcfb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1.2px solid var(--mp-gold); box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
-        .bubble-label { font-size: 9px; font-weight: 800; color: var(--mp-dark); text-transform: uppercase; }
-        .progress-container { width: 100%; background: #eee; height: 5px; border-radius: 10px; overflow: hidden; }
+        /* BOLLE DASHBOARD - FORZATE IN ORIZZONTALE */
+        .action-bubbles { 
+            display: flex !important; 
+            flex-direction: row !important;
+            justify-content: space-between; 
+            align-items: center;
+            margin: 10px 0; 
+            width: 100%;
+        }
+        .bubble-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex: 1; }
+        .bubble-circle { width: 46px; height: 46px; background: #f8fcfb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1.2px solid var(--mp-gold); box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
+        .bubble-label { font-size: 9px; font-weight: 800; color: var(--mp-dark); text-transform: uppercase; text-align: center; }
+        .progress-container { width: 100%; background: #eee; height: 5px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
         .progress-bar { width: 0%; height: 100%; background: var(--mp-gold); transition: width 0.5s; }
 
-        /* LISTA PREGHIERE */
+        /* LISTA PREGHIERE SCORREVOLE */
         .prayer-list { width: 92%; margin: 0 auto; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-bottom: 20px; }
-        .prayer-card { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 16px 20px; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .prayer-card.active { border: 2px solid var(--mp-gold); background: #FFFCF5; }
+        .prayer-card { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 16px 20px; border-radius: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border: 1.5px solid transparent; }
+        .prayer-card.active { border-color: var(--mp-gold); background: #FFFCF5; }
         .p-name { font-size: 18px; font-weight: 700; color: var(--mp-dark); }
-        .p-time { font-size: 20px; font-weight: 900; }
+        .p-time { font-size: 19px; font-weight: 900; }
 
         /* SIDEBAR (SINISTRA) */
-        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.4s; padding: 50px 20px; color: white; overflow-y: auto; text-align: right; }
+        .sidebar { position: fixed; top: 0; left: -310px; width: 310px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.4s; padding: 50px 20px; color: white; overflow-y: auto; text-align: right; }
         .sidebar.open { left: 0; }
         .sidebar h2 { color: var(--mp-gold); text-align: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .sidebar-btn { width: 100%; padding: 15px; border-radius: 15px; margin-top: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 14px; text-align: center; }
-        .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
         .btn-white { background: white; color: black; }
+        .btn-gold { background: var(--mp-gold); color: var(--mp-dark); }
 
         /* MODALS (GRIGLIA 3x3) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -59,9 +72,8 @@
         .names-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .gold-item { background: #FFFCF5; padding: 10px 5px; border-radius: 12px; border: 1.2px solid var(--mp-gold); font-size: 10px; font-weight: bold; text-align: center; }
         .gold-item b { display: block; font-size: 14px; color: var(--mp-dark); font-family: 'Amiri', serif; }
-        .dua-card { background: #FFFCF5; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1.2px solid var(--mp-gold); text-align: right; font-size: 13px; }
 
-        /* HADITH STRIP */
+        /* HADITH FOOTER */
         .hadith-footer { width: 100%; background: var(--mp-dark); padding: 12px 0; border-top: 2px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; position: relative; }
         .hadith-track { display: flex; width: max-content; animation: marquee-rtl 160s linear infinite; }
         .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 14px; padding: 0 60px; direction: rtl; white-space: nowrap; }
@@ -81,6 +93,7 @@
         <div class="ramadan-title">رمضان مبارك 🏮</div>
         <div class="header-logo"></div>
     </div>
+    <div class="aya-strip">إِنَّ مَعَ الْعُسْرِ يُسْرًا | In verità con la difficoltà c'è la facilità</div>
 
     <!-- DASHBOARD -->
     <div class="dashboard">
@@ -106,7 +119,6 @@
         <div class="progress-container"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
     </div>
 
-    <!-- LISTA PREGHIERE -->
     <div class="prayer-list" id="list-container"></div>
     <div class="hadith-footer"><div class="hadith-track" id="h-track"></div></div>
 
@@ -130,7 +142,6 @@
             <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah</option>
             <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah</option>
             <option value="https://www.islamcan.com/audio/adhan/azan16.mp3">Marocco</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan10.mp3">Egitto</option>
         </select>
         
         <div style="display:flex; gap:10px; margin-top:20px;">
@@ -150,7 +161,11 @@
 
     <script>
         const timetable = {
-            "1-3":{f:"05:28",dh:"12:23",a:"15:29",m:"18:00",i:"19:18",r:12},"2-3":{f:"05:27",dh:"12:23",a:"15:30",m:"18:01",i:"19:19",r:13},"3-3":{f:"05:25",dh:"12:23",a:"15:31",m:"18:02",i:"19:21",r:14},"4-3":{f:"05:23",dh:"12:23",a:"15:31",m:"18:04",i:"19:22",r:15},"5-3":{f:"05:22",dh:"12:22",a:"15:32",m:"18:05",i:"19:23",r:16},"6-3":{f:"05:20",dh:"12:22",a:"15:33",m:"18:06",i:"19:24",r:17},"7-3":{f:"05:18",dh:"12:22",a:"15:34",m:"18:07",i:"19:26",r:18},"8-3":{f:"05:17",dh:"12:22",a:"15:34",m:"18:09",i:"19:27",r:19},"9-3":{f:"05:15",dh:"12:21",a:"15:35",m:"18:10",i:"19:28",r:20},"18-3":{f:"04:59",dh:"12:19",a:"15:42",m:"18:21",i:"19:39",r:29}
+            "1-3":{f:"05:28",dh:"12:23",a:"15:29",m:"18:00",i:"19:18",r:12},"2-3":{f:"05:27",dh:"12:23",a:"15:30",m:"18:01",i:"19:19",r:13},
+            "3-3":{f:"05:25",dh:"12:23",a:"15:31",m:"18:02",i:"19:21",r:14},"4-3":{f:"05:23",dh:"12:23",a:"15:31",m:"18:04",i:"19:22",r:15},
+            "5-3":{f:"05:22",dh:"12:22",a:"15:32",m:"18:05",i:"19:23",r:16},"6-3":{f:"05:20",dh:"12:22",a:"15:33",m:"18:06",i:"19:24",r:17},
+            "7-3":{f:"05:18",dh:"12:22",a:"15:34",m:"18:07",i:"19:26",r:18},"8-3":{f:"05:17",dh:"12:22",a:"15:34",m:"18:09",i:"19:27",r:19},
+            "18-3":{f:"04:59",dh:"12:19",a:"15:42",m:"18:21",i:"19:39",r:29}, "19-3":{f:"04:57",dh:"12:19",a:"15:42",m:"18:22",i:"19:41",r:30}
         };
 
         const allahNames = [
@@ -159,7 +174,7 @@
             {a:"الخالق",i:"Il Creatore"},{a:"البارئ",i:"L'Evolutore"},{a:"المصور",i:"Il Formatore"},{a:"الغفار",i:"L'Indulgente"},{a:"القهار",i:"Il Dominatore"},
             {a:"الوهاب",i:"Il Donatore"},{a:"الرزاق",i:"Il Sostentatore"},{a:"الفتاح",i:"L'Aprente"},{a:"العليم",i:"L'Onnisciente"},{a:"القابض",i:"Il Restringitore"},
             {a:"الباسط",i:"L'Espansore"},{a:"الخافض",i:"L'Abbassatore"},{a:"الرافع",i:"L'Elevatore"},{a:"المعز",i:"Colui che Onora"},{a:"المذل",i:"Colui che Umilia"},
-            {a:"السميع",i:"L'Onnisenziente"},{a:"البصير",i:"L'Onneveggente"},{a:"الحكم",i:"Il Giudice"},{a:"العدل",i:"Il Giusto"},{a:"اللطيف",i:"Il Gentile"},
+            {a:"السميع",i:"L'Onnisenziente"},{a:"البصير",i:"Veggentee"},{a:"الحكم",i:"Giudice"},{a:"العدل",i:"Giusto"},{a:"اللطيف",i:"Gentile"},
             {a:"الخبير",i:"Consapevole"},{a:"الحليم",i:"Paziente"},{a:"العظيم",i:"Immenso"},{a:"الغفور",i:"Perdonatore"},{a:"الشكور",i:"Riconoscente"},
             {a:"العلي",i:"Altissimo"},{a:"الكبير",i:"Grande"},{a:"الحفيظ",i:"Preservatore"},{a:"المقيت",i:"Nutritore"},{a:"الحسيب",i:"Computatore"},
             {a:"الجليل",i:"Maestoso"},{a:"الكريم",i:"Generoso"},{a:"الرقيب",i:"Osservatore"},{a:"المجيب",i:"Rispondente"},{a:"الواسع",i:"Vasto"},
@@ -177,13 +192,11 @@
         ];
 
         const azkarData = [{t:"Mattina",d:[{a:"أصبحنا وأصبح الملك لله",i:"Siamo giunti al mattino e il regno è di Allah"}]},{t:"Sera",d:[{a:"أمسينـا وأمسى الملك لله",i:"Siamo giunti alla sera e il regno è di Allah"}]},{t:"Dopo Salah",d:[{a:"أستغفر الله",i:"Chiedo perdono ad Allah"}]}];
-        const hadiths = [{ar:"الدال على الخير كفاعله", it: "Chi indica il bene è come chi lo compie"},
-            {ar:"من صام رمضان إيماناً واحتساباً غفر له", it: "Chi digiuna con fede sarà perdonato"},
-            {ar:"أحب الأعمال إلى الله أدومها", it: "Le azioni migliori sono le più costanti"}];
-        
+        const hadiths = [{ar:"إنما الأعمال بالنيات", it:"Le azioni dipendono dalle intenzioni"}, {ar:"بني الإسلام sulla顧問 خمس", it:"L'Islam si basa su 5 pilastri"}];
+
         let audioUnlocked = false; let lastT = ""; let tCount = 0;
-        function savePrefs() { localStorage.setItem('notifMode', document.getElementById('notif-type').value); localStorage.setItem('v', document.getElementById('athan-voice').value); }
-        function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('notifMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('v') || 'https://www.islamcan.com/audio/adhan/azan1.mp3'; }
+        function savePrefs() { localStorage.setItem('notifMode', document.getElementById('notif-type').value); localStorage.setItem('voice', document.getElementById('athan-voice').value); }
+        function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('notifMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('voice') || 'https://www.islamcan.com/audio/adhan/azan1.mp3'; }
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
         async function startWakeLock() { try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){} }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
@@ -211,8 +224,7 @@
         function update() {
             const now = new Date();
             const dateKey = now.getDate() + "-" + (now.getMonth() + 1);
-            const dayData = timetable[dateKey];
-            if(!dayData) return;
+            const dayData = timetable[dateKey] || timetable["8-3"];
 
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
             const cities = [{ n: "Roma", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
@@ -220,13 +232,11 @@
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
             document.getElementById('hijri-txt').innerText = dayData.r + " رمضان 1447";
-            document.getElementById('g-date').innerText = now.toLocaleDateString('it-IT');
 
             let html = ""; let nextP = null; let lastP = null;
             const pKeys = ["f","dh","a","m","i"];
             const pLabels = ["الفجر","الظهر","العصر","المغرب","العشاء"];
             const pNamesIT = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-            const pIconsArr = ["🌅","☀️","🌤️","🌇","🌙"];
 
             pKeys.forEach((k, idx) => {
                 const time = dayData[k];
