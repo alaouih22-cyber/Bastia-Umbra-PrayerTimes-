@@ -1,15 +1,14 @@
 /* 
-   MUSLIM PRO SUPREME - ENGINE v17 
-   Gestione Totale Offline e Notifiche Banner ad Alta Priorità
+   MUSLIM PRO ABSOLUTE PLATINUM - SERVICE WORKER 
+   Gestione Offline Totale e Notifiche ad Alta Priorità
 */
 
-const CACHE_NAME = 'muslim-pro-absolute-v17';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'muslim-pro-v18-platinum';
+const ASSETS = [
     './',
     './index.html',
     './manifest.json',
     './icon.png',
-    // Salvataggio audio in cache per funzionamento offline
     'https://www.islamcan.com/audio/adhan/azan1.mp3',
     'https://www.islamcan.com/audio/adhan/azan2.mp3',
     'https://www.islamcan.com/audio/adhan/azan16.mp3',
@@ -18,42 +17,35 @@ const ASSETS_TO_CACHE = [
     'https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3'
 ];
 
-// 1. Installazione: Scarica tutti i file e l'audio nella memoria del telefono
+// 1. INSTALLAZIONE: Salva tutto il sito e gli audio nel telefono
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            console.log('Caching System: Salvataggio risorse per modalità Offline...');
-            return cache.addAll(ASSETS_TO_CACHE);
+            console.log('Caching in corso...');
+            return cache.addAll(ASSETS);
         })
     );
     self.skipWaiting();
 });
 
-// 2. Attivazione: Pulisce le vecchie versioni dell'app
+// 2. ATTIVAZIONE: Pulisce le vecchie versioni
 self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(keys => {
-            return Promise.all(
-                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-            );
-        })
-    );
-    self.clients.claim();
+    event.waitUntil(clients.claim());
 });
 
-// 3. IL CUORE DEI BANNER: Riceve il comando dall'index.html e lo mostra a schermo
+// 3. GESTORE DEI BANNER (Riceve il segnale dall'index.html)
 self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SHOW_PRAYER_BANNER') {
         const options = {
             body: event.data.body,
             icon: 'icon.png',
             badge: 'icon.png',
-            // Vibrazione professionale: 3 colpi lunghi (tipico delle app preghiera)
             vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40],
-            tag: 'prayer-alert',
+            tag: 'prayer-notification',
             renotify: true,
-            requireInteraction: true, // Il banner resta finché l'utente non lo chiude
-            priority: 2,              // Alta priorità per Android/Samsung
+            requireInteraction: true, // Il banner non sparisce da solo
+            priority: 2,              // Alta priorità per Android
+            importance: 'high',       // Forza la comparsa visiva
             data: { url: './' }
         };
 
@@ -63,24 +55,20 @@ self.addEventListener('message', event => {
     }
 });
 
-// 4. Gestione Click: Quando l'utente tocca il banner, apre l'app istantaneamente
+// 4. CLICK SUL BANNER: Apre l'app
 self.addEventListener('notificationclick', event => {
     event.notification.close();
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
             for (let client of clientList) {
-                if (client.url === '/' && 'focus' in client) {
-                    return client.focus();
-                }
+                if (client.url === '/' && 'focus' in client) return client.focus();
             }
-            if (clients.openWindow) {
-                return clients.openWindow('./');
-            }
+            if (clients.openWindow) return clients.openWindow('./');
         })
     );
 });
 
-// 5. Strategia Fetch: Se non c'è internet, usa i file salvati nel telefono
+// 5. STRATEGIA OFFLINE: Se non c'è campo, usa i file salvati
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request).then(response => {
