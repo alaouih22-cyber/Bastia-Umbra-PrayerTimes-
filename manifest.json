@@ -1,8 +1,8 @@
 {
   "name": "Muslim Pro Bastia",
   "short_name": "MuslimPro",
-  "description": "Orari Preghiera e Ramadan 2026 - Bastia Umbra",
-  "id": "com.muslimprobastia.twa",
+  "description": "Orari Preghiera, Ramadan 2026, Qibla e Tasbih - Bastia Umbra",
+  "id": "com.muslimpro.bastia.platinum",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#004F3F",
@@ -12,9 +12,27 @@
   "icons": [
     {
       "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tasbih",
+      "url": "index.html#tasbih-modal",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Qibla",
+      "url": "index.html#qibla-modal",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
     }
   ],
   "categories": ["lifestyle", "utilities"]
