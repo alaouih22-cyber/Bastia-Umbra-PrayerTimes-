@@ -83,7 +83,6 @@
     </div>
     <div class="header-aya">إِنَّ مَعَ الْعُسْرِ يُسْرًا | In verità con la difficoltà c'è la facilità</div>
 
-    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="dash-info">
             <div style="text-align:right">
@@ -92,7 +91,7 @@
             </div>
             <div class="date-box">
                 <div class="date-hijri" id="hijri-txt">-- رمضان 1447</div>
-                <div class="city-label" id="city-display">ROMA: 00:00</div>
+                <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
                 <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
         </div>
@@ -107,11 +106,9 @@
         <div class="progress-container"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
     </div>
 
-    <!-- LISTA PREGHIERE -->
     <div class="prayer-list" id="list-container"></div>
     <div class="hadith-footer"><div class="hadith-track" id="h-track"></div></div>
 
-    <!-- SIDEBAR SINISTRA -->
     <div class="sidebar" id="sidebar">
         <h2>Muslim Pro Menu</h2>
         <button class="sidebar-btn btn-gold" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
@@ -140,7 +137,6 @@
         <button class="sidebar-btn" style="background:transparent; border:1px solid white !important; color:white; margin-top:30px;" onclick="toggleMenu()">CHIUDI</button>
     </div>
 
-    <!-- MODALS -->
     <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list" class="names-grid"></div><button class="sidebar-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="duas-modal"><div class="modal-card"><h3>Azkar & Suppliche</h3><div id="duas-list" style="text-align:right"></div><button class="sidebar-btn btn-gold" onclick="closeModal('duas-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3>Qibla</h3><div class="compass-ui"><div id="compass-disk"></div></div><button class="sidebar-btn btn-gold" style="margin-top:20px" onclick="closeModal('qibla-modal')">OK</button></div></div>
@@ -150,13 +146,36 @@
 
     <script>
         const timetable = {
-            "1-3":{f:"05:28",dh:"12:23",a:"15:29",m:"18:00",i:"19:18",r:12},"2-3":{f:"05:27",dh:"12:23",a:"15:30",m:"18:01",i:"19:19",r:13},
-            "3-3":{f:"05:25",dh:"12:23",a:"15:31",m:"18:02",i:"19:21",r:14},"4-3":{f:"05:23",dh:"12:23",a:"15:31",m:"18:04",i:"19:22",r:15},
-            "5-3":{f:"05:22",dh:"12:22",a:"15:32",m:"18:05",i:"19:23",r:16},"6-3":{f:"05:20",dh:"12:22",a:"15:33",m:"18:06",i:"19:24",r:17},
-            "7-3":{f:"05:18",dh:"12:22",a:"15:34",m:"18:07",i:"19:26",r:18},"8-3":{f:"05:17",dh:"12:22",a:"15:34",m:"18:09",i:"19:27",r:19},
-            "9-3":{f:"05:15",dh:"12:21",a:"15:35",m:"18:10",i:"19:28",r:20},"10-3":{f:"05:13",dh:"12:21",a:"15:36",m:"18:11",i:"19:29",r:21},
+            "18-2":{f:"05:45",dh:"12:25",a:"15:19",m:"17:46",i:"19:05",r:1},
+            "19-2":{f:"05:43",dh:"12:25",a:"15:20",m:"17:47",i:"19:06",r:2},
+            "20-2":{f:"05:42",dh:"12:25",a:"15:21",m:"17:48",i:"19:07",r:3},
+            "21-2":{f:"05:41",dh:"12:25",a:"15:22",m:"17:50",i:"19:08",r:4},
+            "22-2":{f:"05:39",dh:"12:24",a:"15:23",m:"17:51",i:"19:10",r:5},
+            "23-2":{f:"05:38",dh:"12:24",a:"15:24",m:"17:52",i:"19:11",r:6},
+            "24-2":{f:"05:36",dh:"12:24",a:"15:25",m:"17:54",i:"19:12",r:7},
+            "25-2":{f:"05:35",dh:"12:24",a:"15:25",m:"17:55",i:"19:13",r:8},
+            "26-2":{f:"05:33",dh:"12:24",a:"15:26",m:"17:56",i:"19:15",r:9},
+            "27-2":{f:"05:31",dh:"12:24",a:"15:27",m:"17:57",i:"19:16",r:10},
+            "28-2":{f:"05:30",dh:"12:23",a:"15:28",m:"17:59",i:"19:17",r:11},
+            "1-3":{f:"05:28",dh:"12:23",a:"15:29",m:"18:00",i:"19:18",r:12},
+            "2-3":{f:"05:27",dh:"12:23",a:"15:30",m:"18:01",i:"19:19",r:13},
+            "3-3":{f:"05:25",dh:"12:23",a:"15:31",m:"18:02",i:"19:21",r:14},
+            "4-3":{f:"05:23",dh:"12:23",a:"15:31",m:"18:04",i:"19:22",r:15},
+            "5-3":{f:"05:22",dh:"12:22",a:"15:32",m:"18:05",i:"19:23",r:16},
+            "6-3":{f:"05:20",dh:"12:22",a:"15:33",m:"18:06",i:"19:24",r:17},
+            "7-3":{f:"05:18",dh:"12:22",a:"15:34",m:"18:07",i:"19:26",r:18},
+            "8-3":{f:"05:17",dh:"12:22",a:"15:35",m:"18:09",i:"19:27",r:19},
+            "9-3":{f:"05:15",dh:"12:21",a:"15:35",m:"18:10",i:"19:28",r:20},
+            "10-3":{f:"05:13",dh:"12:21",a:"15:36",m:"18:11",i:"19:29",r:21},
             "11-3":{f:"05:11",dh:"12:21",a:"15:37",m:"18:12",i:"19:31",r:22},
-            "18-3":{f:"04:59",dh:"12:19",a:"15:42",m:"18:21",i:"19:39",r:29},"19-3":{f:"04:57",dh:"12:19",a:"15:42",m:"18:22",i:"19:41",r:30}
+            "12-3":{f:"05:09",dh:"12:21",a:"15:38",m:"18:13",i:"19:32",r:23},
+            "13-3":{f:"05:08",dh:"12:20",a:"15:38",m:"18:15",i:"19:33",r:24},
+            "14-3":{f:"05:06",dh:"12:20",a:"15:39",m:"18:16",i:"19:34",r:25},
+            "15-3":{f:"05:04",dh:"12:20",a:"15:40",m:"18:17",i:"19:36",r:26},
+            "16-3":{f:"05:02",dh:"12:20",a:"15:40",m:"18:18",i:"19:37",r:27},
+            "17-3":{f:"05:00",dh:"12:19",a:"15:41",m:"18:19",i:"19:38",r:28},
+            "18-3":{f:"04:59",dh:"12:19",a:"15:42",m:"18:21",i:"19:39",r:29},
+            "19-3":{f:"04:57",dh:"12:19",a:"15:42",m:"18:22",i:"19:41",r:30}
         };
 
         const allahNames = ["الرحمن","الرحيم","الملك","القدوس","السلام","المؤمن","المهيمن","العزيز","الجبار","المتكبر","الخالق","البارئ","المصور","الغفار","القهار","الوهاب","الرزاق","الفتاح","العليم","القابض","الباسط","الخافض","الرافع","المعز","المذل","السميع","البصير","الحكم","العدل","اللطيف","الخبير","الحليم","العظيم","الغفور","الشكور","العلي","الكبير","الحفيظ","المقيت","الحسيب","الجليل","الكريم","الرقيب","المجيب","الواسع","الحكيم","الودود","المجيد","الباعث","الشهيد","الحق","الوكيل","القوي","المتين","الولي","الحميد","المحصي","المبدئ","المعيد","المحيي","المميت","الحي","القيوم","الواجد","الماجد","الواحد","الأحد","الصمد","القادر","المقتدر","المقدم","المؤخر","الأول","الآخر","الظاهر","الباطن","الوالي","المتعالي","البر","التواب","المنتقم","العفو","الرؤوف","مالك الملك","ذو الجلال","المقسط","الجامع","الغني","المغني","المانع","الضار","النافع","النور","الهادي","البديع","الباقي","الوارث","الرشيد","الصبور"];
@@ -207,10 +226,10 @@
             const d = now.getDate();
             const m = now.getMonth() + 1;
             const dateKey = d + "-" + m;
-            const dayData = timetable[dateKey] || timetable["9-3"];
+            const dayData = timetable[dateKey] || timetable["18-2"];
 
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-            const cities = [{ n: "Roma", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
+            const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             const cityIdx = Math.floor(now.getTime() / 30000) % 3;
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
@@ -231,7 +250,7 @@
             });
 
             if (!nextP) {
-                const tomData = timetable[(now.getDate()+1) + "-" + (now.getMonth() + 1)] || timetable["1-3"];
+                const tomData = timetable[(now.getDate()+1) + "-" + (now.getMonth() + 1)] || timetable["18-2"];
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                 document.getElementById('next-name').innerText = "PROSSIMA: FAJR";
             }
