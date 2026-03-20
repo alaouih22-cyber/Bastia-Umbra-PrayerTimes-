@@ -20,8 +20,7 @@
         .header { width: 100%; background: linear-gradient(180deg, #004F3F 0%, #002b22 100%); padding: 45px 15px 15px 15px; border-bottom: 3px solid var(--mp-gold); flex-shrink: 0; z-index: 1000; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; text-align: center; }
         .menu-btn { color: var(--mp-gold); font-size: 38px; cursor: pointer; order: 1; text-align: left; }
         .header-logo { width: 50px; height: 50px; border-radius: 12px; background: url('icon.png') center/cover; border: 2px solid var(--mp-gold); order: 3; box-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
-        .ramadan-title { font-family: 'Amiri', serif; color: var(--mp-gold); font-size: 22px; font-weight: 900; order: 2; animation: shimmer 3s infinite; }
-        @keyframes shimmer { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .app-title { font-family: 'Inter', sans-serif; color: var(--mp-gold); font-size: 18px; font-weight: 900; order: 2; text-transform: uppercase; letter-spacing: 1px; }
         .header-aya { width: 100%; background: rgba(0,0,0,0.1); color: #444; padding: 5px; text-align: center; font-size: 10px; font-style: italic; border-bottom: 1px solid #ddd; flex-shrink: 0; }
 
         /* DASHBOARD */
@@ -47,7 +46,7 @@
         .p-name { font-size: 17px; font-weight: 700; color: var(--mp-dark); }
         .p-time { font-size: 19px; font-weight: 900; }
 
-        /* SIDEBAR (SINISTRA) */
+        /* SIDEBAR */
         .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--mp-dark); z-index: 2000; transition: 0.4s; padding: 50px 20px; color: white; overflow-y: auto; text-align: right; }
         .sidebar.open { left: 0; }
         .sidebar h2 { color: var(--mp-gold); text-align: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
@@ -61,7 +60,7 @@
         .gold-item { background: #FFFCF5; padding: 10px 5px; border-radius: 12px; border: 1.2px solid var(--mp-gold); font-size: 10px; font-weight: bold; text-align: center; }
         .gold-item b { display: block; font-size: 14px; color: var(--mp-dark); font-family: 'Amiri', serif; }
 
-        /* HADITH FOOTER (VELOCE) */
+        /* HADITH FOOTER */
         .hadith-footer { width: 100%; background: var(--mp-dark); padding: 12px 0; border-top: 2px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; position: relative; }
         .hadith-track { display: flex; width: max-content; animation: marquee-rtl 80s linear infinite; }
         .hadith-text { color: var(--mp-gold); font-weight: 600; font-size: 14px; padding: 0 60px; direction: rtl; white-space: nowrap; }
@@ -78,7 +77,7 @@
 
     <div class="header">
         <div class="menu-btn" onclick="toggleMenu()">☰</div>
-        <div class="ramadan-title">🏮 رمضان مبارك 🏮</div>
+        <div class="app-title">Muslim Pro Ultimate</div>
         <div class="header-logo"></div>
     </div>
     <div class="header-aya">إِنَّ مَعَ الْعُسْرِ يُسْرًا | In verità con la difficoltà c'è la facilità</div>
@@ -90,7 +89,7 @@
                 <div style="font-size:10px; font-weight:800; color:var(--mp-gold)" id="next-name">PROSSIMA PREGHIERA</div>
             </div>
             <div class="date-box">
-                <div class="date-hijri" id="hijri-txt">-- رمضان 1447</div>
+                <div class="date-hijri" id="hijri-txt">-- شوال 1447</div>
                 <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
                 <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
@@ -137,6 +136,7 @@
         <button class="sidebar-btn" style="background:transparent; border:1px solid white !important; color:white; margin-top:30px;" onclick="toggleMenu()">CHIUDI</button>
     </div>
 
+    <!-- MODALS -->
     <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list" class="names-grid"></div><button class="sidebar-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="duas-modal"><div class="modal-card"><h3>Azkar & Suppliche</h3><div id="duas-list" style="text-align:right"></div><button class="sidebar-btn btn-gold" onclick="closeModal('duas-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3>Qibla</h3><div class="compass-ui"><div id="compass-disk"></div></div><button class="sidebar-btn btn-gold" style="margin-top:20px" onclick="closeModal('qibla-modal')">OK</button></div></div>
@@ -145,37 +145,38 @@
     <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="mp-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
 
     <script>
+        // TABELLA AGGIORNATA DALL'IMMAGINE (Bastia Umbra Marzo-Aprile 2026 / Shawwal 1447)
         const timetable = {
-            "18-2":{f:"05:45",dh:"12:25",a:"15:19",m:"17:46",i:"19:05",r:1},
-            "19-2":{f:"05:43",dh:"12:25",a:"15:20",m:"17:47",i:"19:06",r:2},
-            "20-2":{f:"05:42",dh:"12:25",a:"15:21",m:"17:48",i:"19:07",r:3},
-            "21-2":{f:"05:41",dh:"12:25",a:"15:22",m:"17:50",i:"19:08",r:4},
-            "22-2":{f:"05:39",dh:"12:24",a:"15:23",m:"17:51",i:"19:10",r:5},
-            "23-2":{f:"05:38",dh:"12:24",a:"15:24",m:"17:52",i:"19:11",r:6},
-            "24-2":{f:"05:36",dh:"12:24",a:"15:25",m:"17:54",i:"19:12",r:7},
-            "25-2":{f:"05:35",dh:"12:24",a:"15:25",m:"17:55",i:"19:13",r:8},
-            "26-2":{f:"05:33",dh:"12:24",a:"15:26",m:"17:56",i:"19:15",r:9},
-            "27-2":{f:"05:31",dh:"12:24",a:"15:27",m:"17:57",i:"19:16",r:10},
-            "28-2":{f:"05:30",dh:"12:23",a:"15:28",m:"17:59",i:"19:17",r:11},
-            "1-3":{f:"05:28",dh:"12:23",a:"15:29",m:"18:00",i:"19:18",r:12},
-            "2-3":{f:"05:27",dh:"12:23",a:"15:30",m:"18:01",i:"19:19",r:13},
-            "3-3":{f:"05:25",dh:"12:23",a:"15:31",m:"18:02",i:"19:21",r:14},
-            "4-3":{f:"05:23",dh:"12:23",a:"15:31",m:"18:04",i:"19:22",r:15},
-            "5-3":{f:"05:22",dh:"12:22",a:"15:32",m:"18:05",i:"19:23",r:16},
-            "6-3":{f:"05:20",dh:"12:22",a:"15:33",m:"18:06",i:"19:24",r:17},
-            "7-3":{f:"05:18",dh:"12:22",a:"15:34",m:"18:07",i:"19:26",r:18},
-            "8-3":{f:"05:17",dh:"12:22",a:"15:35",m:"18:09",i:"19:27",r:19},
-            "9-3":{f:"05:15",dh:"12:21",a:"15:35",m:"18:10",i:"19:28",r:20},
-            "10-3":{f:"05:13",dh:"12:21",a:"15:36",m:"18:11",i:"19:29",r:21},
-            "11-3":{f:"05:11",dh:"12:21",a:"15:37",m:"18:12",i:"19:31",r:22},
-            "12-3":{f:"05:09",dh:"12:21",a:"15:38",m:"18:13",i:"19:32",r:23},
-            "13-3":{f:"05:08",dh:"12:20",a:"15:38",m:"18:15",i:"19:33",r:24},
-            "14-3":{f:"05:06",dh:"12:20",a:"15:39",m:"18:16",i:"19:34",r:25},
-            "15-3":{f:"05:04",dh:"12:20",a:"15:40",m:"18:17",i:"19:36",r:26},
-            "16-3":{f:"05:02",dh:"12:20",a:"15:40",m:"18:18",i:"19:37",r:27},
-            "17-3":{f:"05:00",dh:"12:19",a:"15:41",m:"18:19",i:"19:38",r:28},
-            "18-3":{f:"04:59",dh:"12:19",a:"15:42",m:"18:21",i:"19:39",r:29},
-            "19-3":{f:"04:57",dh:"12:19",a:"15:42",m:"18:22",i:"19:41",r:30}
+            "20-3":{f:"04:55",dh:"12:18",a:"15:43",m:"18:23",i:"19:42",r:1},
+            "21-3":{f:"04:53",dh:"12:18",a:"15:44",m:"18:24",i:"19:43",r:2},
+            "22-3":{f:"04:51",dh:"12:18",a:"15:44",m:"18:25",i:"19:45",r:3},
+            "23-3":{f:"04:49",dh:"12:18",a:"15:45",m:"18:27",i:"19:46",r:4},
+            "24-3":{f:"04:47",dh:"12:17",a:"15:45",m:"18:28",i:"19:47",r:5},
+            "25-3":{f:"04:45",dh:"12:17",a:"15:46",m:"18:29",i:"19:49",r:6},
+            "26-3":{f:"04:43",dh:"12:17",a:"15:47",m:"18:30",i:"19:50",r:7},
+            "27-3":{f:"04:41",dh:"12:16",a:"15:47",m:"18:31",i:"19:51",r:8},
+            "28-3":{f:"04:39",dh:"12:16",a:"15:48",m:"18:32",i:"19:53",r:9},
+            // CAMBIO ORA LEGALE (29 MARZO)
+            "29-3":{f:"05:40",dh:"13:16",a:"16:48",m:"19:32",i:"20:52",r:10},
+            "30-3":{f:"05:38",dh:"13:16",a:"16:48",m:"19:34",i:"20:54",r:11},
+            "31-3":{f:"05:36",dh:"13:15",a:"16:49",m:"19:35",i:"20:55",r:12},
+            "1-4":{f:"05:34",dh:"13:15",a:"16:49",m:"19:36",i:"20:56",r:13},
+            "2-4":{f:"05:32",dh:"13:15",a:"16:50",m:"19:37",i:"20:58",r:14},
+            "3-4":{f:"05:30",dh:"13:15",a:"16:50",m:"19:38",i:"20:59",r:15},
+            "4-4":{f:"05:28",dh:"13:14",a:"16:51",m:"19:39",i:"21:01",r:16},
+            "5-4":{f:"05:26",dh:"13:14",a:"16:51",m:"19:41",i:"21:02",r:17},
+            "6-4":{f:"05:24",dh:"13:14",a:"16:52",m:"19:42",i:"21:03",r:18},
+            "7-4":{f:"05:22",dh:"13:13",a:"16:52",m:"19:43",i:"21:05",r:19},
+            "8-4":{f:"05:20",dh:"13:13",a:"16:53",m:"19:44",i:"21:06",r:20},
+            "9-4":{f:"05:18",dh:"13:13",a:"16:53",m:"19:45",i:"21:08",r:21},
+            "10-4":{f:"05:16",dh:"13:13",a:"16:54",m:"19:46",i:"21:09",r:22},
+            "11-4":{f:"05:14",dh:"13:12",a:"16:54",m:"19:48",i:"21:10",r:23},
+            "12-4":{f:"05:12",dh:"13:12",a:"16:54",m:"19:49",i:"21:12",r:24},
+            "13-4":{f:"05:10",dh:"13:12",a:"16:55",m:"19:50",i:"21:13",r:25},
+            "14-4":{f:"05:08",dh:"13:11",a:"16:55",m:"19:51",i:"21:15",r:26},
+            "15-4":{f:"05:06",dh:"13:11",a:"16:56",m:"19:52",i:"21:16",r:27},
+            "16-4":{f:"05:04",dh:"13:11",a:"16:56",m:"19:53",i:"21:18",r:28},
+            "17-4":{f:"05:02",dh:"13:11",a:"16:57",m:"19:55",i:"21:19",r:29}
         };
 
         const allahNames = ["الرحمن","الرحيم","الملك","القدوس","السلام","المؤمن","المهيمن","العزيز","الجبار","المتكبر","الخالق","البارئ","المصور","الغفار","القهار","الوهاب","الرزاق","الفتاح","العليم","القابض","الباسط","الخافض","الرافع","المعز","المذل","السميع","البصير","الحكم","العدل","اللطيف","الخبير","الحليم","العظيم","الغفور","الشكور","العلي","الكبير","الحفيظ","المقيت","الحسيب","الجليل","الكريم","الرقيب","المجيب","الواسع","الحكيم","الودود","المجيد","الباعث","الشهيد","الحق","الوكيل","القوي","المتين","الولي","الحميد","المحصي","المبدئ","المعيد","المحيي","المميت","الحي","القيوم","الواجد","الماجد","الواحد","الأحد","الصمد","القادر","المقتدر","المقدم","المؤخر","الأول","الآخر","الظاهر","الباطن","الوالي","المتعالي","البر","التواب","المنتقم","العفو","الرؤوف","مالك الملك","ذو الجلال","المقسط","الجامع","الغني","المغني","المانع","الضار","النافع","النور","الهادي","البديع","الباقي","الوارث","الرشيد","الصبور"];
@@ -200,7 +201,6 @@
         function openAzkar() { const list = document.getElementById('duas-list'); if(list.innerHTML === "") { azkar.forEach(sec => { list.innerHTML += `<h4 style="color:#004F3F; margin:15px 0 5px 0">${sec.t}</h4>`; sec.d.forEach(dua => list.innerHTML += `<div class="gold-item"><b>${dua.a}</b><br><small>${dua.i}</small></div>`); }); } openModal('duas-modal'); }
 
         function countTasbih() { tCount++; document.getElementById('t-display').innerText=tCount; if(navigator.vibrate) navigator.vibrate(50); }
-        function resetTasbih() { tCount=0; document.getElementById('t-display').innerText=0; }
         
         window.addEventListener('deviceorientationabsolute', (e) => {
             let north = e.webkitCompassHeading || 360 - e.alpha;
@@ -212,9 +212,6 @@
             navigator.serviceWorker.ready.then(reg => {
                 reg.showNotification(title, { body: 'Bastia Umbra - È ora della preghiera', icon: 'icon.png', vibrate: [500, 110, 500], requireInteraction: true });
             });
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({ title: 'Richiamo alla Preghiera', artist: title, album: 'Muslim Pro Platinum', artwork: [{ src: 'icon.png', sizes: '512x512', type: 'image/png' }] });
-            }
             const mode = document.getElementById('notif-type').value;
             const voice = document.getElementById('athan-voice').value;
             if(mode === 'athan') new Audio(voice).play();
@@ -226,14 +223,15 @@
             const d = now.getDate();
             const m = now.getMonth() + 1;
             const dateKey = d + "-" + m;
-            const dayData = timetable[dateKey] || timetable["18-2"];
+            const dayData = timetable[dateKey] || timetable["20-3"];
 
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-            const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             const cityIdx = Math.floor(now.getTime() / 30000) % 3;
+            const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
-            document.getElementById('hijri-txt').innerText = dayData.r + " رمضان 1447";
+            // Cambiato mese Hijri in Shawwal
+            document.getElementById('hijri-txt').innerText = dayData.r + " شوال 1447";
 
             let html = ""; let nextP = null; let lastP = null;
             const pKeys = ["f","dh","a","m","i"];
@@ -243,14 +241,15 @@
             pKeys.forEach((k, idx) => {
                 const time = dayData[k];
                 if (hhmm === time && now.getSeconds() === 0 && lastT !== hhmm+k) { lastT=hhmm+k; triggerBanner("صلاة "+ pLabels[idx]); }
-                const [h,m] = time.split(":"); const pDate = new Date(); pDate.setHours(h,m,0);
+                const [h,min] = time.split(":"); const pDate = new Date(); pDate.setHours(h,min,0);
                 if (pDate > now && !nextP) { nextP = pDate; document.getElementById('next-name').innerText = "PROSSIMA PREGHIERA: " + pNamesIT[idx].toUpperCase(); }
                 if (pDate <= now) lastP = pDate;
                 html += `<div class="prayer-card ${hhmm === time ? 'active' : ''}"><span class="p-time">${time}</span><div class="p-right"><span class="p-name">${pLabels[idx]}</span><span class="p-icon">${["🌅","☀️","🌤️","🌇","🌙"][idx]}</span></div></div>`;
             });
 
             if (!nextP) {
-                const tomData = timetable[(now.getDate()+1) + "-" + (now.getMonth() + 1)] || timetable["18-2"];
+                const nextDay = new Date(); nextDay.setDate(now.getDate()+1);
+                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["20-3"];
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                 document.getElementById('next-name').innerText = "PROSSIMA: FAJR";
             }
