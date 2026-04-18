@@ -89,7 +89,7 @@
                 <div style="font-size:10px; font-weight:800; color:var(--mp-gold)" id="next-name">PROSSIMA PREGHIERA</div>
             </div>
             <div class="date-box">
-                <div class="date-hijri" id="hijri-txt">-- شوال 1447</div>
+                <div class="date-hijri" id="hijri-txt">-- ذو القعدة 1447</div>
                 <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
                 <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
@@ -136,7 +136,6 @@
         <button class="sidebar-btn" style="background:transparent; border:1px solid white !important; color:white; margin-top:30px;" onclick="toggleMenu()">CHIUDI</button>
     </div>
 
-    <!-- MODALS -->
     <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list" class="names-grid"></div><button class="sidebar-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="duas-modal"><div class="modal-card"><h3>Azkar & Suppliche</h3><div id="duas-list" style="text-align:right"></div><button class="sidebar-btn btn-gold" onclick="closeModal('duas-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3>Qibla</h3><div class="compass-ui"><div id="compass-disk"></div></div><button class="sidebar-btn btn-gold" style="margin-top:20px" onclick="closeModal('qibla-modal')">OK</button></div></div>
@@ -145,38 +144,23 @@
     <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="mp-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
 
     <script>
-        // TABELLA AGGIORNATA DALL'IMMAGINE (Bastia Umbra Marzo-Aprile 2026 / Shawwal 1447)
+        // TABELLA AGGIORNATA BASTIA UMBRA (Aprile-Maggio 2026 / Dhul Qa'dah 1447)
         const timetable = {
-            "20-3":{f:"04:55",dh:"12:18",a:"15:43",m:"18:23",i:"19:42",r:1},
-            "21-3":{f:"04:53",dh:"12:18",a:"15:44",m:"18:24",i:"19:43",r:2},
-            "22-3":{f:"04:51",dh:"12:18",a:"15:44",m:"18:25",i:"19:45",r:3},
-            "23-3":{f:"04:49",dh:"12:18",a:"15:45",m:"18:27",i:"19:46",r:4},
-            "24-3":{f:"04:47",dh:"12:17",a:"15:45",m:"18:28",i:"19:47",r:5},
-            "25-3":{f:"04:45",dh:"12:17",a:"15:46",m:"18:29",i:"19:49",r:6},
-            "26-3":{f:"04:43",dh:"12:17",a:"15:47",m:"18:30",i:"19:50",r:7},
-            "27-3":{f:"04:41",dh:"12:16",a:"15:47",m:"18:31",i:"19:51",r:8},
-            "28-3":{f:"04:39",dh:"12:16",a:"15:48",m:"18:32",i:"19:53",r:9},
-            // CAMBIO ORA LEGALE (29 MARZO)
-            "29-3":{f:"05:40",dh:"13:16",a:"16:48",m:"19:32",i:"20:52",r:10},
-            "30-3":{f:"05:38",dh:"13:16",a:"16:48",m:"19:34",i:"20:54",r:11},
-            "31-3":{f:"05:36",dh:"13:15",a:"16:49",m:"19:35",i:"20:55",r:12},
-            "1-4":{f:"05:34",dh:"13:15",a:"16:49",m:"19:36",i:"20:56",r:13},
-            "2-4":{f:"05:32",dh:"13:15",a:"16:50",m:"19:37",i:"20:58",r:14},
-            "3-4":{f:"05:30",dh:"13:15",a:"16:50",m:"19:38",i:"20:59",r:15},
-            "4-4":{f:"05:28",dh:"13:14",a:"16:51",m:"19:39",i:"21:01",r:16},
-            "5-4":{f:"05:26",dh:"13:14",a:"16:51",m:"19:41",i:"21:02",r:17},
-            "6-4":{f:"05:24",dh:"13:14",a:"16:52",m:"19:42",i:"21:03",r:18},
-            "7-4":{f:"05:22",dh:"13:13",a:"16:52",m:"19:43",i:"21:05",r:19},
-            "8-4":{f:"05:20",dh:"13:13",a:"16:53",m:"19:44",i:"21:06",r:20},
-            "9-4":{f:"05:18",dh:"13:13",a:"16:53",m:"19:45",i:"21:08",r:21},
-            "10-4":{f:"05:16",dh:"13:13",a:"16:54",m:"19:46",i:"21:09",r:22},
-            "11-4":{f:"05:14",dh:"13:12",a:"16:54",m:"19:48",i:"21:10",r:23},
-            "12-4":{f:"05:12",dh:"13:12",a:"16:54",m:"19:49",i:"21:12",r:24},
-            "13-4":{f:"05:10",dh:"13:12",a:"16:55",m:"19:50",i:"21:13",r:25},
-            "14-4":{f:"05:08",dh:"13:11",a:"16:55",m:"19:51",i:"21:15",r:26},
-            "15-4":{f:"05:06",dh:"13:11",a:"16:56",m:"19:52",i:"21:16",r:27},
-            "16-4":{f:"05:04",dh:"13:11",a:"16:56",m:"19:53",i:"21:18",r:28},
-            "17-4":{f:"05:02",dh:"13:11",a:"16:57",m:"19:55",i:"21:19",r:29}
+            "18-4":{f:"05:00",dh:"13:11",a:"16:57",m:"19:56",i:"21:21",r:1},
+            "19-4":{f:"04:58",dh:"13:10",a:"16:57",m:"19:57",i:"21:22",r:2},
+            "20-4":{f:"04:56",dh:"13:10",a:"16:58",m:"19:58",i:"21:24",r:3},
+            "21-4":{f:"04:54",dh:"13:10",a:"16:58",m:"19:59",i:"21:25",r:4},
+            "22-4":{f:"04:53",dh:"13:10",a:"16:59",m:"20:00",i:"21:27",r:5},
+            "23-4":{f:"04:51",dh:"13:09",a:"16:59",m:"20:02",i:"21:28",r:6},
+            "24-4":{f:"04:49",dh:"13:09",a:"16:59",m:"20:03",i:"21:30",r:7},
+            "25-4":{f:"04:47",dh:"13:09",a:"17:00",m:"20:04",i:"21:31",r:8},
+            "26-4":{f:"04:45",dh:"13:09",a:"17:00",m:"20:05",i:"21:33",r:9},
+            "27-4":{f:"04:43",dh:"13:09",a:"17:00",m:"20:06",i:"21:35",r:10},
+            "28-4":{f:"04:41",dh:"13:09",a:"17:01",m:"20:07",i:"21:36",r:11},
+            "29-4":{f:"04:39",dh:"13:08",a:"17:01",m:"20:09",i:"21:38",r:12},
+            "30-4":{f:"04:37",dh:"13:08",a:"17:02",m:"20:10",i:"21:39",r:13},
+            "1-5":{f:"04:36",dh:"13:08",a:"17:02",m:"20:11",i:"21:41",r:14},
+            "2-5":{f:"04:34",dh:"13:08",a:"17:02",m:"20:12",i:"21:42",r:15}
         };
 
         const allahNames = ["الرحمن","الرحيم","الملك","القدوس","السلام","المؤمن","المهيمن","العزيز","الجبار","المتكبر","الخالق","البارئ","المصور","الغفار","القهار","الوهاب","الرزاق","الفتاح","العليم","القابض","الباسط","الخافض","الرافع","المعز","المذل","السميع","البصير","الحكم","العدل","اللطيف","الخبير","الحليم","العظيم","الغفور","الشكور","العلي","الكبير","الحفيظ","المقيت","الحسيب","الجليل","الكريم","الرقيب","المجيب","الواسع","الحكيم","الودود","المجيد","الباعث","الشهيد","الحق","الوكيل","القوي","المتين","الولي","الحميد","المحصي","المبدئ","المعيد","المحيي","المميت","الحي","القيوم","الواجد","الماجد","الواحد","الأحد","الصمد","القادر","المقتدر","المقدم","المؤخر","الأول","الآخر","الظاهر","الباطن","الوالي","المتعالي","البر","التواب","المنتقم","العفو","الرؤوف","مالك الملك","ذو الجلال","المقسط","الجامع","الغني","المغني","المانع","الضار","النافع","النور","الهادي","البديع","الباقي","الوارث","الرشيد","الصبور"];
@@ -223,15 +207,15 @@
             const d = now.getDate();
             const m = now.getMonth() + 1;
             const dateKey = d + "-" + m;
-            const dayData = timetable[dateKey] || timetable["20-3"];
+            const dayData = timetable[dateKey] || timetable["18-4"];
 
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
             const cityIdx = Math.floor(now.getTime() / 30000) % 3;
             const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
-            // Cambiato mese Hijri in Shawwal
-            document.getElementById('hijri-txt').innerText = dayData.r + " شوال 1447";
+            // Mese Hijri aggiornato a Dhul Qa'dah per il periodo richiesto
+            document.getElementById('hijri-txt').innerText = dayData.r + " ذو القعدة 1447";
 
             let html = ""; let nextP = null; let lastP = null;
             const pKeys = ["f","dh","a","m","i"];
@@ -249,7 +233,7 @@
 
             if (!nextP) {
                 const nextDay = new Date(); nextDay.setDate(now.getDate()+1);
-                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["20-3"];
+                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["18-4"];
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                 document.getElementById('next-name').innerText = "PROSSIMA: FAJR";
             }
