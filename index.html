@@ -60,6 +60,13 @@
         .gold-item { background: #FFFCF5; padding: 10px 5px; border-radius: 12px; border: 1.2px solid var(--mp-gold); font-size: 10px; font-weight: bold; text-align: center; }
         .gold-item b { display: block; font-size: 14px; color: var(--mp-dark); font-family: 'Amiri', serif; }
 
+        /* TABELLA CALENDARIO COMPLETO */
+        .timetable-scroll { width: 100%; overflow-x: auto; margin-top: 15px; }
+        .timetable-view { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; }
+        .timetable-view th { background: var(--mp-dark); color: var(--mp-gold); padding: 8px 4px; font-weight: bold; }
+        .timetable-view td { padding: 8px 4px; border-bottom: 1px solid #eee; }
+        .timetable-view tr.current-day-row { background: #FFFCF5; font-weight: bold; border: 1.5px solid var(--mp-gold); }
+
         /* HADITH FOOTER */
         .hadith-footer { width: 100%; background: var(--mp-dark); padding: 12px 0; border-top: 2px solid var(--mp-gold); overflow: hidden; flex-shrink: 0; direction: ltr !important; position: relative; }
         .hadith-track { display: flex; width: max-content; animation: marquee-rtl 80s linear infinite; }
@@ -89,7 +96,7 @@
                 <div style="font-size:10px; font-weight:800; color:var(--mp-gold)" id="next-name">PROSSIMA PREGHIERA</div>
             </div>
             <div class="date-box">
-                <div class="date-hijri" id="hijri-txt">-- ذو الحجة 1447</div>
+                <div class="date-hijri" id="hijri-txt">-- ذو القعدة 1447</div>
                 <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
                 <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
@@ -99,7 +106,7 @@
             <div class="bubble-item" onclick="openModal('tracker-modal')"><div class="bubble-circle">✅</div><span class="bubble-label">Diary</span></div>
             <div class="bubble-item" onclick="openAzkar()"><div class="bubble-circle">🤲</div><span class="bubble-label">Azkar</span></div>
             <div class="bubble-item" onclick="openNames()"><div class="bubble-circle">✨</div><span class="bubble-label">Nomi 99</span></div>
-            <div class="bubble-item" onclick="openModal('tasbih-modal')"><div class="bubble-circle">📿</div><span class="bubble-label">Tasbih</span></div>
+            <div class="bubble-item" onclick="openModal('timetable-modal')"><div class="bubble-circle">📅</div><span class="bubble-label">Calendario</span></div>
             <div class="bubble-item" onclick="openModal('qibla-modal')"><div class="bubble-circle">🧭</div><span class="bubble-label">Qibla</span></div>
         </div>
         <div class="progress-container"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
@@ -113,6 +120,7 @@
         <button class="sidebar-btn btn-gold" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
         <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
         <button class="sidebar-btn" style="background:#002b22; color:white; border: 1px solid var(--mp-gold);" id="mosque-status-btn">🕌 Stato della Moschea (Live News)</button>
+        <button class="sidebar-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="openModal('timetable-modal')">📅 Visualizza Calendario Mese</button>
         <hr style="margin:20px 0; opacity:0.1">
         
         <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">
@@ -143,10 +151,36 @@
     <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3>Tasbih</h3><div id="t-display" style="font-size:60px; margin:20px 0">0</div><div style="width:100px; height:100px; border-radius:50%; background:gold; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:30px;" onclick="countTasbih()">+1</div><br><button class="sidebar-btn btn-white" onclick="closeModal('tasbih-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="tracker-modal"><div class="modal-card"><h3>Prayer Tracker</h3><div id="tracker-list"></div><button class="sidebar-btn btn-gold" onclick="closeModal('tracker-modal')">OK</button></div></div>
     <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="mp-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
+    
+    <div class="modal-overlay" id="timetable-modal">
+        <div class="modal-card" style="max-width: 600px;">
+            <h3>Orari Bastia Umbra</h3>
+            <p style="font-size: 11px; margin-bottom: 10px; color: var(--mp-gold);">Maggio / Giugno 2026 - Dhul-Hijja 1447</p>
+            <div class="timetable-scroll">
+                <table class="timetable-view">
+                    <thead>
+                        <tr>
+                            <th>Giorno</th>
+                            <th>Hijri</th>
+                            <th>Fajr</th>
+                            <th>Dhuhr</th>
+                            <th>Asr</th>
+                            <th>Maghrib</th>
+                            <th>Isha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetable-rows"></tbody>
+                </table>
+            </div>
+            <button class="sidebar-btn btn-gold" style="margin-top:15px" onclick="closeModal('timetable-modal')">CHIUDI</button>
+        </div>
+    </div>
 
     <script>
         // TABELLA AGGIORNATA BASTIA UMBRA DAL CALENDARIO (Maggio - Giugno 2026 / Dhul-hijja 1447)
+        // Inserito oggi 17-5 come 30 di Al-Qiada
         const timetable = {
+            "17-5":{f:"04:08",dh:"13:07",a:"17:07",m:"20:29",i:"22:05",r:30,isQiada:true},
             "18-5":{f:"04:07",dh:"13:07",a:"17:08",m:"20:30",i:"22:07",r:1},
             "19-5":{f:"04:06",dh:"13:07",a:"17:08",m:"20:31",i:"22:09",r:2},
             "20-5":{f:"04:04",dh:"13:07",a:"17:08",m:"20:32",i:"22:10",r:3},
@@ -194,7 +228,7 @@
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
         async function startWakeLock() { try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){} }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-        function openModal(id) { document.getElementById(id).style.display='flex'; toggleMenu(); }
+        function openModal(id) { document.getElementById(id).style.display='flex'; if(id !== 'timetable-modal' && document.getElementById('sidebar').classList.contains('open')) toggleMenu(); }
         function closeModal(id) { document.getElementById(id).style.display='none'; }
         
         function openNames() { const list = document.getElementById('names-list'); if(list.innerHTML === "") { allahNames.forEach(n => list.innerHTML += `<div class="gold-item" style="text-align:center"><b>${n}</b></div>`); } openModal('names-modal'); }
@@ -240,12 +274,34 @@
             }
         }
 
+        function buildTimetableModal(currentKey) {
+            const tbody = document.getElementById('timetable-rows');
+            if(tbody && tbody.innerHTML === "") {
+                Object.keys(timetable).forEach(k => {
+                    const rowData = timetable[k];
+                    const isCurrent = (k === currentKey);
+                    const monthLabel = rowData.isQiada ? "ذو القعدة" : "ذو الحجة";
+                    tbody.innerHTML += `
+                        <tr class="${isCurrent ? 'current-day-row' : ''}">
+                            <td>${k}</td>
+                            <td>${rowData.r} ${monthLabel}</td>
+                            <td>${rowData.f}</td>
+                            <td>${rowData.dh}</td>
+                            <td>${rowData.a}</td>
+                            <td>${rowData.m}</td>
+                            <td>${rowData.i}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
         function update() {
             const now = new Date();
             const d = now.getDate();
             const m = now.getMonth() + 1;
             const dateKey = d + "-" + m;
-            const dayData = timetable[dateKey] || timetable["18-5"];
+            const dayData = timetable[dateKey] || timetable["17-5"];
 
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
             
@@ -255,8 +311,11 @@
             const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
-            // Mese Hijri aggiornato a Dhul-hijja per la tabella caricata
-            document.getElementById('hijri-txt').innerText = dayData.r + " ذو الحجة 1447";
+            // Gestione dinamica del mese Hijri corrente nel box principale
+            const currentMonthName = dayData.isQiada ? "ذو القعدة" : "ذو الحجة";
+            document.getElementById('hijri-txt').innerText = dayData.r + " " + currentMonthName + " 1447";
+
+            buildTimetableModal(dateKey);
 
             let html = ""; let nextP = null; let lastP = null;
             const pKeys = ["f","dh","a","m","i"];
@@ -274,7 +333,7 @@
 
             if (!nextP) {
                 const nextDay = new Date(); nextDay.setDate(now.getDate()+1);
-                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["18-5"];
+                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["17-5"];
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                 document.getElementById('next-name').innerText = "PROSSIMA: FAJR";
             }
