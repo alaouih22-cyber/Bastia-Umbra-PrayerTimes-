@@ -89,7 +89,7 @@
                 <div style="font-size:10px; font-weight:800; color:var(--mp-gold)" id="next-name">PROSSIMA PREGHIERA</div>
             </div>
             <div class="date-box">
-                <div class="date-hijri" id="hijri-txt">-- ذو القعدة 1447</div>
+                <div class="date-hijri" id="hijri-txt">-- ذو الحجة 1447</div>
                 <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
                 <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
@@ -112,6 +112,7 @@
         <h2>Muslim Pro Menu</h2>
         <button class="sidebar-btn btn-gold" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
         <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
+        <button class="sidebar-btn" style="background:#002b22; color:white; border: 1px solid var(--mp-gold);" id="mosque-status-btn">🕌 Stato della Moschea (Live News)</button>
         <hr style="margin:20px 0; opacity:0.1">
         
         <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">
@@ -144,25 +145,37 @@
     <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="mp-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
 
     <script>
-        // TABELLA AGGIORNATA BASTIA UMBRA DAL CALENDARIO (Maggio 2026 / Dhul Qa'dah 1447)
+        // TABELLA AGGIORNATA BASTIA UMBRA DAL CALENDARIO (Maggio - Giugno 2026 / Dhul-hijja 1447)
         const timetable = {
-            "1-5":{f:"04:36",dh:"13:08",a:"17:02",m:"20:11",i:"21:41",r:14},
-            "2-5":{f:"04:34",dh:"13:08",a:"17:02",m:"20:12",i:"21:42",r:15},
-            "3-5":{f:"04:32",dh:"13:08",a:"17:03",m:"20:13",i:"21:44",r:16},
-            "4-5":{f:"04:30",dh:"13:08",a:"17:03",m:"20:14",i:"21:45",r:17},
-            "5-5":{f:"04:28",dh:"13:08",a:"17:03",m:"20:15",i:"21:47",r:18},
-            "6-5":{f:"04:27",dh:"13:08",a:"17:04",m:"20:17",i:"21:49",r:19},
-            "7-5":{f:"04:25",dh:"13:08",a:"17:04",m:"20:18",i:"21:50",r:20},
-            "8-5":{f:"04:23",dh:"13:07",a:"17:04",m:"20:19",i:"21:52",r:21},
-            "9-5":{f:"04:21",dh:"13:07",a:"17:05",m:"20:20",i:"21:53",r:22},
-            "10-5":{f:"04:20",dh:"13:07",a:"17:05",m:"20:21",i:"21:55",r:23},
-            "11-5":{f:"04:18",dh:"13:07",a:"17:05",m:"20:22",i:"21:57",r:24},
-            "12-5":{f:"04:16",dh:"13:07",a:"17:06",m:"20:23",i:"21:58",r:25},
-            "13-5":{f:"04:15",dh:"13:07",a:"17:06",m:"20:24",i:"22:00",r:26},
-            "14-5":{f:"04:13",dh:"13:07",a:"17:06",m:"20:25",i:"22:01",r:27},
-            "15-5":{f:"04:12",dh:"13:07",a:"17:07",m:"20:27",i:"22:03",r:28},
-            "16-5":{f:"04:10",dh:"13:07",a:"17:07",m:"20:28",i:"22:04",r:29},
-            "17-5":{f:"04:09",dh:"13:07",a:"17:07",m:"20:29",i:"22:05",r:30}
+            "18-5":{f:"04:07",dh:"13:07",a:"17:08",m:"20:30",i:"22:07",r:1},
+            "19-5":{f:"04:06",dh:"13:07",a:"17:08",m:"20:31",i:"22:09",r:2},
+            "20-5":{f:"04:04",dh:"13:07",a:"17:08",m:"20:32",i:"22:10",r:3},
+            "21-5":{f:"04:03",dh:"13:07",a:"17:09",m:"20:33",i:"22:12",r:4},
+            "22-5":{f:"04:02",dh:"13:08",a:"17:09",m:"20:34",i:"22:13",r:5},
+            "23-5":{f:"04:00",dh:"13:08",a:"17:09",m:"20:35",i:"22:15",r:6},
+            "24-5":{f:"03:59",dh:"13:08",a:"17:10",m:"20:36",i:"22:16",r:7},
+            "25-5":{f:"03:58",dh:"13:08",a:"17:10",m:"20:37",i:"22:18",r:8},
+            "26-5":{f:"03:57",dh:"13:08",a:"17:10",m:"20:38",i:"22:19",r:9},
+            "27-5":{f:"03:56",dh:"13:08",a:"17:11",m:"20:39",i:"22:20",r:10},
+            "28-5":{f:"03:54",dh:"13:08",a:"17:11",m:"20:39",i:"22:22",r:11},
+            "29-5":{f:"03:53",dh:"13:08",a:"17:11",m:"20:40",i:"22:23",r:12},
+            "30-5":{f:"03:52",dh:"13:08",a:"17:12",m:"20:41",i:"22:24",r:13},
+            "31-5":{f:"03:51",dh:"13:09",a:"17:12",m:"20:42",i:"22:26",r:14},
+            "1-6":{f:"03:50",dh:"13:09",a:"17:12",m:"20:43",i:"22:27",r:15},
+            "2-6":{f:"03:50",dh:"13:09",a:"17:13",m:"20:44",i:"22:28",r:16},
+            "3-6":{f:"03:49",dh:"13:09",a:"17:13",m:"20:44",i:"22:29",r:17},
+            "4-6":{f:"03:48",dh:"13:09",a:"17:13",m:"20:45",i:"22:30",r:18},
+            "5-6":{f:"03:47",dh:"13:09",a:"17:14",m:"20:46",i:"22:31",r:19},
+            "6-6":{f:"03:47",dh:"13:09",a:"17:14",m:"20:47",i:"22:32",r:20},
+            "7-6":{f:"03:46",dh:"13:10",a:"17:14",m:"20:47",i:"22:33",r:21},
+            "8-6":{f:"03:45",dh:"13:10",a:"17:14",m:"20:48",i:"22:34",r:22},
+            "9-6":{f:"03:45",dh:"13:10",a:"17:15",m:"20:49",i:"22:35",r:23},
+            "10-6":{f:"03:44",dh:"13:10",a:"17:15",m:"20:49",i:"22:36",r:24},
+            "11-6":{f:"03:44",dh:"13:10",a:"17:15",m:"20:50",i:"22:37",r:25},
+            "12-6":{f:"03:44",dh:"13:11",a:"17:16",m:"20:50",i:"22:38",r:26},
+            "13-6":{f:"03:43",dh:"13:11",a:"17:16",m:"20:51",i:"22:38",r:27},
+            "14-6":{f:"03:43",dh:"13:11",a:"17:16",m:"20:51",i:"22:39",r:28},
+            "15-6":{f:"03:43",dh:"13:11",a:"17:16",m:"20:52",i:"22:40",r:29}
         };
 
         const allahNames = ["الرحمن","الرحيم","الملك","القدوس","السلام","المؤمن","المهيمن","العزيز","الجبار","المتكبر","الخالق","البارئ","المصور","الغفار","القهار","الوهاب","الرزاق","الفتاح","العليم","القابض","الباسط","الخافض","الرافع","المعز","المذل","السميع","البصير","الحكم","العدل","اللطيف","الخبير","الحليم","العظيم","الغفور","الشكور","العلي","الكبير","الحفيظ","المقيت","الحسيب","الجليل","الكريم","الرقيب","المجيب","الواسع","الحكيم","الودود","المجيد","الباعث","الشهيد","الحق","الوكيل","القوي","المتين","الولي","الحميد","المحصي","المبدئ","المعيد","المحيي","المميت","الحي","القيوم","الواجد","الماجد","الواحد","الأحد","الصمد","القادر","المقتدر","المقدم","المؤخر","الأول","الآخر","الظاهر","الباطن","الوالي","المتعالي","البر","التواب","المنتقم","العفو","الرؤوف","مالك الملك","ذو الجلال","المقسط","الجامع","الغني","المغني","المانع","الضار","النافع","النور","الهادي","البديع","الباقي","الوارث","الرشيد","الصبور"];
@@ -175,6 +188,7 @@
         ];
 
         let audioUnlocked = false; let lastT = ""; let tCount = 0;
+        let lastCustomAlert = "";
         function savePrefs() { localStorage.setItem('nMode', document.getElementById('notif-type').value); localStorage.setItem('v', document.getElementById('athan-voice').value); }
         function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('nMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('v') || 'https://www.islamcan.com/audio/adhan/azan1.mp3'; }
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
@@ -204,20 +218,45 @@
             else new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play();
         }
 
+        function triggerCustomNotification(title, body) {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.showNotification(title, { body: body, icon: 'icon.png', vibrate: [300, 100, 300], requireInteraction: true });
+            });
+            new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play();
+        }
+
+        function checkCustomAlerts(hhmm, now) {
+            if (hhmm === "05:20" && now.getSeconds() === 0 && lastCustomAlert !== hhmm + "-imsak") {
+                lastCustomAlert = hhmm + "-imsak";
+                triggerCustomNotification("Imsak", "Avviso fine Suhoor (allarme Imsak)");
+            }
+            if (hhmm === "17:45" && now.getSeconds() === 0 && lastCustomAlert !== hhmm + "-iftar") {
+                lastCustomAlert = hhmm + "-iftar";
+                triggerCustomNotification("Notifica Iftar", "Preparazione per l'Iftar imminente");
+            }
+            if (hhmm === "20:30" && now.getSeconds() === 0 && lastCustomAlert !== hhmm + "-tarawih") {
+                lastCustomAlert = hhmm + "-tarawih";
+                triggerCustomNotification("Promemoria Tarawih", "Attivazione modalità Notte Serena e inizio Tarawih");
+            }
+        }
+
         function update() {
             const now = new Date();
             const d = now.getDate();
             const m = now.getMonth() + 1;
             const dateKey = d + "-" + m;
-            const dayData = timetable[dateKey] || timetable["1-5"];
+            const dayData = timetable[dateKey] || timetable["18-5"];
 
             const hhmm = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            
+            checkCustomAlerts(hhmm, now);
+
             const cityIdx = Math.floor(now.getTime() / 30000) % 3;
             const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
-            // Mese Hijri aggiornato a Dhul Qa'dah per il periodo richiesto
-            document.getElementById('hijri-txt').innerText = dayData.r + " ذو القعدة 1447";
+            // Mese Hijri aggiornato a Dhul-hijja per la tabella caricata
+            document.getElementById('hijri-txt').innerText = dayData.r + " ذو الحجة 1447";
 
             let html = ""; let nextP = null; let lastP = null;
             const pKeys = ["f","dh","a","m","i"];
@@ -235,7 +274,7 @@
 
             if (!nextP) {
                 const nextDay = new Date(); nextDay.setDate(now.getDate()+1);
-                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["1-5"];
+                const tomData = timetable[nextDay.getDate() + "-" + (nextDay.getMonth() + 1)] || timetable["18-5"];
                 nextP = new Date(); nextP.setDate(now.getDate()+1); nextP.setHours(tomData.f.split(":")[0], tomData.f.split(":")[1], 0);
                 document.getElementById('next-name').innerText = "PROSSIMA: FAJR";
             }
