@@ -76,6 +76,11 @@
         /* COMPASS UI */
         .compass-ui { width: 200px; height: 200px; margin: 0 auto; border: 3px solid var(--mp-gold); border-radius: 50%; position: relative; background: #002b22; }
         #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s linear; }
+
+        /* MOSHAF WARSH FULLSCREEN MODAL */
+        #moshafWarshModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #111; z-index: 4000; flex-direction: column; }
+        .moshaf-header { display: flex; justify-content: space-between; align-items: center; background: #004F3F; padding: 12px 16px; color: #fff; border-bottom: 2px solid #C5A059; }
+        .moshaf-close-btn { background: #C5A059; color: #004F3F; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body onclick="unlockAudio(); startWakeLock();">
@@ -117,7 +122,8 @@
 
     <div class="sidebar" id="sidebar">
         <h2>Muslim Pro Menu</h2>
-        <button class="sidebar-btn btn-gold" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
+        <button class="sidebar-btn btn-gold" onclick="openMoshafWarsh()">📖 المصحف الملون (ورش)</button>
+        <button class="sidebar-btn btn-gold" style="margin-top:10px;" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
         <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
         <button class="sidebar-btn" style="background:#002b22; color:white; border: 1px solid var(--mp-gold);" onclick="sendCustomPushAlert()">📢 Invia Avviso Push</button>
         <button class="sidebar-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="openModal('timetable-modal')">📅 Visualizza Calendario Mese</button>
@@ -150,6 +156,17 @@
             <button class="sidebar-btn" style="flex:1; background:#ff4747; color:white" onclick="testNotif()">TEST</button>
         </div>
         <button class="sidebar-btn" style="background:transparent; border:1px solid white !important; color:white; margin-top:30px;" onclick="toggleMenu()">CHIUDI</button>
+    </div>
+
+    <!-- MODAL MOSHAF MULAWWAN WARSH INTERNO -->
+    <div id="moshafWarshModal">
+        <div class="moshaf-header">
+            <button class="moshaf-close-btn" onclick="closeMoshafWarsh()">⬅️ إغلاق (Chiudi)</button>
+            <span style="font-weight:bold; color:#C5A059; font-size:16px;">المصحف التجويد الملون - برواية ورش</span>
+        </div>
+        <div style="flex:1; width:100%; height:100%; overflow:hidden;">
+            <iframe id="moshafWarshFrame" src="" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
     </div>
 
     <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list" class="names-grid"></div><button class="sidebar-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
@@ -254,6 +271,21 @@
         function openModal(id) { document.getElementById(id).style.display='flex'; if(id !== 'timetable-modal' && document.getElementById('sidebar').classList.contains('open')) toggleMenu(); }
         function closeModal(id) { document.getElementById(id).style.display='none'; }
         
+        function openMoshafWarsh() {
+            const modal = document.getElementById('moshafWarshModal');
+            const frame = document.getElementById('moshafWarshFrame');
+            if (!frame.src || frame.src === "about:blank") {
+                frame.src = "https://archive.org/embed/quran-tajweed-warsh";
+            }
+            modal.style.display = 'flex';
+            if (document.getElementById('sidebar').classList.contains('open')) {
+                toggleMenu();
+            }
+        }
+        function closeMoshafWarsh() {
+            document.getElementById('moshafWarshModal').style.display = 'none';
+        }
+
         function openNames() { const list = document.getElementById('names-list'); if(list.innerHTML === "") { allahNames.forEach(n => list.innerHTML += `<div class="gold-item" style="text-align:center"><b>${n}</b></div>`); } openModal('names-modal'); }
         function openAzkar() { const list = document.getElementById('duas-list'); if(list.innerHTML === "") { azkar.forEach(sec => { list.innerHTML += `<h4 style="color:#004F3F; margin:15px 0 5px 0">${sec.t}</h4>`; sec.d.forEach(dua => list.innerHTML += `<div class="gold-item"><b>${dua.a}</b><br><small>${dua.i}</small></div>`); }); } openModal('duas-modal'); }
 
