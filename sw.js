@@ -1,78 +1,67 @@
-/* 
-   MUSLIM PRO ABSOLUTE PLATINUM - SERVICE WORKER 
-   Gestione Offline Totale e Notifiche ad Alta Priorità
-*/
-
-const CACHE_NAME = 'muslim-pro-v18-platinum';
-const ASSETS = [
-    './',
-    './index.html',
-    './manifest.json',
-    './icon.png',
-    'https://www.islamcan.com/audio/adhan/azan1.mp3',
-    'https://www.islamcan.com/audio/adhan/azan2.mp3',
-    'https://www.islamcan.com/audio/adhan/azan16.mp3',
-    'https://www.islamcan.com/audio/adhan/azan10.mp3',
-    'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',
-    'https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3'
+const CACHE_NAME = 'muslim-pro-ultimate-v1';
+const urlsToCache = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png',
+  'https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3'
 ];
 
-// 1. INSTALLAZIONE: Salva tutto il sito e gli audio nel telefono
+// Installazione del Service Worker e salvataggio dei file in cache
 self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            console.log('Caching in corso...');
-            return cache.addAll(ASSETS);
-        })
-    );
-    self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.addAll(urlsToCache);
+      })
+  );
+  self.skipWaiting();
 });
 
-// 2. ATTIVAZIONE: Pulisce le vecchie versioni
+// Attivazione e pulizia delle vecchie cache
 self.addEventListener('activate', event => {
-    event.waitUntil(clients.claim());
-});
-
-// 3. GESTORE DEI BANNER (Riceve il segnale dall'index.html)
-self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SHOW_PRAYER_BANNER') {
-        const options = {
-            body: event.data.body,
-            icon: 'icon.png',
-            badge: 'icon.png',
-            vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40],
-            tag: 'prayer-notification',
-            renotify: true,
-            requireInteraction: true, // Il banner non sparisce da solo
-            priority: 2,              // Alta priorità per Android
-            importance: 'high',       // Forza la comparsa visiva
-            data: { url: './' }
-        };
-
-        event.waitUntil(
-            self.registration.showNotification(event.data.title, options)
-        );
-    }
-});
-
-// 4. CLICK SUL BANNER: Apre l'app
-self.addEventListener('notificationclick', event => {
-    event.notification.close();
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-            for (let client of clientList) {
-                if (client.url === '/' && 'focus' in client) return client.focus();
-            }
-            if (clients.openWindow) return clients.openWindow('./');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
+          }
         })
-    );
+      );
+    })
+  );
+  self.clients.claim();
 });
 
-// 5. STRATEGIA OFFLINE: Se non c'è campo, usa i file salvati
+// Intercettazione delle richieste di rete (Funzionamento Offline)
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request);
-        })
-    );
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Ritorna il file dalla cache se esiste, altrimenti lo scarica da internet
+        return response || fetch(event.request);
+      })
+  );
+});
+
+// Gestione dell'interazione con le Notifiche Push
+self.addEventListener('notificationclick', event => {
+  event.notification.close(); // Chiude la notifica quando viene toccata
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then(windowClients => {
+      // Se l'app è già aperta in background, la riporta in primo piano
+      for (let i = 0; i < windowClients.length; i++) {
+        let client = windowClients[i];
+        if (client.url.includes('/') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // Se l'app è chiusa, la apre
+      if (clients.openWindow) {
+        return clients.openWindow('./index.html');
+      }
+    })
+  );
 });
