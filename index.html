@@ -133,13 +133,16 @@
 
         <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan</label>
         <select id="athan-voice" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
-            <option value="https://www.islamcan.com/audio/adhan/azan16.mp3">Marocco (Casablanca)</option>
+            <option value="https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3">Marocco (Casablanca - Stile Maghrebi autentico)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah (La Mecca)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah (Medina)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan3.mp3">Al-Aqsa (Gerusalemme)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan4.mp3">Egitto (Il Cairo)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan5.mp3">Abdul Basit Abdus Samad</option>
             <option value="https://www.islamcan.com/audio/adhan/azan6.mp3">Mishary Rashid Alafasy</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan7.mp3">Athan Maghribi Traditional</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan8.mp3">Nasser Al-Qatami</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan9.mp3">Ali Ibn Ahmed Al-Mulla</option>
         </select>
         
         <div style="display:flex; gap:10px; margin-top:20px;">
@@ -244,7 +247,7 @@
         let audioUnlocked = false; let lastT = ""; let tCount = 0;
         let lastCustomAlert = "";
         function savePrefs() { localStorage.setItem('nMode', document.getElementById('notif-type').value); localStorage.setItem('v', document.getElementById('athan-voice').value); }
-        function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('nMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('v') || 'https://www.islamcan.com/audio/adhan/azan16.mp3'; }
+        function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('nMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('v') || 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3'; }
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
         async function startWakeLock() { try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){} }
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
