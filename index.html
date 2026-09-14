@@ -185,7 +185,6 @@
     </div>
 
     <script>
-        // TABELLA AGGIORNATA BASTIA UMBRA DAL CALENDARIO (Settembre - Ottobre 2026 / Rabi' al-Akhar 1448)
         const timetable = {
             "12-9":{f:"05:27",dh:"13:09",a:"16:41",m:"19:29",i:"20:48",r:1},
             "13-9":{f:"05:28",dh:"13:08",a:"16:40",m:"19:28",i:"20:46",r:2},
@@ -411,7 +410,6 @@
             const cities = [{ n: "Bastia Umbra", tz: "Europe/Rome" }, { n: "Rabat", tz: "Africa/Casablanca" }, { n: "Makkah", tz: "Asia/Riyadh" }];
             document.getElementById('city-display').innerText = `${cities[cityIdx].n.toUpperCase()}: ${now.toLocaleTimeString('it-IT', { timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit' })}`;
 
-            // Gestione dinamica del mese Hijri corrente nel box principale (Rabi' al-Akhar 1448)
             const currentMonthName = "ربيع الآخر";
             document.getElementById('hijri-txt').innerText = dayData.r + " " + currentMonthName + " 1448";
 
