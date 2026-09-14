@@ -155,7 +155,7 @@
     <div class="modal-overlay" id="names-modal"><div class="modal-card"><h3>99 Nomi di Allah</h3><div id="names-list" class="names-grid"></div><button class="sidebar-btn btn-gold" onclick="closeModal('names-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="duas-modal"><div class="modal-card"><h3>Azkar & Suppliche</h3><div id="duas-list" style="text-align:right"></div><button class="sidebar-btn btn-gold" onclick="closeModal('duas-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="qibla-modal"><div class="modal-card"><h3>Qibla</h3><div class="compass-ui"><div id="compass-disk"></div></div><button class="sidebar-btn btn-gold" style="margin-top:20px" onclick="closeModal('qibla-modal')">OK</button></div></div>
-    <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3>Tasbih</h3><div id="t-display" style="font-size:60px; margin:20px 0">0</div><div style="width:100px; height:100px; border-radius:50%; background:gold; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:30px;" onclick="countTasbih()">+1</div><br><button class="sidebar-btn btn-white" onclick="closeModal('tasbih-modal')">CHIUDI</button></div></div>
+    <div class="modal-overlay" id="tasbih-modal"><div class="modal-card"><h3>Tasbih</h3><div id="t-display" style="font-size:60px; margin:20px 0">0</div><div style="width:100px; height:100px; border-radius:50%; background:gold; display:flex; align-items:center; justify-content:center; font-size:30px;" onclick="countTasbih()">+1</div><br><button class="sidebar-btn btn-white" onclick="closeModal('tasbih-modal')">CHIUDI</button></div></div>
     <div class="modal-overlay" id="tracker-modal"><div class="modal-card"><h3>Prayer Tracker</h3><div id="tracker-list"></div><button class="sidebar-btn btn-gold" onclick="closeModal('tracker-modal')">OK</button></div></div>
     <div class="modal-overlay" id="zakat-modal"><div class="modal-card"><h3>Calcolo Zakat</h3><input type="number" id="z-val" class="mp-btn btn-white" style="text-align:center" placeholder="Risparmi €" oninput="document.getElementById('z-res').innerText = (this.value * 0.025).toFixed(2) + ' €'"><h2 id="z-res" style="color:var(--mp-dark); margin:15px 0">0.00 €</h2><button class="sidebar-btn btn-gold" onclick="closeModal('zakat-modal')">OK</button></div></div>
     
@@ -264,7 +264,44 @@
             document.getElementById('compass-disk').style.transform = `rotate(${- (north - 119)}deg)`;
         });
 
-        function requestPermission() { Notification.requestPermission(); toggleMenu(); }
+        async function schedulePrayerTriggers() {
+            if ('serviceWorker' in navigator && 'showTrigger' in Notification.prototype) {
+                try {
+                    const reg = await navigator.serviceWorker.ready;
+                    const now = new Date();
+                    const d = now.getDate();
+                    const m = now.getMonth() + 1;
+                    const dayData = timetable[d + "-" + m] || timetable["12-9"];
+                    const pKeys = ["f","dh","a","m","i"];
+                    const pNamesIT = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+                    pKeys.forEach((k, idx) => {
+                        const [h, min] = dayData[k].split(":");
+                        const pDate = new Date();
+                        pDate.setHours(parseInt(h), parseInt(min), 0, 0);
+                        if (pDate > now) {
+                            reg.showNotification("Muslim Pro - " + pNamesIT[idx], {
+                                body: "È ora della preghiera di " + pNamesIT[idx] + " a Bastia Umbra",
+                                icon: 'icon.png',
+                                vibrate: [500, 110, 500],
+                                showTrigger: new TimestampTrigger(pDate.getTime())
+                            });
+                        }
+                    });
+                } catch(e) {
+                    console.log("Sistema Notification Triggers non supportato o disattivato:", e);
+                }
+            }
+        }
+
+        function requestPermission() { 
+            Notification.requestPermission().then((perm) => {
+                if(perm === 'granted') {
+                    schedulePrayerTriggers();
+                }
+            }); 
+            toggleMenu(); 
+        }
 
         function triggerBanner(title) {
             const options = {
@@ -401,7 +438,11 @@
 
         document.getElementById('h-track').innerHTML = [...hadiths, ...hadiths].map(h => `<span class="hadith-text">${h.ar} <span style="font-size:11px">[${h.it}]</span></span>`).join('');
         loadPrefs(); setInterval(update, 500); update();
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+        if ('serviceWorker' in navigator) { 
+            navigator.serviceWorker.register('sw.js').then(() => {
+                schedulePrayerTriggers();
+            }); 
+        }
         function testNotif() { triggerBanner("Muslim Pro Test"); }
     </script>
 </body>
