@@ -183,6 +183,44 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="warsh-modal">
+        <div class="modal-card" style="max-width: 680px; width: 95%;">
+            <h3>المصحف الملون (ورش) - صفحة <span id="warsh-page-num">1</span> / 604</h3>
+            <div style="display: flex; gap: 8px; justify-content: center; margin: 12px 0; align-items: center;">
+                <button class="sidebar-btn btn-gold" style="width: auto; padding: 10px 16px; margin:0;" onclick="changeWarshPage(-1)">◀ السابق</button>
+                <input type="number" id="warsh-page-input" min="1" max="604" value="1" style="width: 70px; text-align: center; padding: 10px; border-radius: 10px; border: 1px solid var(--mp-gold); font-weight: bold;" onchange="setWarshPage(parseInt(this.value))">
+                <button class="sidebar-btn btn-gold" style="width: auto; padding: 10px 16px; margin:0;" onclick="changeWarshPage(1)">التالي ▶</button>
+            </div>
+            <div style="width: 150px; margin: 0 auto 12px auto;">
+                <select id="warsh-surah-jump" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--mp-gold); background: #fff; font-size: 11px;" onchange="jumpWarshSurah(this.value)">
+                    <option value="">الانتقال السريع للسورة...</option>
+                    <option value="1">1. الفاتحة (ص 1)</option>
+                    <option value="2">2. البقرة (ص 2)</option>
+                    <option value="3">3. آل عمران (ص 50)</option>
+                    <option value="4">4. النساء (ص 77)</option>
+                    <option value="5">5. المائدة (ص 106)</option>
+                    <option value="6">6. الأنعام (ص 128)</option>
+                    <option value="7">7. الأعراف (ص 151)</option>
+                    <option value="8">8. الأنفال (ص 177)</option>
+                    <option value="9">9. التوبة (ص 187)</option>
+                    <option value="10">10. يونس (ص 208)</option>
+                    <option value="18">18. الكهف (ص 293)</option>
+                    <option value="36">36. يس (ص 440)</option>
+                    <option value="67">67. الملك (ص 562)</option>
+                    <option value="78">78. النبأ (ص 582)</option>
+                    <option value="114">114. الناس (ص 604)</option>
+                </select>
+            </div>
+            <div style="width: 1b0px; background: #fff0d4; border-radius: 14px; padding: 8px; border: 2px solid var(--mp-gold); box-shadow: inset 0 0 15px rgba(197,160,89,0.2);">
+                <iframe id="warsh-iframe" src="" style="width: 100%; height: 52vh; border: none; border-radius: 10px; background: #fff;" allowfullscreen></iframe>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="sidebar-btn btn-gold" style="flex:1; margin:0;" onclick="window.open(document.getElementById('warsh-iframe').src, '_blank')">🔍 فتح بنطاق موسع</button>
+                <button class="sidebar-btn" style="flex:1; background:var(--mp-dark); color:white; margin:0;" onclick="closeModal('warsh-modal')">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const timetable = {
             "12-9":{f:"05:27",dh:"13:09",a:"16:41",m:"19:29",i:"20:48",r:1},
@@ -240,6 +278,7 @@
         ];
 
         let audioUnlocked = false; let lastT = ""; let tCount = 0;
+        let currentWarshPage = 1;
         function savePrefs() { localStorage.setItem('nMode', document.getElementById('notif-type').value); localStorage.setItem('v', document.getElementById('athan-voice').value); }
         function loadPrefs() { document.getElementById('notif-type').value = localStorage.getItem('nMode') || 'athan'; document.getElementById('athan-voice').value = localStorage.getItem('v') || 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3'; }
         function unlockAudio() { if(!audioUnlocked) { document.getElementById('silent-audio').play(); audioUnlocked=true; }}
@@ -248,8 +287,31 @@
         function openModal(id) { document.getElementById(id).style.display='flex'; if(id !== 'timetable-modal' && document.getElementById('sidebar').classList.contains('open')) toggleMenu(); }
         function closeModal(id) { document.getElementById(id).style.display='none'; }
         
+        function updateWarshViewer() {
+            document.getElementById('warsh-page-num').innerText = currentWarshPage;
+            document.getElementById('warsh-page-input').value = currentWarshPage;
+            // Digital Quran page viewer embedding supporting Warsh color-coded page resource or fallback interactive page viewer
+            document.getElementById('warsh-iframe').src = `https://quran.com/warsh/${currentWarshPage}?embed=true&hide_nav=true`;
+        }
+
+        function setWarshPage(p) {
+            currentWarshPage = Math.max(1, Math.min(604, p || 1));
+            updateWarshViewer();
+        }
+
+        function changeWarshPage(delta) {
+            setWarshPage(currentWarshPage + delta);
+        }
+
+        function jumpWarshSurah(val) {
+            const pageMap = {"1":1, "2":2, "3":50, "4":77, "5":106, "6":128, "7":151, "8":177, "9":187, "10":208, "18":293, "36":440, "67":562, "78":582, "114":604};
+            if(pageMap[val]) setWarshPage(pageMap[val]);
+        }
+
         function openMoshafWarsh() {
-            window.open('https://ia800203.us.archive.org/8/items/quran-tajweed-warsh/quran-tajweed-warsh.pdf', '_blank');
+            currentWarshPage = parseInt(localStorage.getItem('warsh_last_page') || '1', 10);
+            updateWarshViewer();
+            openModal('warsh-modal');
             if (document.getElementById('sidebar').classList.contains('open')) toggleMenu();
         }
 
