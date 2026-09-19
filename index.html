@@ -211,7 +211,7 @@
                     <option value="114">114. الناس (ص 604)</option>
                 </select>
             </div>
-            <div style="width: 1b0px; background: #fff0d4; border-radius: 14px; padding: 8px; border: 2px solid var(--mp-gold); box-shadow: inset 0 0 15px rgba(197,160,89,0.2);">
+            <div style="width: 100%; background: #fff0d4; border-radius: 14px; padding: 8px; border: 2px solid var(--mp-gold); box-shadow: inset 0 0 15px rgba(197,160,89,0.2);">
                 <iframe id="warsh-iframe" src="" style="width: 100%; height: 52vh; border: none; border-radius: 10px; background: #fff;" allowfullscreen></iframe>
             </div>
             <div style="display:flex; gap:10px; margin-top:15px;">
@@ -290,8 +290,9 @@
         function updateWarshViewer() {
             document.getElementById('warsh-page-num').innerText = currentWarshPage;
             document.getElementById('warsh-page-input').value = currentWarshPage;
-            // Digital Quran page viewer embedding supporting Warsh color-coded page resource or fallback interactive page viewer
-            document.getElementById('warsh-iframe').src = `https://quran.com/warsh/${currentWarshPage}?embed=true&hide_nav=true`;
+            // Sostituito Quran.com (che dà errore in iframe) con l'embed affidabile e supportato di Internet Archive
+            // che carica direttamente il Mushaf Tajweed Colorato in lettura Warsh
+            document.getElementById('warsh-iframe').src = `https://archive.org/embed/quran-tajweed-warsh?ui=embed&page=${currentWarshPage}`;
         }
 
         function setWarshPage(p) {
@@ -458,4 +459,3 @@
     </script>
 </body>
 </html>
-
