@@ -24,7 +24,7 @@ messaging.onBackgroundMessage((payload) => {
     console.log('[sw.js] Ricevuto messaggio in background FCM:', payload);
     const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Ultimate';
     const options = {
-        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento.',
+        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.',
         icon: 'icon.png',
         badge: 'icon.png',
         vibrate: [500, 110, 500]
@@ -45,7 +45,7 @@ self.addEventListener('push', (event) => {
     const data = event.data ? event.data.json() : {};
     const title = data.title || 'Muslim Pro Ultimate';
     const options = {
-        body: data.body || 'È arrivato il momento.',
+        body: data.body || 'È arrivato il momento della preghiera.',
         icon: 'icon.png',
         badge: 'icon.png',
         vibrate: [500, 110, 500]
