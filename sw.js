@@ -20,12 +20,11 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim());
 });
 
-// Gestione messaggi background specifici Firebase FCM
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Ricevuto messaggio in background FCM:', payload);
+    console.log('[sw.js] Ricevuto messaggio in background FCM:', payload);
     const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Ultimate';
     const options = {
-        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.',
+        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento.',
         icon: 'icon.png',
         badge: 'icon.png',
         vibrate: [500, 110, 500]
@@ -33,24 +32,20 @@ messaging.onBackgroundMessage((payload) => {
     self.registration.showNotification(title, options);
 });
 
-// Gestione dei push generici (fallback)
 self.addEventListener('push', (event) => {
-    // Se il messaggio è gestito da FCM onBackgroundMessage, ignora per evitare duplicati
     if (event.data) {
         try {
             const json = event.data.json();
             if (json.data && (json.data.firebaseMessageId || json.from)) {
                 return; 
             }
-        } catch (e) {
-            // Non è JSON valido, gestisci come push generico
-        }
+        } catch (e) {}
     }
 
     const data = event.data ? event.data.json() : {};
     const title = data.title || 'Muslim Pro Ultimate';
     const options = {
-        body: data.body || 'È arrivato il momento della preghiera.',
+        body: data.body || 'È arrivato il momento.',
         icon: 'icon.png',
         badge: 'icon.png',
         vibrate: [500, 110, 500]
