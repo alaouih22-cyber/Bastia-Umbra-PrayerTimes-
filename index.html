@@ -210,7 +210,7 @@
                 </select>
             </div>
             <div style="width: 100%; background: #fff0d4; border-radius: 14px; padding: 10px; border: 2px solid var(--mp-gold); box-shadow: inset 0 0 15px rgba(197,160,89,0.2); max-height: 52vh; overflow-y: auto; text-align: center; min-height: 300px; display: flex; align-items: center; justify-content: center;">
-                <img id="warsh-page-img" src="" alt="Mushaf Warsh page" style="max-width: 100%; max-height: 50vh; border-radius: 8px; background: #fff;" onerror="handleWarshImageError(this)">
+                <img id="warsh-page-img" src="" alt="Mushaf page" style="max-width: 100%; max-height: 50vh; border-radius: 8px; background: #fff;" onerror="handleWarshImageError(this)">
             </div>
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <button class="sidebar-btn btn-gold" style="flex:1; margin:0;" onclick="window.open(document.getElementById('warsh-page-img').src, '_blank')">🔍 فتح الصورة وحدها</button>
@@ -287,13 +287,14 @@
         
         function updateWarshViewer() {
             document.getElementById('warsh-page-num').innerText = currentWarshPage;
-            document.getElementById('warsh-page-input').value = currentWarshPage;
+            const inputEl = document.getElementById('warsh-page-input');
+            if(inputEl) inputEl.value = currentWarshPage;
             localStorage.setItem('warsh_last_page', currentWarshPage);
             
             const imgEl = document.getElementById('warsh-page-img');
             imgEl.dataset.tryStep = 0;
             imgEl.onerror = null;
-            imgEl.src = `https://verses.quran.com/pages/v1/1000px/${currentWarshPage}.png`;
+            imgEl.src = `https://www.quranflash.com/books/Warsh/pages/p${currentWarshPage}.jpg`;
         }
 
         function handleWarshImageError(imgEl) {
@@ -302,12 +303,12 @@
             
             if (step === 0) {
                 imgEl.dataset.tryStep = 1;
-                imgEl.src = `https://quran.com/api/v4/pages/${currentWarshPage}/image`;
+                imgEl.src = `https://cdn.islamic.network/quran/images/high-res/${currentWarshPage}.png`;
             } else if (step === 1) {
                 imgEl.dataset.tryStep = 2;
-                imgEl.src = `https://raw.githubusercontent.com/islamic-network/quran-images/master/images/${currentWarshPage}.png`;
+                imgEl.src = `https://raw.githubusercontent.com/quran/quran-images/master/images/page${padded}.png`;
             } else {
-                imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="100%" height="100%" fill="%23fff0d4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="%23004F3F" font-family="sans-serif">صفحة ${currentWarshPage} (غير متوفرة مؤقتاً)</text></svg>`;
+                imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="100%" height="100%" fill="%23fff0d4"/><text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-size="22" fill="%23004F3F" font-family="sans-serif">المصحف - صفحة ${currentWarshPage}</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="14" fill="%23666" font-family="sans-serif">اضغط "فتح الصورة وحدها" للعرض</text></svg>`;
             }
         }
 
