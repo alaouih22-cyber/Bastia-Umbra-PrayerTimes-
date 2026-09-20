@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <!-- MODALE LETTORE WARSH NATIVO (SENZA IFRAME, IMMAGINI DIRETTE PULITE) -->
+    <!-- MODALE LETTORE WARSH NATIVO (RISOLUZIONE 404 CON CDN AFFIDABILE) -->
     <div class="modal-overlay" id="warsh-modal">
         <div class="modal-card" style="max-width: 680px; width: 95%;">
             <h3>المصحف الملون (ورش) - صفحة <span id="warsh-page-num">1</span> / 604</h3>
@@ -213,7 +213,7 @@
                 </select>
             </div>
             <div style="width: 100%; background: #fff0d4; border-radius: 14px; padding: 10px; border: 2px solid var(--mp-gold); box-shadow: inset 0 0 15px rgba(197,160,89,0.2); max-height: 52vh; overflow-y: auto; text-align: center;">
-                <img id="warsh-page-img" src="" alt="Mushaf Warsh page" style="max-width: 100%; height: auto; border-radius: 8px; background: #fff;" onerror="this.src='https://everyayah.com/data/images_png/surah_page_' + currentWarshPage + '.png'">
+                <img id="warsh-page-img" src="" alt="Mushaf Warsh page" style="max-width: 100%; height: auto; border-radius: 8px; background: #fff;">
             </div>
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <button class="sidebar-btn btn-gold" style="flex:1; margin:0;" onclick="window.open(document.getElementById('warsh-page-img').src, '_blank')">🔍 فتح الصورة وحدها</button>
@@ -243,7 +243,7 @@
             "28-9":{f:"05:46",dh:"13:03",a:"16:22",m:"19:01",i:"20:17",r:17},
             "29-9":{f:"05:48",dh:"13:03",a:"16:20",m:"18:59",i:"20:16",r:18},
             "30-9":{f:"05:49",dh:"13:02",a:"16:19",m:"18:57",i:"20:14",r:19},
-            "1-10":{f:"05:50",dh:"13:02",a:"16:18",m:"18:55",i:"20:12",r:20},
+            "1-10":{f:"05:50",dh:"13:02",a:"16:18",m:"18:53",i:"20:12",r:20},
             "2-10":{f:"05:51",dh:"13:02",a:"16:16",m:"18:53",i:"20:10",r:21},
             "3-10":{f:"05:52",dh:"13:01",a:"16:15",m:"18:52",i:"20:08",r:22},
             "4-10":{f:"05:53",dh:"13:01",a:"16:14",m:"18:50",i:"20:06",r:23},
@@ -292,9 +292,15 @@
             document.getElementById('warsh-page-num').innerText = currentWarshPage;
             document.getElementById('warsh-page-input').value = currentWarshPage;
             localStorage.setItem('warsh_last_page', currentWarshPage);
-            // Uso diretto di immagini pulite del Mushaf (formato standard 3 cifre, es. 001, 002)
+            
+            const imgEl = document.getElementById('warsh-page-img');
             const paddedPage = String(currentWarshPage).padStart(3, '0');
-            document.getElementById('warsh-page-img').src = `https://quran.com/images/pages/watsh/${paddedPage}.png`;
+            // Endpoint stabile primario (GitHub repo ufficiale quran-images)
+            imgEl.src = `https://raw.githubusercontent.com/quran/quran-images/master/page${paddedPage}.png`;
+            imgEl.onerror = function() {
+                this.onerror = null;
+                this.src = `https://everyayah.com/data/images_png/surah_page_${currentWarshPage}.png`;
+            };
         }
 
         function setWarshPage(p) {
