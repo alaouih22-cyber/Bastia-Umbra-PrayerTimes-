@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <!-- MODALE LETTORE WARSH NATIVO (RISOLUZIONE 404 CON CDN AFFIDABILE) -->
+    <!-- MODALE LETTORE WARSH NATIVO (RISOLUZIONE 404 CON CDN MULTI-FALLBACK) -->
     <div class="modal-overlay" id="warsh-modal">
         <div class="modal-card" style="max-width: 680px; width: 95%;">
             <h3>المصحف الملون (ورش) - صفحة <span id="warsh-page-num">1</span> / 604</h3>
@@ -295,11 +295,17 @@
             
             const imgEl = document.getElementById('warsh-page-img');
             const paddedPage = String(currentWarshPage).padStart(3, '0');
-            // Endpoint stabile primario (GitHub repo ufficiale quran-images)
-            imgEl.src = `https://raw.githubusercontent.com/quran/quran-images/master/page${paddedPage}.png`;
+            imgEl.onerror = null;
+            // CDN primario stabile per le pagine del Mushaf standard high-res
+            imgEl.src = `https://verses.quran.com/pages/v1/1000px/${currentWarshPage}.png`;
+            
             imgEl.onerror = function() {
-                this.onerror = null;
-                this.src = `https://everyayah.com/data/images_png/surah_page_${currentWarshPage}.png`;
+                this.onerror = function() {
+                    // Fallback secondario su mirror ogni-ayah standard con 3 zeri
+                    this.src = `https://everyayah.com/data/images_png/page${paddedPage}.png`;
+                };
+                // Fallback terziario su api quran v4 image
+                this.src = `https://quran.com/api/v4/pages/${currentWarshPage}/image`;
             };
         }
 
