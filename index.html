@@ -294,7 +294,8 @@
             const imgEl = document.getElementById('warsh-page-img');
             imgEl.dataset.tryStep = 0;
             imgEl.onerror = null;
-            imgEl.src = `https://www.quranflash.com/books/Warsh/pages/p${currentWarshPage}.jpg`;
+            const padded = String(currentWarshPage).padStart(3, '0');
+            imgEl.src = `https://www.everyayah.com/data/images_quran/page${padded}.png`;
         }
 
         function handleWarshImageError(imgEl) {
@@ -308,7 +309,7 @@
                 imgEl.dataset.tryStep = 2;
                 imgEl.src = `https://raw.githubusercontent.com/quran/quran-images/master/images/page${padded}.png`;
             } else {
-                imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="100%" height="100%" fill="%23fff0d4"/><text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-size="22" fill="%23004F3F" font-family="sans-serif">المصحف - صفحة ${currentWarshPage}</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="14" fill="%23666" font-family="sans-serif">اضغط "فتح الصورة وحدها" للعرض</text></svg>`;
+                imgEl.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="100%" height="100%" fill="%23fff0d4"/><text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-size="22" fill="%23004F3F" font-family="sans-serif">المصحف - صفحة ${currentWarshPage}</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="14" fill="%23666" font-family="sans-serif">تعذر تحميل الصورة مباشرة</text></svg>`;
             }
         }
 
