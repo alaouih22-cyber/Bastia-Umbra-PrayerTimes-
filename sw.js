@@ -22,7 +22,7 @@ self.addEventListener('activate', (event) => {
 
 messaging.onBackgroundMessage((payload) => {
     console.log('[sw.js] Ricevuto messaggio in background FCM:', payload);
-    const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Ultimate';
+    const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Bastia';
     const options = {
         body: payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.',
         icon: 'icon.png',
@@ -43,7 +43,7 @@ self.addEventListener('push', (event) => {
     }
 
     const data = event.data ? event.data.json() : {};
-    const title = data.title || 'Muslim Pro Ultimate';
+    const title = data.title || 'Muslim Pro Bastia';
     const options = {
         body: data.body || 'È arrivato il momento della preghiera.',
         icon: 'icon.png',
