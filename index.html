@@ -78,7 +78,7 @@
         #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s linear; }
     </style>
 </head>
-<body onclick="unlockAudio();">
+<body onclick="unlockAudio(); startWakeLock();">
 
     <audio id="silent-audio" loop><source src="https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3" type="audio/mp3"></audio>
 
@@ -122,20 +122,36 @@
         <button class="sidebar-btn btn-gold" style="margin-top:10px;" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
         <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
         <button class="sidebar-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="openModal('timetable-modal')">📅 Visualizza Calendario Mese</button>
-        
         <hr style="margin:20px 0; opacity:0.1">
+        
+        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">
+            <label style="font-size:12px; color:var(--mp-gold)">🔔 Modalità Sveglia</label>
+            <select id="notif-type" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:10px; border:1px solid gold; margin-top:8px;">
+                <option value="athan">Athan Completo + Banner</option>
+                <option value="bip">Solo Bip + Banner</option>
+            </select>
+        </div>
 
-        <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan Test</label>
+        <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan</label>
         <select id="athan-voice" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
+            <option value="https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3">Marocco (Casablanca - Stile Maghrebi autentico)</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah (La Mecca)</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah (Medina)</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan3.mp3">Al-Aqsa (Gerusalemme)</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan4.mp3">Egitto (Il Cairo)</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan5.mp3">Abdul Basit Abdus Samad</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan6.mp3">Mishary Rashid Alafasy</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan7.mp3">Athan Maghribi Traditional</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan8.mp3">Nasser Al-Qatami</option>
+            <option value="https://www.islamcan.com/audio/adhan/azan9.mp3">Ali Ibn Ahmed Al-Mulla</option>
             <option value="https://cdn.islamic.network/astronomical/adhan.mp3">Stile Maghrebino / Nord Africa (Standard CDN)</option>
-            <option value="https://download.quranicaudio.com/quran/mishary_rashid_al_afasy/001.mp3">Mishary Rashid Alafasy (Recita/Athan Correlato)</option>
-            <option value="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">fallback alert</option>
         </select>
         
-        <button class="sidebar-btn btn-gold" onclick="testAudio()" style="margin-top:15px; background:#C5A059; border:2px solid #fff;">🔊 Test Audio Adhan</button>
-        
-        <button class="sidebar-btn" style="background:red; color:white; margin-top:20px;" onclick="closeMenu()">Chiudi</button>
-        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.9 | Bastia Umbra Offline</p>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="sidebar-btn btn-gold" style="flex:1" onclick="requestPermission()">ATTIVA</button>
+            <button class="sidebar-btn" style="flex:1; background:#ff4747; color:white" onclick="testNotif()">TEST</button>
+        </div>
+        <button class="sidebar-btn" style="background:transparent; border:1px solid white !important; color:white; margin-top:30px;" onclick="toggleMenu()">CHIUDI</button>
     </div>
 
     <!-- Modals -->
@@ -231,23 +247,83 @@
             }
         }
 
+        async function startWakeLock() { 
+            try { if('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch(e){} 
+        }
+
         function loadPrefs() {
-            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://cdn.islamic.network/astronomical/adhan.mp3';
+            document.getElementById('notif-type').value = localStorage.getItem('nMode') || 'athan';
+            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3';
         }
         function savePrefs() {
+            localStorage.setItem('nMode', document.getElementById('notif-type').value);
             localStorage.setItem('athanVoice', document.getElementById('athan-voice').value);
         }
 
-        function testAudio() {
+        function testNotif() {
             unlockAudio();
-            alarmAudio.src = document.getElementById('athan-voice').value || localStorage.getItem('athanVoice');
-            alarmAudio.loop = false;
-            alarmAudio.currentTime = 0;
-            alarmAudio.play().then(() => {
-                alert("Riproduzione audio in corso...");
-            }).catch(e => {
-                alert("Errore riproduzione audio: " + e.message + "\nAssicurati di aver toccato la pagina e verifica la connessione o l'URL.");
-            });
+            const mode = document.getElementById('notif-type').value;
+            const voice = document.getElementById('athan-voice').value;
+            triggerBanner("Muslim Pro - Test Orario");
+        }
+
+        function triggerBanner(title) {
+            const options = {
+                body: 'Bastia Umbra - Test notifica preghiera',
+                icon: 'icon.png',
+                vibrate: [500, 110, 500],
+                requireInteraction: true
+            };
+
+            if (Notification.permission === 'granted') {
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, options));
+                } else {
+                    new Notification(title, options);
+                }
+            }
+
+            const mode = document.getElementById('notif-type').value;
+            const voice = document.getElementById('athan-voice').value;
+            if(mode === 'athan') {
+                alarmAudio.src = voice;
+                alarmAudio.currentTime = 0;
+                alarmAudio.play().catch(e => alert("Errore riproduzione audio: " + e.message));
+            } else {
+                new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3").play().catch(e => {});
+            }
+        }
+
+        async function schedulePrayerTriggers() {
+            if ('serviceWorker' in navigator && 'showTrigger' in Notification.prototype) {
+                try {
+                    const reg = await navigator.serviceWorker.ready;
+                    const now = new Date();
+                    const times = rawTimetable[getTodayString()] || ["05:00","06:30","13:10","16:40","19:50","21:10"];
+                    const pNamesIT = ["Fajr", "Shorooq", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+                    times.forEach((tStr, idx) => {
+                        const [h, min] = tStr.split(":");
+                        const pDate = new Date();
+                        pDate.setHours(parseInt(h), parseInt(min), 0, 0);
+                        if (pDate > now) {
+                            reg.showNotification("Muslim Pro - " + pNamesIT[idx], {
+                                body: "È ora della preghiera di " + pNamesIT[idx] + " a Bastia Umbra",
+                                icon: 'icon.png',
+                                vibrate: [500, 110, 500],
+                                showTrigger: new TimestampTrigger(pDate.getTime())
+                            });
+                        }
+                    });
+                } catch(e) {}
+            }
+        }
+
+        function requestPermission() { 
+            Notification.requestPermission().then((perm) => {
+                if(perm === 'granted') schedulePrayerTriggers();
+            }); 
+            toggleMenu(); 
         }
 
         function generateMonthData() {
