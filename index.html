@@ -233,7 +233,7 @@
                 }
             } catch(e) {}
         }
-        return '1447 هـ';
+        return '1448 هـ';
     }
 
     function unlockAudio() {
@@ -270,35 +270,39 @@
     }
 
     function generateMonthData() {
-        let data = {};
-        let d = new Date();
-        let year = d.getFullYear();
-        let month = d.getMonth();
-        let daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        let baseFajr = new Date(year, month, 1, 5, 0);
-        let baseShorooq = new Date(year, month, 1, 6, 30);
-        let baseDhuhr = new Date(year, month, 1, 13, 10);
-        let baseAsr = new Date(year, month, 1, 16, 40);
-        let baseMaghrib = new Date(year, month, 1, 19, 50);
-        let baseIsha = new Date(year, month, 1, 21, 10);
-
-        for(let i=1; i<=daysInMonth; i++) {
-            let dayStr = i.toString().padStart(2,'0') + "/" + (month+1).toString().padStart(2,'0') + "/" + year;
-            let modF = new Date(baseFajr.getTime() - (i*1.5)*60000);
-            let modS = new Date(baseShorooq.getTime() - (i*1.5)*60000);
-            let modM = new Date(baseMaghrib.getTime() + (i*1.5)*60000);
-            let modI = new Date(baseIsha.getTime() + (i*1.5)*60000);
-
-            data[dayStr] = [
-                fTime(modF), fTime(modS), fTime(baseDhuhr), fTime(baseAsr), fTime(modM), fTime(modI)
-            ];
-        }
-        return data;
-    }
-
-    function fTime(dateObj) {
-        return dateObj.getHours().toString().padStart(2,'0')+":"+dateObj.getMinutes().toString().padStart(2,'0');
+        // Tabella aggiornata basata sull'immagine fornita per Settembre-Ottobre 2026 (1448 Rabie' Al-Akhar)
+        return {
+            "12/09/2026": ["05:27", "06:45", "13:09", "16:41", "19:29", "20:48"],
+            "13/09/2026": ["05:28", "06:46", "13:08", "16:40", "19:28", "20:46"],
+            "14/09/2026": ["05:29", "06:47", "13:08", "16:39", "19:26", "20:44"],
+            "15/09/2026": ["05:31", "06:48", "13:08", "16:38", "19:24", "20:42"],
+            "16/09/2026": ["05:32", "06:49", "13:07", "16:37", "19:22", "20:40"],
+            "17/09/2026": ["05:33", "06:50", "13:07", "16:35", "19:20", "20:39"],
+            "18/09/2026": ["05:34", "06:52", "13:06", "16:34", "19:19", "20:37"],
+            "19/09/2026": ["05:36", "06:53", "13:06", "16:33", "19:17", "20:35"],
+            "20/09/2026": ["05:37", "06:54", "13:06", "16:32", "19:15", "20:33"],
+            "21/09/2026": ["05:38", "06:55", "13:05", "16:30", "19:13", "20:31"],
+            "22/09/2026": ["05:39", "06:56", "13:05", "16:29", "19:11", "20:29"],
+            "23/09/2026": ["05:41", "06:57", "13:05", "16:28", "19:10", "20:27"],
+            "24/09/2026": ["05:42", "06:58", "13:04", "16:27", "19:08", "20:25"],
+            "25/09/2026": ["05:43", "06:59", "13:04", "16:25", "19:06", "20:23"],
+            "26/09/2026": ["05:44", "07:00", "13:04", "16:24", "19:04", "20:21"],
+            "27/09/2026": ["05:45", "07:02", "13:03", "16:23", "19:02", "20:19"],
+            "28/09/2026": ["05:46", "07:03", "13:03", "16:22", "19:01", "20:17"],
+            "29/09/2026": ["05:48", "07:04", "13:03", "16:20", "18:59", "20:16"],
+            "30/09/2026": ["05:49", "07:05", "13:02", "16:19", "18:57", "20:14"],
+            "01/10/2026": ["05:50", "07:06", "13:02", "16:18", "18:55", "20:12"],
+            "02/10/2026": ["05:51", "07:07", "13:02", "16:16", "18:53", "20:10"],
+            "03/10/2026": ["05:52", "07:08", "13:01", "16:15", "18:52", "20:08"],
+            "04/10/2026": ["05:53", "07:09", "13:01", "16:14", "18:50", "20:06"],
+            "05/10/2026": ["05:55", "07:11", "13:01", "16:12", "18:48", "20:05"],
+            "06/10/2026": ["05:56", "07:12", "13:00", "16:11", "18:46", "20:03"],
+            "07/10/2026": ["05:57", "07:13", "13:00", "16:10", "18:45", "20:01"],
+            "08/10/2026": ["05:58", "07:14", "13:00", "16:09", "18:43", "19:59"],
+            "09/10/2026": ["05:59", "07:15", "13:00", "16:07", "18:41", "19:58"],
+            "10/10/2026": ["06:00", "07:16", "12:59", "16:06", "18:39", "19:56"],
+            "11/10/2026": ["06:02", "07:17", "12:59", "16:05", "18:38", "19:54"]
+        };
     }
 
     function initApp() {
@@ -319,17 +323,24 @@
         let tbody = document.getElementById('monthly-body');
         tbody.innerHTML = '';
         let todayStr = getTodayString();
+        
+        const hijriDaysMap = {
+            "12/09/2026": "١", "13/09/2026": "٢", "14/09/2026": "٣", "15/09/2026": "٤", "16/09/2026": "٥",
+            "17/09/2026": "٦", "18/09/2026": "٧", "19/09/2026": "٨", "20/09/2026": "٩", "21/09/2026": "١٠",
+            "22/09/2026": "١١", "23/09/2026": "١٢", "24/09/2026": "١٣", "25/09/2026": "١٤", "26/09/2026": "١٥",
+            "27/09/2026": "١٦", "28/09/2026": "١٧", "29/09/2026": "١٨", "30/09/2026": "١٩", "01/10/2026": "٢٠",
+            "02/10/2026": "٢١", "03/10/2026": "٢٢", "04/10/2026": "٢٣", "05/10/2026": "٢٤", "06/10/2026": "٢٥",
+            "07/10/2026": "٢٦", "08/10/2026": "٢٧", "09/10/2026": "٢٨", "10/10/2026": "٢٩", "11/10/2026": "٣٠"
+        };
 
         for(let date in rawTimetable) {
             let times = rawTimetable[date];
-            let dNum = date.split('/')[0];
             let isToday = (date === todayStr);
 
             let tr = document.createElement('tr');
             if(isToday) tr.className = 'current-day-row';
 
-            let hijriDayIndex = (parseInt(dNum, 10) % 30);
-            let hijriDayAr = hijriDayIndex === 0 ? '30' : hijriDayIndex.toString();
+            let hijriDayAr = hijriDaysMap[date] || '';
             let html = `<td>${hijriDayAr}</td>`;
             times.forEach(t => html += `<td>${t}</td>`);
             tr.innerHTML = html;
@@ -344,7 +355,8 @@
 
         document.getElementById('hijri-txt').innerText = getHijriArabicDate();
 
-        const times = rawTimetable[getTodayString()] || ["05:00","06:30","13:10","16:40","19:50","21:10"];
+        const defaultTimes = ["05:38","06:55","13:05","16:30","19:13","20:31"];
+        const times = rawTimetable[getTodayString()] || defaultTimes;
 
         listDiv.innerHTML = '';
         let nextIndex = -1;
@@ -456,5 +468,3 @@
 </script>
 </body>
 </html>
-
-```
