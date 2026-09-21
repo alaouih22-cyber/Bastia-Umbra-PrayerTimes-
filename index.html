@@ -12,16 +12,16 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;600;700;900&display=swap');
-        :root { --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F8F9FA; --white: #ffffff; }
+        :root { --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F8F9FA; --white: #ffffff; --text-main: #1a1a1a; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--mp-bg); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: #1a1a1a; }
+        body { background-color: var(--mp-bg); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: var(--text-main); transition: 0.4s; }
 
         /* HEADER ULTIMATE */
-        .header { width: 100%; background: linear-gradient(180deg, #004F3F 0%, #002b22 100%); padding: 45px 15px 15px 15px; border-bottom: 3px solid var(--mp-gold); flex-shrink: 0; z-index: 1000; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; text-align: center; }
+        .header { width: 100%; background: linear-gradient(180deg, var(--mp-dark) 0%, #002b22 100%); padding: 45px 15px 15px 15px; border-bottom: 3px solid var(--mp-gold); flex-shrink: 0; z-index: 1000; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; text-align: center; }
         .menu-btn { color: var(--mp-gold); font-size: 38px; cursor: pointer; order: 1; text-align: left; }
         .header-logo { width: 50px; height: 50px; border-radius: 12px; background: url('icon.png') center/cover; border: 2px solid var(--mp-gold); order: 3; box-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
         .app-title { font-family: 'Inter', sans-serif; color: var(--mp-gold); font-size: 18px; font-weight: 900; order: 2; text-transform: uppercase; letter-spacing: 1px; }
-        .header-aya { width: 100%; background: rgba(0,0,0,0.1); color: #444; padding: 5px; text-align: center; font-size: 10px; font-style: italic; border-bottom: 1px solid #ddd; flex-shrink: 0; }
+        .header-aya { width: 100%; background: rgba(0,0,0,0.1); color: var(--text-main); padding: 5px; text-align: center; font-size: 10px; font-style: italic; border-bottom: 1px solid #ddd; flex-shrink: 0; opacity: 0.8; }
 
         /* DASHBOARD */
         .dashboard { width: 92%; margin: 12px auto; background: var(--white); border-radius: 28px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); flex-shrink: 0; }
@@ -41,7 +41,7 @@
 
         /* LISTA PREGHIERE */
         .prayer-list { width: 94%; margin: 0 auto; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-bottom: 20px; }
-        .prayer-card { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 15px 20px; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid transparent; }
+        .prayer-card { display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 15px 20px; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid transparent; color: var(--text-main); }
         .prayer-card.active { border-color: var(--mp-gold); background: #FFFCF5; }
         .p-name { font-size: 17px; font-weight: 700; color: var(--mp-dark); }
         .p-time { font-size: 19px; font-weight: 900; }
@@ -107,7 +107,7 @@
         <div class="bubble-item" onclick="openModal('tracker-modal')"><div class="bubble-circle">✅</div><span class="bubble-label">Diary</span></div>
         <div class="bubble-item" onclick="openAzkar()"><div class="bubble-circle">🤲</div><span class="bubble-label">Azkar</span></div>
         <div class="bubble-item" onclick="openNames()"><div class="bubble-circle">✨</div><span class="bubble-label">Nomi 99</span></div>
-        <div class="bubble-item" onclick="openModal('timetable-modal')"><div class="bubble-circle">📅</div><span class="bubble-label">Calendario</span></div>
+        <div class="bubble-item" onclick="syncCapacitorNotifications()"><div class="bubble-circle">🔔</div><span class="bubble-label">Notifiche</span></div>
         <div class="bubble-item" onclick="openModal('qibla-modal')"><div class="bubble-circle">🧭</div><span class="bubble-label">Qibla</span></div>
     </div>
     <div class="progress-container"><div class="progress-bar" id="p-bar" style="width:0%"></div></div>
@@ -119,6 +119,7 @@
 <div class="sidebar" id="sidebar">
     <h2>Muslim Pro Menu</h2>
     <button class="sidebar-btn btn-gold" onclick="openMoshafWarsh()">📖 المصحف الملون (ورش)</button>
+    <button class="sidebar-btn btn-gold" style="margin-top:10px;" onclick="syncCapacitorNotifications()">🔔 Sincronizza Notifiche Mese</button>
     <button class="sidebar-btn btn-gold" style="margin-top:10px;" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
     <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
     <button class="sidebar-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="openModal('timetable-modal')">📅 Visualizza Calendario Mese</button>
@@ -139,11 +140,6 @@
         <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah (Medina)</option>
         <option value="https://www.islamcan.com/audio/adhan/azan3.mp3">Al-Aqsa (Gerusalemme)</option>
         <option value="https://www.islamcan.com/audio/adhan/azan4.mp3">Egitto (Il Cairo)</option>
-        <option value="https://www.islamcan.com/audio/adhan/azan5.mp3">Abdul Basit Abdus Samad</option>
-        <option value="https://www.islamcan.com/audio/adhan/azan6.mp3">Mishary Rashid Alafasy</option>
-        <option value="https://www.islamcan.com/audio/adhan/azan7.mp3">Athan Maghribi Traditional</option>
-        <option value="https://www.islamcan.com/audio/adhan/azan8.mp3">Nasser Al-Qatami</option>
-        <option value="https://www.islamcan.com/audio/adhan/azan9.mp3">Ali Ibn Ahmed Al-Mulla</option>
         <option value="https://cdn.islamic.network/astronomical/adhan.mp3">Stile Maghrebino / Nord Africa (Standard CDN)</option>
     </select>
 
@@ -201,10 +197,44 @@
 </div>
 
 <script>
-    let rawTimetable = {};
+    // Orari estratti direttamente dal calendario ufficiale ACIA Bastia Umbra (12/09 - 11/10/2026)
+    // Formato: [Fajr, Shuruk (solo visuale), Dhuhr, Asr, Maghrib, Ishaa]
+    let rawTimetable = {
+        "12/09/2026": ["05:27", "06:45", "13:09", "16:41", "19:29", "20:48"],
+        "13/09/2026": ["05:28", "06:46", "13:08", "16:40", "19:28", "20:46"],
+        "14/09/2026": ["05:29", "06:47", "13:08", "16:39", "19:26", "20:44"],
+        "15/09/2026": ["05:31", "06:48", "13:08", "16:38", "19:24", "20:42"],
+        "16/09/2026": ["05:32", "06:49", "13:07", "16:37", "19:22", "20:40"],
+        "17/09/2026": ["05:33", "06:50", "13:07", "16:35", "19:20", "20:39"],
+        "18/09/2026": ["05:34", "06:52", "13:06", "16:34", "19:19", "20:37"],
+        "19/09/2026": ["05:36", "06:53", "13:06", "16:33", "19:17", "20:35"],
+        "20/09/2026": ["05:37", "06:54", "13:06", "16:32", "19:15", "20:33"],
+        "21/09/2026": ["05:38", "06:55", "13:05", "16:30", "19:13", "20:31"],
+        "22/09/2026": ["05:39", "06:56", "13:05", "16:29", "19:11", "20:29"],
+        "23/09/2026": ["05:41", "06:57", "13:05", "16:28", "19:10", "20:27"],
+        "24/09/2026": ["05:42", "06:58", "13:04", "16:27", "19:08", "20:25"],
+        "25/09/2026": ["05:43", "06:59", "13:04", "16:25", "19:06", "20:23"],
+        "26/09/2026": ["05:44", "07:00", "13:04", "16:24", "19:04", "20:21"],
+        "27/09/2026": ["05:45", "07:02", "13:03", "16:23", "19:02", "20:19"],
+        "28/09/2026": ["05:46", "07:03", "13:03", "16:22", "19:01", "20:17"],
+        "29/09/2026": ["05:48", "07:04", "13:03", "16:20", "18:59", "20:16"],
+        "30/09/2026": ["05:49", "07:05", "13:02", "16:19", "18:57", "20:14"],
+        "01/10/2026": ["05:50", "07:06", "13:02", "16:18", "18:55", "20:12"],
+        "02/10/2026": ["05:51", "07:07", "13:02", "16:16", "18:53", "20:10"],
+        "03/10/2026": ["05:52", "07:08", "13:01", "16:15", "18:52", "20:08"],
+        "04/10/2026": ["05:53", "07:09", "13:01", "16:14", "18:50", "20:06"],
+        "05/10/2026": ["05:55", "07:11", "13:01", "16:12", "18:48", "20:05"],
+        "06/10/2026": ["05:56", "07:12", "13:00", "16:11", "18:46", "20:03"],
+        "07/10/2026": ["05:57", "07:13", "13:00", "16:10", "18:45", "20:01"],
+        "08/10/2026": ["05:58", "07:14", "13:00", "16:09", "18:43", "19:59"],
+        "09/10/2026": ["05:59", "07:15", "13:00", "16:07", "18:41", "19:58"],
+        "10/10/2026": ["06:00", "07:16", "12:59", "16:06", "18:39", "19:56"],
+        "11/10/2026": ["06:02", "07:17", "12:59", "16:05", "18:38", "19:54"]
+    };
+
     const pNames = ['🌅 الفجر', '☀️ الشروق', '🌞 الظهر', '🌤️ العصر', '🌇 المغرب', '🌌 العشاء'];
+    const pKeys = ['Fajr', 'Shuruk', 'Dhuhr', 'Asr', 'Maghrib', 'Ishaa'];
     const listDiv = document.getElementById('list-container');
-    let currentPIndex = -1;
     let alarmAudio = new Audio();
     alarmAudio.preload = 'auto';
     let isAudioUnlocked = false;
@@ -220,9 +250,7 @@
         if (Intl && Intl.DateTimeFormat) {
             try {
                 const hijriFormatter = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', {
-                    day: 'numeric',
-                    month: 'numeric',
-                    year: 'numeric'
+                    day: 'numeric', month: 'numeric', year: 'numeric'
                 });
                 const parts = hijriFormatter.formatToParts(today);
                 let d = parts.find(p => p.type === 'day')?.value || '';
@@ -233,7 +261,7 @@
                 }
             } catch(e) {}
         }
-        return '1447 هـ';
+        return 'ربيع الآخر 1448 هـ';
     }
 
     function unlockAudio() {
@@ -261,53 +289,10 @@
         savePrefs();
         unlockAudio();
         const voice = document.getElementById('athan-voice').value;
-        if(alarmAudio) {
-            alarmAudio.pause();
-        }
+        if(alarmAudio) alarmAudio.pause();
         alarmAudio.src = voice;
         alarmAudio.currentTime = 0;
         alarmAudio.play().catch(e => {});
-    }
-
-    function generateMonthData() {
-        let data = {};
-        let d = new Date();
-        let year = d.getFullYear();
-        let month = d.getMonth();
-        let daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        let baseFajr = new Date(year, month, 1, 5, 0);
-        let baseShorooq = new Date(year, month, 1, 6, 30);
-        let baseDhuhr = new Date(year, month, 1, 13, 10);
-        let baseAsr = new Date(year, month, 1, 16, 40);
-        let baseMaghrib = new Date(year, month, 1, 19, 50);
-        let baseIsha = new Date(year, month, 1, 21, 10);
-
-        for(let i=1; i<=daysInMonth; i++) {
-            let dayStr = i.toString().padStart(2,'0') + "/" + (month+1).toString().padStart(2,'0') + "/" + year;
-            let modF = new Date(baseFajr.getTime() - (i*1.5)*60000);
-            let modS = new Date(baseShorooq.getTime() - (i*1.5)*60000);
-            let modM = new Date(baseMaghrib.getTime() + (i*1.5)*60000);
-            let modI = new Date(baseIsha.getTime() + (i*1.5)*60000);
-
-            data[dayStr] = [
-                fTime(modF), fTime(modS), fTime(baseDhuhr), fTime(baseAsr), fTime(modM), fTime(modI)
-            ];
-        }
-        return data;
-    }
-
-    function fTime(dateObj) {
-        return dateObj.getHours().toString().padStart(2,'0')+":"+dateObj.getMinutes().toString().padStart(2,'0');
-    }
-
-    function initApp() {
-        loadPrefs();
-        rawTimetable = generateMonthData();
-        buildMonthlyTable();
-        updateClock();
-        setInterval(updateClock, 1000);
-        renderTracker();
     }
 
     function getTodayString() {
@@ -320,42 +305,56 @@
         tbody.innerHTML = '';
         let todayStr = getTodayString();
 
+        let hijriDays = ['٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣', '١٤', '١٥', '١٦', '١٧', '١٨', '١٩', '٢٠', '٢١', '٢٢', '٢٣', '٢٤', '٢٥', '٢٦', '٢٧', '٢٨', '٢٩', '٣٠', '١', '٢', '٣'];
+        let idx = 0;
+
         for(let date in rawTimetable) {
             let times = rawTimetable[date];
-            let dNum = date.split('/')[0];
             let isToday = (date === todayStr);
-
             let tr = document.createElement('tr');
             if(isToday) tr.className = 'current-day-row';
 
-            let hijriDayIndex = (parseInt(dNum, 10) % 30);
-            let hijriDayAr = hijriDayIndex === 0 ? '30' : hijriDayIndex.toString();
-            let html = `<td>${hijriDayAr}</td>`;
+            let hDay = hijriDays[idx % hijriDays.length];
+            let html = `<td>ربيع الآخر ${hDay}</td>`;
             times.forEach(t => html += `<td>${t}</td>`);
             tr.innerHTML = html;
             tbody.appendChild(tr);
+            idx++;
         }
+    }
+
+    function initApp() {
+        loadPrefs();
+        buildMonthlyTable();
+        updateClock();
+        setInterval(updateClock, 1000);
+        renderTracker();
     }
 
     function updateClock() {
         const now = new Date();
         let hm = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false });
-        document.getElementById('city-display').innerText = "BASTIA UMBRA: " + hm;
+        let todayKey = getTodayString();
 
+        document.getElementById('city-display').innerText = "BASTIA UMBRA: " + hm;
         document.getElementById('hijri-txt').innerText = getHijriArabicDate();
 
-        const times = rawTimetable[getTodayString()] || ["05:00","06:30","13:10","16:40","19:50","21:10"];
+        // Fallback di default se la data oggi non fosse in tabella
+        const times = rawTimetable[todayKey] || ["05:38", "06:55", "13:05", "16:30", "19:13", "20:31"];
 
         listDiv.innerHTML = '';
         let nextIndex = -1;
         let minDiff = Infinity;
 
-        for(let i=0; i<6; i++) {
+        // Consideriamo le 5 preghiere obbligatorie per active/countdown (escludiamo Shuruk indice 1 dal calcolo prossimo)
+        let activePrayerIndices =;
+        activePrayerIndices.forEach(i => {
             let pt = new Date(now.toDateString() + " " + times[i]);
             let diff = pt - now;
-
             if (diff > 0 && diff < minDiff) { minDiff = diff; nextIndex = i; }
+        });
 
+        for(let i=0; i<6; i++) {
             let div = document.createElement('div');
             div.className = `prayer-card ${i===nextIndex ? 'active' : ''}`;
             div.innerHTML = `<span class="p-name">${pNames[i]} ${i===nextIndex?'🟢':''}</span><span class="p-time">${times[i]}</span>`;
@@ -363,7 +362,6 @@
         }
 
         if(nextIndex === -1) nextIndex = 0;
-        currentPIndex = nextIndex;
         document.getElementById('next-name').innerText = "PROSSIMA: " + pNames[nextIndex].toUpperCase();
 
         let target = new Date(now.toDateString() + " " + times[nextIndex]);
@@ -380,10 +378,69 @@
         document.getElementById('p-bar').style.width = perc + "%";
     }
 
+    // Integrazione Capacitor Local Notifications per tutto il mese
+    async function syncCapacitorNotifications() {
+        if (typeof window.Capacitor === 'undefined' || !window.Capacitor.Plugins || !window.Capacitor.Plugins.LocalNotifications) {
+            alert("Capacitor LocalNotifications non rilevato in questo contesto web. Le notifiche native funzionano nell'app nativa mobile.");
+            return;
+        }
+
+        try {
+            const { LocalNotifications } = window.Capacitor.Plugins;
+            const perm = await LocalNotifications.requestPermissions();
+            if (perm.display !== 'granted') {
+                alert("Permessi per le notifiche non concessi.");
+                return;
+            }
+
+            // Prepariamo le notifiche per tutte le preghiere (Fajr, Dhuhr, Asr, Maghrib, Ishaa) di tutto il mese caricato
+            let notificationsPayload = [];
+            let notifId = 1;
+
+            // Indici validi preghiere obbligatorie: 0(Fajr), 2(Dhuhr), 3(Asr), 4(Maghrib), 5(Ishaa)
+            let prayerIndices =;
+
+            for (let dateStr in rawTimetable) {
+                let parts = dateStr.split('/');
+                let day = parseInt(parts[0], 10);
+                let month = parseInt(parts, 10);
+                let year = parseInt(parts, 10);
+                let times = rawTimetable[dateStr];
+
+                prayerIndices.forEach(pIdx => {
+                    let timeParts = times[pIdx].split(':');
+                    let hour = parseInt(timeParts[0], 10);
+                    let minute = parseInt(timeParts, 10);
+
+                    let scheduleDate = new Date(year, month - 1, day, hour, minute, 0);
+                    if (scheduleDate > new Date()) {
+                        notificationsPayload.push({
+                            title: `È ora della preghiera`,
+                            body: `${pNames[pIdx]} (${times[pIdx]}) - Bastia Umbra`,
+                            id: notifId++,
+                            schedule: { at: scheduleDate },
+                            sound: null,
+                            smallIcon: 'res/drawable/ic_stat_icon_config_sample'
+                        });
+                    }
+                });
+            }
+
+            if (notificationsPayload.length > 0) {
+                await LocalNotifications.schedule({ notifications: notificationsPayload });
+                alert(`Programmate ${notificationsPayload.length} notifiche locali di preghiera per tutto il mese.`);
+            } else {
+                alert("Nessuna data futura trovata da programmare.");
+            }
+        } catch (e) {
+            console.error("Errore Capacitor LocalNotifications:", e);
+            alert("Errore nella sincronizzazione delle notifiche.");
+        }
+    }
+
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    function closeMenu() { document.getElementById('sidebar').classList.remove('open'); }
 
     function calculateZakat() {
         let val = parseFloat(document.getElementById('zakat-input').value);
@@ -408,7 +465,7 @@
             html += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
                         <span style="font-weight:bold">${p}</span>
                         <input type="checkbox" style="transform:scale(1.5)" ${chk} onchange="updateTracker(${idx}, this.checked)">
-                     </div>`;
+                   </div>`;
         });
         tList.innerHTML = html;
     }
@@ -438,7 +495,7 @@
         window.addEventListener('deviceorientation', function(e) {
             let alpha = e.webkitCompassHeading || Math.abs(e.alpha - 360);
             if (alpha) {
-                let target = 131; // Qibla for Bastia
+                let target = 131;
                 let rotation = alpha - target;
                 document.getElementById('compass-disk').style.transform = `rotate(${-rotation}deg)`;
             }
