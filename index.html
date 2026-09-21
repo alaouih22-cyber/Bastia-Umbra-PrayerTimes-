@@ -14,14 +14,14 @@
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;600;700;900&display=swap');
         :root { --mp-dark: #004F3F; --mp-gold: #C5A059; --mp-bg: #F8F9FA; --white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--mp-bg); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: #1a1a1a; transition: filter 0.5s ease; }
+        body { background-color: var(--mp-bg); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; color: #1a1a1a; }
 
         /* HEADER ULTIMATE */
         .header { width: 100%; background: linear-gradient(180deg, #004F3F 0%, #002b22 100%); padding: 45px 15px 15px 15px; border-bottom: 3px solid var(--mp-gold); flex-shrink: 0; z-index: 1000; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; text-align: center; }
         .menu-btn { color: var(--mp-gold); font-size: 38px; cursor: pointer; order: 1; text-align: left; }
         .header-logo { width: 50px; height: 50px; border-radius: 12px; background: url('icon.png') center/cover; border: 2px solid var(--mp-gold); order: 3; box-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
         .app-title { font-family: 'Inter', sans-serif; color: var(--mp-gold); font-size: 18px; font-weight: 900; order: 2; text-transform: uppercase; letter-spacing: 1px; }
-        .header-aya { width: 100%; background: rgba(0,0,0,0.1); color: #444; padding: 5px; text-align: center; font-size: 10px; font-style: italic; border-bottom: 1px solid #ddd; flex-shrink: 0; display: flex; justify-content: space-around; align-items: center; }
+        .header-aya { width: 100%; background: rgba(0,0,0,0.1); color: #444; padding: 5px; text-align: center; font-size: 10px; font-style: italic; border-bottom: 1px solid #ddd; flex-shrink: 0; }
 
         /* DASHBOARD */
         .dashboard { width: 92%; margin: 12px auto; background: var(--white); border-radius: 28px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); flex-shrink: 0; }
@@ -78,7 +78,7 @@
         #compass-disk { width: 100%; height: 100%; background: url('icon.png') center/cover; border-radius: 50%; transition: transform 0.1s linear; }
     </style>
 </head>
-<body onclick="unlockAudio(); startWakeLock();">
+<body onclick="unlockAudio();">
 
     <audio id="silent-audio" loop><source src="https://github.com/anars/blank-audio/raw/master/10-seconds-of-silence.mp3" type="audio/mp3"></audio>
 
@@ -89,7 +89,6 @@
     </div>
     <div class="header-aya">
         <span>إِنَّ مَعَ الْعُسْرِ يُسْرًا | In verità con la difficoltà c'è la facilità</span>
-        <span id="mosque-live-status" style="color:var(--mp-gold); cursor:pointer;" onclick="openModal('mosque-modal')">🟢 Stato Moschea: Aperta</span>
     </div>
 
     <div class="dashboard">
@@ -101,7 +100,6 @@
             <div class="date-box">
                 <div class="date-hijri" id="hijri-txt">--</div>
                 <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
-                <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
         </div>
 
@@ -124,32 +122,19 @@
         <button class="sidebar-btn btn-gold" style="margin-top:10px;" onclick="openModal('zakat-modal')">💰 Calcola Zakat</button>
         <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
         <button class="sidebar-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="openModal('timetable-modal')">📅 Visualizza Calendario Mese</button>
-        <button class="sidebar-btn" style="background:#00332c; color:var(--mp-gold);" onclick="toggleSereneNightMode()">🌙 Attiva/Disattiva Notte Serena</button>
         
         <hr style="margin:20px 0; opacity:0.1">
-        
-        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">
-            <label style="font-size:12px; color:var(--mp-gold)">🔔 Modalità Sveglia</label>
-            <select id="notif-type" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:10px; border:1px solid gold; margin-top:8px;">
-                <option value="athan">Athan Completo + Banner</option>
-                <option value="bip">Solo Bip + Banner</option>
-            </select>
-        </div>
 
-        <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan</label>
+        <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan Test</label>
         <select id="athan-voice" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
-            <option value="https://cdn.islamic.network/astronomical/adhan.mp3">Marocco (Autentico Maghrebi - Full Stream)</option>
-            <option value="https://api.aladhan.com/v1/cdn/audio/1.mp3">Makkah (La Mecca - Full Stream)</option>
-            <option value="https://api.aladhan.com/v1/cdn/audio/8.mp3">Madinah (Medina - Full Stream)</option>
-            <option value="https://api.aladhan.com/v1/cdn/audio/14.mp3">Al-Aqsa (Full Stream)</option>
-            <option value="https://api.aladhan.com/v1/cdn/audio/4.mp3">Mishary Al Afasy (Full Stream)</option>
-            <option value="https://api.aladhan.com/v1/cdn/audio/2.mp3">Egitto (Stile Cairino - Full Stream)</option>
+            <option value="https://assets.mixkit.co/sfx/preview/mixkit-islamic-call-to-prayer-1786.mp3">Marocco / Standard Autentico (MP3)</option>
+            <option value="https://cdn.islamic.network/astronomical/adhan.mp3">Alternative Stream 1</option>
         </select>
         
         <button class="sidebar-btn btn-gold" onclick="testAudio()" style="margin-top:15px; background:#C5A059; border:2px solid #fff;">🔊 Test Audio Adhan</button>
         
         <button class="sidebar-btn" style="background:red; color:white; margin-top:20px;" onclick="closeMenu()">Chiudi</button>
-        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.7 | Bastia Umbra Offline</p>
+        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.8 | Bastia Umbra Offline</p>
     </div>
 
     <!-- Modals -->
@@ -202,26 +187,6 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="mosque-modal">
-        <div class="modal-card">
-            <h3 style="color:var(--mp-dark); margin-bottom:15px;">Stato Moschea - Bastia Umbra</h3>
-            <div style="background:#FFFCF5; padding:20px; border-radius:15px; border:2px solid var(--mp-gold);">
-                <h4 style="color:green">🟢 Moschea Attualmente Aperta</h4>
-                <p style="font-size:13px; margin-top:10px;">La moschea apre solitamente 20 minuti prima di ogni preghiera obbligatoria e chiude circa 30 minuti dopo.</p>
-                <hr style="margin:15px 0; opacity:0.2">
-                <p style="font-size:12px; font-weight:bold;">Prossimo Jumu'ah (Venerdì):</p>
-                <p style="font-size:12px; color:var(--mp-dark);">Khutba: 13:00</p>
-            </div>
-            <button class="sidebar-btn btn-gold" onclick="closeModal('mosque-modal')" style="margin-top:20px;">Chiudi</button>
-        </div>
-    </div>
-
-    <div id="alarm-banner" style="position:fixed; top:-200%; left:5%; width:90%; background:#fff; border:4px solid var(--mp-gold); border-radius:20px; box-shadow:0 15px 40px rgba(0,0,0,0.5); z-index:9999; text-align:center; padding:25px; transition:top 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-        <h1 style="color:var(--mp-dark); font-size:28px; margin-bottom:10px;" id="alarm-title">È l'ora di Fajr!</h1>
-        <p style="font-size:14px; color:#555; margin-bottom:20px;" id="alarm-sub">A Bastia Umbra</p>
-        <button style="background:var(--mp-dark); color:var(--mp-gold); border:none; padding:15px 40px; font-size:18px; border-radius:15px; font-weight:bold; cursor:pointer;" onclick="stopAlarm()">FERMA ALLARME</button>
-    </div>
-
     <script>
         let rawTimetable = {};
         const pNames = ['🌅 الفجر', '☀️ الشروق', '🌞 الظهر', '🌤️ العصر', '🌇 المغرب', '🌌 العشاء'];
@@ -229,11 +194,7 @@
         let currentPIndex = -1;
         let alarmAudio = new Audio();
         alarmAudio.preload = 'auto';
-        let bipAudio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-        let activeAlarm = false;
         let isAudioUnlocked = false;
-        let wakelock = null;
-        let sereneModeActive = false;
 
         const hijriMonthsAr = [
             'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر',
@@ -262,10 +223,6 @@
             return '1447 هـ';
         }
 
-        async function startWakeLock() {
-            try { if ('wakeLock' in navigator) wakelock = await navigator.wakeLock.request('screen'); }
-            catch (err) { console.log("WakeLock non supportato."); }
-        }
         function unlockAudio() {
             if(!isAudioUnlocked) {
                 document.getElementById('silent-audio').play().catch(e=>{});
@@ -274,26 +231,22 @@
         }
 
         function loadPrefs() {
-            document.getElementById('notif-type').value = localStorage.getItem('notifType') || 'athan';
-            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://cdn.islamic.network/astronomical/adhan.mp3';
+            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://assets.mixkit.co/sfx/preview/mixkit-islamic-call-to-prayer-1786.mp3';
         }
         function savePrefs() {
-            localStorage.setItem('notifType', document.getElementById('notif-type').value);
             localStorage.setItem('athanVoice', document.getElementById('athan-voice').value);
         }
 
         function testAudio() {
             unlockAudio();
-            let nType = localStorage.getItem('notifType');
-            if (nType === 'athan') {
-                alarmAudio.src = localStorage.getItem('athanVoice');
-                alarmAudio.loop = false;
-                alarmAudio.currentTime = 0;
-                alarmAudio.play().catch(e => alert("Assicurati di toccare un punto dello schermo prima di testare. Errore: " + e));
-            } else {
-                bipAudio.play();
-            }
-            alert("Test in corso... Se non senti nulla, verifica la connessione o alza il volume multimediale.");
+            alarmAudio.src = document.getElementById('athan-voice').value || localStorage.getItem('athanVoice');
+            alarmAudio.loop = false;
+            alarmAudio.currentTime = 0;
+            alarmAudio.play().then(() => {
+                alert("Riproduzione audio in corso...");
+            }).catch(e => {
+                alert("Errore riproduzione audio: " + e.message + "\nAssicurati di aver toccato la pagina e verifica la connessione o l'URL.");
+            });
         }
 
         function generateMonthData() {
@@ -364,17 +317,6 @@
             }
         }
 
-        function toggleSereneNightMode() {
-            sereneModeActive = !sereneModeActive;
-            if(sereneModeActive) {
-                document.body.style.filter = "brightness(0.6) sepia(0.4) hue-rotate(15deg)";
-                alert("🌙 Modalità Notte Serena Attivata: Luminosità ridotta per il comfort visivo.");
-            } else {
-                document.body.style.filter = "none";
-                alert("☀️ Modalità Notte Serena Disattivata.");
-            }
-        }
-
         function updateClock() {
             const now = new Date();
             let hm = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -391,10 +333,6 @@
             for(let i=0; i<6; i++) {
                 let pt = new Date(now.toDateString() + " " + times[i]);
                 let diff = pt - now;
-
-                if (hm === times[i] && now.getSeconds() === 0) {
-                    triggerBanner(pNames[i]);
-                }
 
                 if (diff > 0 && diff < minDiff) { minDiff = diff; nextIndex = i; }
                 
@@ -420,37 +358,6 @@
             let perc = 100 - ((rem / totalInterval) * 100);
             if(perc > 100) perc = 100; if(perc < 0) perc = 0;
             document.getElementById('p-bar').style.width = perc + "%";
-        }
-
-        function triggerBanner(pname) {
-            if(activeAlarm) return;
-            activeAlarm = true;
-            document.getElementById('alarm-title').innerText = `È l'ora di ${pname}!`;
-            document.getElementById('alarm-banner').style.top = "15%";
-            
-            if(wakelock===null) startWakeLock();
-
-            if (!pname.includes('الشروق')) {
-                let nType = localStorage.getItem('notifType');
-                if (nType === 'athan') {
-                    alarmAudio.src = localStorage.getItem('athanVoice');
-                    alarmAudio.loop = false;
-                    alarmAudio.currentTime = 0;
-                    alarmAudio.play().catch(e=>console.log(e));
-                } else {
-                    bipAudio.play();
-                }
-            } else {
-                bipAudio.play();
-            }
-        }
-
-        function stopAlarm() {
-            activeAlarm = false;
-            document.getElementById('alarm-banner').style.top = "-200%"; 
-            alarmAudio.pause();
-            alarmAudio.currentTime = 0;
-            if(wakelock) { wakelock.release(); wakelock = null; }
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -501,7 +408,7 @@
             openModal('names-modal');
             const g = document.getElementById('names-grid');
             if(g.innerHTML !== '') return;
-            const names = [ "الرَّحْمَنُ", "الرَّحِيمُ", "الْمَلِكُ", "الْقُدُّوسُ", "السَّلَامُ", "الْمُؤْمِنُ", "الْمُهَيْمِنُ", "الْعَزِيزُ", "الْجَبَّارُ", "الْمُتَكَبِّرُ", "الْخَالِقُ", "الْبَارِئُ", "الْمُصَوِّرُ", "الْغَفَّارُ", "الْقَهَّارُ", "الْوَهَّابُ", "الرَّزَّاقُ", "الْفَتَّاحُ", "اَلْعَلِيْمُ" ];
+            const names = [ "الرَّحْمَنُ", "الرَّحِيمُ", "الْمَلِكُ", "الْقُدُّوسُ", "السَّلَامُ", "الْمُؤْمِنُ", "الْمُهَيْمِنُ", "الْعَزِيزُ", "الْجَبَّارُ", "الْمُتَكَبِّرُ", "الْخَالِقُ", "الْبَارِئُ", "ْمُصَوِّرُ", "الْغَفَّارُ", "الْقَهَّارُ", "الْوَهَّابُ", "الرَّزَّاقُ", "الْفَتَّاحُ", "اَلْعَلِيْمُ" ];
             names.forEach((n,i) => {
                 g.innerHTML += `<div class="gold-item"><b>${n}</b><br>${i+1}</div>`;
             });
