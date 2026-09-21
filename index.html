@@ -197,8 +197,6 @@
 </div>
 
 <script>
-    // Orari estratti direttamente dal calendario ufficiale ACIA Bastia Umbra (12/09 - 11/10/2026)
-    // Formato: [Fajr, Shuruk (solo visuale), Dhuhr, Asr, Maghrib, Ishaa]
     let rawTimetable = {
         "12/09/2026": ["05:27", "06:45", "13:09", "16:41", "19:29", "20:48"],
         "13/09/2026": ["05:28", "06:46", "13:08", "16:40", "19:28", "20:46"],
@@ -233,7 +231,6 @@
     };
 
     const pNames = ['🌅 الفجر', '☀️ الشروق', '🌞 الظهر', '🌤️ العصر', '🌇 المغرب', '🌌 العشاء'];
-    const pKeys = ['Fajr', 'Shuruk', 'Dhuhr', 'Asr', 'Maghrib', 'Ishaa'];
     const listDiv = document.getElementById('list-container');
     let alarmAudio = new Audio();
     alarmAudio.preload = 'auto';
@@ -302,9 +299,9 @@
 
     function buildMonthlyTable() {
         let tbody = document.getElementById('monthly-body');
+        if(!tbody) return;
         tbody.innerHTML = '';
         let todayStr = getTodayString();
-
         let hijriDays = ['٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣', '١٤', '١٥', '١٦', '١٧', '١٨', '١٩', '٢٠', '٢١', '٢٢', '٢٣', '٢٤', '٢٥', '٢٦', '٢٧', '٢٨', '٢٩', '٣٠', '١', '٢', '٣'];
         let idx = 0;
 
@@ -336,17 +333,18 @@
         let hm = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false });
         let todayKey = getTodayString();
 
-        document.getElementById('city-display').innerText = "BASTIA UMBRA: " + hm;
-        document.getElementById('hijri-txt').innerText = getHijriArabicDate();
+        let cityEl = document.getElementById('city-display');
+        let hijriEl = document.getElementById('hijri-txt');
+        if(cityEl) cityEl.innerText = "BASTIA UMBRA: " + hm;
+        if(hijriEl) hijriEl.innerText = getHijriArabicDate();
 
-        // Fallback di default se la data oggi non fosse in tabella
         const times = rawTimetable[todayKey] || ["05:38", "06:55", "13:05", "16:30", "19:13", "20:31"];
 
+        if(!listDiv) return;
         listDiv.innerHTML = '';
         let nextIndex = -1;
         let minDiff = Infinity;
 
-        // Consideriamo le 5 preghiere obbligatorie per active/countdown (escludiamo Shuruk indice 1 dal calcolo prossimo)
         let activePrayerIndices =;
         activePrayerIndices.forEach(i => {
             let pt = new Date(now.toDateString() + " " + times[i]);
@@ -362,7 +360,8 @@
         }
 
         if(nextIndex === -1) nextIndex = 0;
-        document.getElementById('next-name').innerText = "PROSSIMA: " + pNames[nextIndex].toUpperCase();
+        let nextNameEl = document.getElementById('next-name');
+        if(nextNameEl) nextNameEl.innerText = "PROSSIMA: " + pNames[nextIndex].toUpperCase();
 
         let target = new Date(now.toDateString() + " " + times[nextIndex]);
         if(target < now) target.setDate(target.getDate()+1);
@@ -370,15 +369,17 @@
         let rh = Math.floor((rem % 86400000) / 3600000);
         let rm = Math.floor((rem % 3600000) / 60000);
         let rs = Math.floor((rem % 60000) / 1000);
-        document.getElementById('timer-next').innerText = `-${rh.toString().padStart(2,'0')}:${rm.toString().padStart(2,'0')}:${rs.toString().padStart(2,'0')}`;
+        
+        let timerNextEl = document.getElementById('timer-next');
+        if(timerNextEl) timerNextEl.innerText = `-${rh.toString().padStart(2,'0')}:${rm.toString().padStart(2,'0')}:${rs.toString().padStart(2,'0')}`;
 
         let totalInterval = 12 * 3600000;
         let perc = 100 - ((rem / totalInterval) * 100);
         if(perc > 100) perc = 100; if(perc < 0) perc = 0;
-        document.getElementById('p-bar').style.width = perc + "%";
+        let pBarEl = document.getElementById('p-bar');
+        if(pBarEl) pBarEl.style.width = perc + "%";
     }
 
-    // Integrazione Capacitor Local Notifications per tutto il mese
     async function syncCapacitorNotifications() {
         if (typeof window.Capacitor === 'undefined' || !window.Capacitor.Plugins || !window.Capacitor.Plugins.LocalNotifications) {
             alert("Capacitor LocalNotifications non rilevato in questo contesto web. Le notifiche native funzionano nell'app nativa mobile.");
@@ -393,11 +394,8 @@
                 return;
             }
 
-            // Prepariamo le notifiche per tutte le preghiere (Fajr, Dhuhr, Asr, Maghrib, Ishaa) di tutto il mese caricato
             let notificationsPayload = [];
             let notifId = 1;
-
-            // Indici validi preghiere obbligatorie: 0(Fajr), 2(Dhuhr), 3(Asr), 4(Maghrib), 5(Ishaa)
             let prayerIndices =;
 
             for (let dateStr in rawTimetable) {
@@ -454,6 +452,7 @@
 
     function renderTracker() {
         let tList = document.getElementById('tracker-list');
+        if(!tList) return;
         let today = getTodayString();
         let saved = JSON.parse(localStorage.getItem('mpTracker')) || {};
         let myTrack = saved[today] || [false,false,false,false,false];
@@ -484,7 +483,7 @@
     function openNames() {
         openModal('names-modal');
         const g = document.getElementById('names-grid');
-        if(g.innerHTML !== '') return;
+        if(!g || g.innerHTML !== '') return;
         const names = [ "الرَّحْمَنُ", "الرَّحِيمُ", "الْمَلِكُ", "الْقُدُّوسُ", "السَّلَامُ", "الْمُؤْمِنُ", "الْمُهَيْمِنُ", "الْعَزِيزُ", "الْجَبَّارُ", "الْمُتَكَبِّرُ", "الْخَالِقُ", "الْبَارِئُ", "الْمُصَوِّرُ", "الْغَفَّارُ", "الْقَهَّارُ", "الْوَهَّابُ", "الرَّزَّاقُ", "الْفَتَّاحُ", "اَلْعَلِيْمُ" ];
         names.forEach((n,i) => {
             g.innerHTML += `<div class="gold-item"><b>${n}</b><br>${i+1}</div>`;
@@ -497,17 +496,21 @@
             if (alpha) {
                 let target = 131;
                 let rotation = alpha - target;
-                document.getElementById('compass-disk').style.transform = `rotate(${-rotation}deg)`;
+                let disk = document.getElementById('compass-disk');
+                if(disk) disk.style.transform = `rotate(${-rotation}deg)`;
             }
         });
     }
 
-    let hArr = [
-        " قال رسول الله ﷺ: مَنْ صَلَّى الْبَرْدَيْنِ دَخَلَ الْجَنَّةَ (البخاري) ",
-        " قال رسول الله ﷺ: الدُّعَاءُ هُوَ الْعِبَادَةُ (الترمذي) ",
-        " قال رسول الله ﷺ: إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ (البخاري) "
-    ];
-    document.getElementById('h-track').innerHTML = `<span class="hadith-text">${hArr.join(' &nbsp;•&nbsp; ')} &nbsp;•&nbsp; ${hArr.join(' &nbsp;•&nbsp; ')}</span>`;
+    let hTrackEl = document.getElementById('h-track');
+    if(hTrackEl) {
+        let hArr = [
+            " قال رسول الله ﷺ: مَنْ صَلَّى الْبَرْدَيْنِ دَخَلَ الْجَنَّةَ (البخاري) ",
+            " قال رسول الله ﷺ: الدُّعَاءُ هُوَ الْعِبَادَةُ (الترمذي) ",
+            " قال رسول الله ﷺ: إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ (البخاري) "
+        ];
+        hTrackEl.innerHTML = `<span class="hadith-text">${hArr.join(' &nbsp;•&nbsp; ')} &nbsp;•&nbsp; ${hArr.join(' &nbsp;•&nbsp; ')}</span>`;
+    }
 
     initApp();
 </script>
