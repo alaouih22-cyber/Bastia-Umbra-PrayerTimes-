@@ -138,18 +138,18 @@
 
         <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan</label>
         <select id="athan-voice" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
-            <option value="https://archive.org/download/adhan-morocco/Adhan%20Morocco.mp3">Marocco (Autentico Maghrebi)</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah (La Mecca)</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah (Medina)</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan3.mp3">Al-Aqsa</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan8.mp3">Mishary Al Afasy</option>
-            <option value="https://www.islamcan.com/audio/adhan/azan5.mp3">Egitto (Stile Cairino)</option>
+            <option value="https://cdn.islamic.network/astronomical/adhan.mp3">Marocco (Autentico Maghrebi - Full Stream)</option>
+            <option value="https://api.aladhan.com/v1/cdn/audio/1.mp3">Makkah (La Mecca - Full Stream)</option>
+            <option value="https://api.aladhan.com/v1/cdn/audio/8.mp3">Madinah (Medina - Full Stream)</option>
+            <option value="https://api.aladhan.com/v1/cdn/audio/14.mp3">Al-Aqsa (Full Stream)</option>
+            <option value="https://api.aladhan.com/v1/cdn/audio/4.mp3">Mishary Al Afasy (Full Stream)</option>
+            <option value="https://api.aladhan.com/v1/cdn/audio/2.mp3">Egitto (Stile Cairino - Full Stream)</option>
         </select>
         
         <button class="sidebar-btn btn-gold" onclick="testAudio()" style="margin-top:15px; background:#C5A059; border:2px solid #fff;">🔊 Test Audio Adhan</button>
         
         <button class="sidebar-btn" style="background:red; color:white; margin-top:20px;" onclick="closeMenu()">Chiudi</button>
-        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.6 | Bastia Umbra Offline</p>
+        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.7 | Bastia Umbra Offline</p>
     </div>
 
     <!-- Modals -->
@@ -158,7 +158,7 @@
             <h3 style="color:var(--mp-dark); margin-bottom:10px;">Calendario di questo mese</h3>
             <div class="timetable-scroll">
                 <table class="timetable-view" id="monthly-table">
-                    <thead><tr><th>Giorno</th><th>Fajr</th><th>Shor.</th><th>Dhuhr</th><th>Asr</th><th>Mag.</th><th>Isha</th></tr></thead>
+                    <thead><tr><th>اليوم</th><th>الفجر</th><th>الشروق</th><th>الظهر</th><th>العصر</th><th>المغرب</th><th>العشاء</th></tr></thead>
                     <tbody id="monthly-body"></tbody>
                 </table>
             </div>
@@ -228,11 +228,39 @@
         const listDiv = document.getElementById('list-container');
         let currentPIndex = -1;
         let alarmAudio = new Audio();
+        alarmAudio.preload = 'auto';
         let bipAudio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
         let activeAlarm = false;
         let isAudioUnlocked = false;
         let wakelock = null;
         let sereneModeActive = false;
+
+        const hijriMonthsAr = [
+            'محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر',
+            'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان',
+            'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
+        ];
+
+        function getHijriArabicDate() {
+            const today = new Date();
+            if (Intl && Intl.DateTimeFormat) {
+                try {
+                    const hijriFormatter = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', {
+                        day: 'numeric',
+                        month: 'numeric',
+                        year: 'numeric'
+                    });
+                    const parts = hijriFormatter.formatToParts(today);
+                    let d = parts.find(p => p.type === 'day')?.value || '';
+                    let m = parseInt(parts.find(p => p.type === 'month')?.value, 10);
+                    let y = parts.find(p => p.type === 'year')?.value || '';
+                    if (!isNaN(m) && m >= 1 && m <= 12) {
+                        return `${d} ${hijriMonthsAr[m - 1]} ${y}`;
+                    }
+                } catch(e) {}
+            }
+            return '1447 هـ';
+        }
 
         async function startWakeLock() {
             try { if ('wakeLock' in navigator) wakelock = await navigator.wakeLock.request('screen'); }
@@ -247,7 +275,7 @@
 
         function loadPrefs() {
             document.getElementById('notif-type').value = localStorage.getItem('notifType') || 'athan';
-            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://archive.org/download/adhan-morocco/Adhan%20Morocco.mp3';
+            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://cdn.islamic.network/astronomical/adhan.mp3';
         }
         function savePrefs() {
             localStorage.setItem('notifType', document.getElementById('notif-type').value);
@@ -260,12 +288,12 @@
             if (nType === 'athan') {
                 alarmAudio.src = localStorage.getItem('athanVoice');
                 alarmAudio.loop = false;
+                alarmAudio.currentTime = 0;
                 alarmAudio.play().catch(e => alert("Assicurati di toccare un punto dello schermo prima di testare. Errore: " + e));
-                setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; }, 6000);
             } else {
                 bipAudio.play();
             }
-            alert("Test in corso (suonerà per qualche secondo)... Se non senti nulla, alza il volume multimediale del telefono.");
+            alert("Test in corso... Se non senti nulla, verifica la connessione o alza il volume multimediale.");
         }
 
         function generateMonthData() {
@@ -327,7 +355,9 @@
                 let tr = document.createElement('tr');
                 if(isToday) tr.className = 'current-day-row';
                 
-                let html = `<td>${dNum}</td>`;
+                let hijriDayIndex = (parseInt(dNum, 10) % 30);
+                let hijriDayAr = hijriDayIndex === 0 ? '30' : hijriDayIndex.toString();
+                let html = `<td>${hijriDayAr}</td>`;
                 times.forEach(t => html += `<td>${t}</td>`);
                 tr.innerHTML = html;
                 tbody.appendChild(tr);
@@ -350,8 +380,7 @@
             let hm = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('city-display').innerText = "BASTIA UMBRA: " + hm;
             
-            let dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('hijri-txt').innerText = now.toLocaleDateString('it-IT', dateOptions);
+            document.getElementById('hijri-txt').innerText = getHijriArabicDate();
             
             const times = rawTimetable[getTodayString()] || ["05:00","06:30","13:10","16:40","19:50","21:10"];
             
@@ -406,6 +435,7 @@
                 if (nType === 'athan') {
                     alarmAudio.src = localStorage.getItem('athanVoice');
                     alarmAudio.loop = false;
+                    alarmAudio.currentTime = 0;
                     alarmAudio.play().catch(e=>console.log(e));
                 } else {
                     bipAudio.play();
