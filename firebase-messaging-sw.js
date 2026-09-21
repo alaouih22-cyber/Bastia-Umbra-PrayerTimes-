@@ -16,7 +16,7 @@ const messaging = firebase.messaging();
 // Gestione dei messaggi quando la PWA/browser è in background o chiuso
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Messaggio ricevuto in background: ', payload);
-  const notificationTitle = payload.notification?.title || 'Muslim Pro Bastia';
+  const notificationTitle = payload.notification?.title || 'MuslimProBastia';
   const notificationOptions = {
     body: payload.notification?.body || 'Nuovo avviso orario preghiera',
     icon: 'icon.png',
