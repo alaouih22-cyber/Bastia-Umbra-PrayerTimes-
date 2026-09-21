@@ -125,6 +125,7 @@
         <button class="sidebar-btn" style="background:white; color:black" onclick="window.open('https://www.google.com/maps/search/mosque+near+me')">🕌 Trova Moschea</button>
         <button class="sidebar-btn" style="background:var(--mp-gold); color:var(--mp-dark);" onclick="openModal('timetable-modal')">📅 Visualizza Calendario Mese</button>
         <button class="sidebar-btn" style="background:#00332c; color:var(--mp-gold);" onclick="toggleSereneNightMode()">🌙 Attiva/Disattiva Notte Serena</button>
+        
         <hr style="margin:20px 0; opacity:0.1">
         
         <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">
@@ -145,8 +146,11 @@
             <option value="https://www.islamcan.com/audio/adhan/azan5.mp3">Egitto (Stile Cairino)</option>
         </select>
         
+        <!-- Pulsante Test Audio ripristinato come richiesto -->
+        <button class="sidebar-btn btn-gold" onclick="testAudio()" style="margin-top:15px; background:#C5A059; border:2px solid #fff;">🔊 Test Audio Adhan</button>
+        
         <button class="sidebar-btn" style="background:red; color:white; margin-top:20px;" onclick="closeMenu()">Chiudi</button>
-        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.5 | Bastia Umbra Offline</p>
+        <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.6 | Bastia Umbra Offline</p>
     </div>
 
     <!-- Modals (Modelli unificati) -->
@@ -213,8 +217,8 @@
         </div>
     </div>
 
-    <!-- Alarm Banner Overlay -->
-    <div id="alarm-banner" style="position:fixed; top:-150px; left:5%; width:90%; background:#fff; border:4px solid var(--mp-gold); border-radius:20px; box-shadow:0 15px 40px rgba(0,0,0,0.5); z-index:9999; text-align:center; padding:25px; transition:top 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <!-- Alarm Banner Overlay: spostato a top:-200% per risolvere il problema visivo segnalato -->
+    <div id="alarm-banner" style="position:fixed; top:-200%; left:5%; width:90%; background:#fff; border:4px solid var(--mp-gold); border-radius:20px; box-shadow:0 15px 40px rgba(0,0,0,0.5); z-index:9999; text-align:center; padding:25px; transition:top 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
         <h1 style="color:var(--mp-dark); font-size:28px; margin-bottom:10px;" id="alarm-title">È l'ora di Fajr!</h1>
         <p style="font-size:14px; color:#555; margin-bottom:20px;" id="alarm-sub">A Bastia Umbra</p>
         <button style="background:var(--mp-dark); color:var(--mp-gold); border:none; padding:15px 40px; font-size:18px; border-radius:15px; font-weight:bold; cursor:pointer;" onclick="stopAlarm()">FERMA ALLARME</button>
@@ -252,6 +256,21 @@
             localStorage.setItem('athanVoice', document.getElementById('athan-voice').value);
         }
 
+        // Funzione Test Audio reinserita
+        function testAudio() {
+            unlockAudio();
+            let nType = localStorage.getItem('notifType');
+            if (nType === 'athan') {
+                alarmAudio.src = localStorage.getItem('athanVoice');
+                alarmAudio.loop = false;
+                alarmAudio.play().catch(e => alert("Assicurati di toccare un punto dello schermo prima di testare. Errore: " + e));
+                setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; }, 6000);
+            } else {
+                bipAudio.play();
+            }
+            alert("Test in corso (suonerà per qualche secondo)... Se non senti nulla, alza il volume multimediale del telefono.");
+        }
+
         // --- Generazione Dati Bastia Umbra (Metodo Angle 18/18 basico) ---
         function generateMonthData() {
             let data = {};
@@ -260,7 +279,6 @@
             let month = d.getMonth();
             let daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            // Semplice approssimazione orari Bastia Umbra (43.06N, 12.55E) per variabilità base
             let baseFajr = new Date(year, month, 1, 5, 0);
             let baseShorooq = new Date(year, month, 1, 6, 30);
             let baseDhuhr = new Date(year, month, 1, 13, 10);
@@ -270,7 +288,6 @@
 
             for(let i=1; i<=daysInMonth; i++) {
                 let dayStr = i.toString().padStart(2,'0') + "/" + (month+1).toString().padStart(2,'0') + "/" + year;
-                // Variazione fittizia giornaliera per simulare il calendario
                 let modF = new Date(baseFajr.getTime() - (i*1.5)*60000);
                 let modS = new Date(baseShorooq.getTime() - (i*1.5)*60000);
                 let modM = new Date(baseMaghrib.getTime() + (i*1.5)*60000);
@@ -359,7 +376,7 @@
                 listDiv.appendChild(div);
             }
 
-            if(nextIndex === -1) nextIndex = 0; // Next day fajr handling simplified
+            if(nextIndex === -1) nextIndex = 0; 
             currentPIndex = nextIndex;
             document.getElementById('next-name').innerText = "PROSSIMA: " + pNames[nextIndex].toUpperCase();
 
@@ -380,12 +397,12 @@
         function triggerBanner(pname) {
             if(activeAlarm) return;
             activeAlarm = true;
-            document.getElementById('alarm-title').innerText = pname.includes('Allarme') || pname.includes('Notifica') || pname.includes('Promemoria') ? pname : `È l'ora di ${pname}!`;
+            document.getElementById('alarm-title').innerText = `È l'ora di ${pname}!`;
             document.getElementById('alarm-banner').style.top = "15%";
             
             if(wakelock===null) startWakeLock();
 
-            if (pname !== 'Shorooq' && !pname.includes('Allarme') && !pname.includes('Notifica') && !pname.includes('Promemoria')) {
+            if (pname !== 'Shorooq') {
                 let nType = localStorage.getItem('notifType');
                 if (nType === 'athan') {
                     alarmAudio.src = localStorage.getItem('athanVoice');
@@ -401,7 +418,7 @@
 
         function stopAlarm() {
             activeAlarm = false;
-            document.getElementById('alarm-banner').style.top = "-150px";
+            document.getElementById('alarm-banner').style.top = "-200%"; // Nasconde il banner oltre il bordo
             alarmAudio.pause();
             alarmAudio.currentTime = 0;
             if(wakelock) { wakelock.release(); wakelock = null; }
@@ -461,7 +478,6 @@
             });
         }
 
-        // Qibla Compass logic base
         if (window.DeviceOrientationEvent) {
             window.addEventListener('deviceorientation', function(e) {
                 let alpha = e.webkitCompassHeading || Math.abs(e.alpha - 360);
@@ -473,7 +489,6 @@
             });
         }
 
-        // Setup Hadith Marquee
         let hArr = [
             " قال رسول الله ﷺ: مَنْ صَلَّى الْبَرْدَيْنِ دَخَلَ الْجَنَّةَ (البخاري) ",
             " قال رسول الله ﷺ: الدُّعَاءُ هُوَ الْعِبَادَةُ (الترمذي) ",
