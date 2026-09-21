@@ -27,7 +27,7 @@
         .dashboard { width: 92%; margin: 12px auto; background: var(--white); border-radius: 28px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); flex-shrink: 0; }
         .dash-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .timer-main { font-size: 32px; font-weight: 900; color: var(--mp-dark); letter-spacing: -1px; }
-        .date-hijri { font-size: 15px; font-weight: 800; color: var(--mp-dark); }
+        .date-hijri { font-size: 14px; font-weight: 800; color: var(--mp-dark); text-transform: capitalize; }
         .city-label { font-size: 10px; font-weight: 800; color: var(--mp-gold); text-transform: uppercase; }
 
         /* BOLLE AZIONI */
@@ -99,7 +99,7 @@
                 <div style="font-size:10px; font-weight:800; color:var(--mp-gold)" id="next-name">PROSSIMA PREGHIERA</div>
             </div>
             <div class="date-box">
-                <div class="date-hijri" id="hijri-txt">-- ربيع الآخر 1448</div>
+                <div class="date-hijri" id="hijri-txt">--</div>
                 <div class="city-label" id="city-display">BASTIA UMBRA: 00:00</div>
                 <div id="moon-icon" style="font-size:16px; margin-top:5px">🌙</div>
             </div>
@@ -138,7 +138,7 @@
 
         <label style="font-size:12px; color:gold; display:block; margin-top:15px;">🔊 Voce Athan</label>
         <select id="athan-voice" onchange="savePrefs()" style="width:100%; padding:12px; background:#222; color:white; border-radius:12px; border:1px solid gold;">
-            <option value="https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3">Marocco (Casablanca - Stile Maghrebi autentico)</option>
+            <option value="https://archive.org/download/adhan-morocco/Adhan%20Morocco.mp3">Marocco (Autentico Maghrebi)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan1.mp3">Makkah (La Mecca)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan2.mp3">Madinah (Medina)</option>
             <option value="https://www.islamcan.com/audio/adhan/azan3.mp3">Al-Aqsa</option>
@@ -146,14 +146,13 @@
             <option value="https://www.islamcan.com/audio/adhan/azan5.mp3">Egitto (Stile Cairino)</option>
         </select>
         
-        <!-- Pulsante Test Audio ripristinato come richiesto -->
         <button class="sidebar-btn btn-gold" onclick="testAudio()" style="margin-top:15px; background:#C5A059; border:2px solid #fff;">🔊 Test Audio Adhan</button>
         
         <button class="sidebar-btn" style="background:red; color:white; margin-top:20px;" onclick="closeMenu()">Chiudi</button>
         <p style="text-align:center; margin-top:15px; font-size:10px; color:#aaa">v Ultimate.6 | Bastia Umbra Offline</p>
     </div>
 
-    <!-- Modals (Modelli unificati) -->
+    <!-- Modals -->
     <div class="modal-overlay" id="timetable-modal">
         <div class="modal-card">
             <h3 style="color:var(--mp-dark); margin-bottom:10px;">Calendario di questo mese</h3>
@@ -217,7 +216,6 @@
         </div>
     </div>
 
-    <!-- Alarm Banner Overlay: spostato a top:-200% per risolvere il problema visivo segnalato -->
     <div id="alarm-banner" style="position:fixed; top:-200%; left:5%; width:90%; background:#fff; border:4px solid var(--mp-gold); border-radius:20px; box-shadow:0 15px 40px rgba(0,0,0,0.5); z-index:9999; text-align:center; padding:25px; transition:top 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
         <h1 style="color:var(--mp-dark); font-size:28px; margin-bottom:10px;" id="alarm-title">È l'ora di Fajr!</h1>
         <p style="font-size:14px; color:#555; margin-bottom:20px;" id="alarm-sub">A Bastia Umbra</p>
@@ -226,7 +224,7 @@
 
     <script>
         let rawTimetable = {};
-        const pNames = ['Fajr','Shorooq','Dhuhr','Asr','Maghrib','Isha'];
+        const pNames = ['🌅 الفجر', '☀️ الشروق', '🌞 الظهر', '🌤️ العصر', '🌇 المغرب', '🌌 العشاء'];
         const listDiv = document.getElementById('list-container');
         let currentPIndex = -1;
         let alarmAudio = new Audio();
@@ -249,14 +247,13 @@
 
         function loadPrefs() {
             document.getElementById('notif-type').value = localStorage.getItem('notifType') || 'athan';
-            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3';
+            document.getElementById('athan-voice').value = localStorage.getItem('athanVoice') || 'https://archive.org/download/adhan-morocco/Adhan%20Morocco.mp3';
         }
         function savePrefs() {
             localStorage.setItem('notifType', document.getElementById('notif-type').value);
             localStorage.setItem('athanVoice', document.getElementById('athan-voice').value);
         }
 
-        // Funzione Test Audio reinserita
         function testAudio() {
             unlockAudio();
             let nType = localStorage.getItem('notifType');
@@ -271,7 +268,6 @@
             alert("Test in corso (suonerà per qualche secondo)... Se non senti nulla, alza il volume multimediale del telefono.");
         }
 
-        // --- Generazione Dati Bastia Umbra (Metodo Angle 18/18 basico) ---
         function generateMonthData() {
             let data = {};
             let d = new Date();
@@ -354,6 +350,9 @@
             let hm = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('city-display').innerText = "BASTIA UMBRA: " + hm;
             
+            let dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('hijri-txt').innerText = now.toLocaleDateString('it-IT', dateOptions);
+            
             const times = rawTimetable[getTodayString()] || ["05:00","06:30","13:10","16:40","19:50","21:10"];
             
             listDiv.innerHTML = '';
@@ -402,7 +401,7 @@
             
             if(wakelock===null) startWakeLock();
 
-            if (pname !== 'Shorooq') {
+            if (!pname.includes('الشروق')) {
                 let nType = localStorage.getItem('notifType');
                 if (nType === 'athan') {
                     alarmAudio.src = localStorage.getItem('athanVoice');
@@ -418,7 +417,7 @@
 
         function stopAlarm() {
             activeAlarm = false;
-            document.getElementById('alarm-banner').style.top = "-200%"; // Nasconde il banner oltre il bordo
+            document.getElementById('alarm-banner').style.top = "-200%"; 
             alarmAudio.pause();
             alarmAudio.currentTime = 0;
             if(wakelock) { wakelock.release(); wakelock = null; }
@@ -446,7 +445,7 @@
             let myTrack = saved[today] || [false,false,false,false,false];
             
             let html = '';
-            let pReal = ['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+            let pReal = ['🌅 الفجر', '🌞 الظهر', '🌤️ العصر', '🌇 المغرب', '🌌 العشاء'];
             pReal.forEach((p, idx) => {
                 let chk = myTrack[idx] ? 'checked' : '';
                 html += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
