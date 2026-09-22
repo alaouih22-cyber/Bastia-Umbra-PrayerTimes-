@@ -20,7 +20,6 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim());
 });
 
-// Gestione messaggi background specifici Firebase FCM
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Ricevuto messaggio in background FCM:', payload);
     const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Ultimate';
@@ -33,7 +32,6 @@ messaging.onBackgroundMessage((payload) => {
     self.registration.showNotification(title, options);
 });
 
-// Gestione dei push generici (fallback)
 self.addEventListener('push', (event) => {
     if (event.data) {
         try {
