@@ -12,6 +12,25 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+const ATHAN_AUDIO_URL = 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3';
+
+function getAppIcon() {
+    return (self.location && self.location.origin) ? (self.location.origin + '/icon.png') : 'icon.png';
+}
+
+function broadcastPlayAthan(title, body) {
+    return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        clientList.forEach((client) => {
+            client.postMessage({
+                type: 'PLAY_ATHAN',
+                title: title,
+                body: body,
+                sound: ATHAN_AUDIO_URL
+            });
+        });
+    });
+}
+
 self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
@@ -22,13 +41,25 @@ self.addEventListener('activate', (event) => {
 
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Ricevuto messaggio in background FCM:', payload);
-    const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Ultimate';
+    const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Bastia';
+    const body = payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.';
+    const iconUrl = getAppIcon();
     const options = {
-        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.',
-        icon: 'icon.png',
-        badge: 'icon.png',
-        vibrate: [500, 110, 500]
+        body: body,
+        icon: iconUrl,
+        badge: iconUrl,
+        image: iconUrl,
+        sound: ATHAN_AUDIO_URL,
+        silent: false,
+        vibrate: [500, 110, 500, 110, 1000],
+        tag: 'prayer-adhan-alert',
+        renotify: true,
+        data: {
+            url: './index.html?playAthan=1'
+        }
     };
+
+    broadcastPlayAthan(title, body);
     self.registration.showNotification(title, options);
 });
 
@@ -43,14 +74,30 @@ self.addEventListener('push', (event) => {
     }
 
     const data = event.data ? event.data.json() : {};
-    const title = data.title || 'Muslim Pro Ultimate';
+    const title = data.title || 'Muslim Pro Bastia';
+    const body = data.body || 'È arrivato il momento della preghiera.';
+    const iconUrl = getAppIcon();
     const options = {
-        body: data.body || 'È arrivato il momento della preghiera.',
-        icon: 'icon.png',
-        badge: 'icon.png',
-        vibrate: [500, 110, 500]
+        body: body,
+        icon: iconUrl,
+        badge: iconUrl,
+        image: iconUrl,
+        sound: ATHAN_AUDIO_URL,
+        silent: false,
+        vibrate: [500, 110, 500, 110, 1000],
+        tag: 'prayer-adhan-alert',
+        renotify: true,
+        data: {
+            url: './index.html?playAthan=1'
+        }
     };
-    event.waitUntil(self.registration.showNotification(title, options));
+
+    event.waitUntil(
+        Promise.all([
+            broadcastPlayAthan(title, body),
+            self.registration.showNotification(title, options)
+        ])
+    );
 });
 
 self.addEventListener('notificationclick', (event) => {
@@ -58,9 +105,13 @@ self.addEventListener('notificationclick', (event) => {
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
             for (const client of clientList) {
-                if ('focus' in client) return client.focus();
+                if ('focus' in client) {
+                    client.focus();
+                    client.postMessage({ type: 'PLAY_ATHAN' });
+                    return;
+                }
             }
-            if (clients.openWindow) return clients.openWindow('./index.html');
+            if (clients.openWindow) return clients.openWindow('./index.html?playAthan=1');
         })
     );
 });
