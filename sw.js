@@ -4,7 +4,9 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png'
+  './icon.png',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -31,7 +33,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Strategia Network-First: scarica sempre da GitHub se connesso, usa la cache se offline
+// Strategia Network-First: scarica sempre da rete se connesso, usa la cache se offline
 self.addEventListener('fetch', (event) => {
   if (!event.request.url.startsWith('http')) return;
 
