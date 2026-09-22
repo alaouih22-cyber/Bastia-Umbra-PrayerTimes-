@@ -1,5 +1,5 @@
 // sw.js - Service Worker per Cache Offline e Auto-Aggiornamento PWA / Capacitor
-const CACHE_NAME = 'muslim-pro-bastia-v2.0';
+const CACHE_NAME = 'muslim-pro-bastia-v2.1';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,7 +10,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[sw.js] Pre-caching asset principali completato');
+      console.log('[sw.js] Pre-caching asset completato');
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );
@@ -31,7 +31,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Strategia Network-First: scarica sempre la versione più recente da GitHub
+// Strategia Network-First: scarica sempre da GitHub se connesso, usa la cache se offline
 self.addEventListener('fetch', (event) => {
   if (!event.request.url.startsWith('http')) return;
 
