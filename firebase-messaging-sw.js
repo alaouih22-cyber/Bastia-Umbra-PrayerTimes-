@@ -1,7 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
 
-// Inizializza Firebase con la stessa configurazione
 firebase.initializeApp({
   apiKey: "AIzaSyCHVgzE-tYoKlQlJRHgUHtEP-Q0NCEG6WQ",
   authDomain: "muslimprobastia-d5d41.firebaseapp.com",
@@ -13,15 +12,57 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Gestione dei messaggi quando la PWA/browser è in background o chiuso
-messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Messaggio ricevuto in background: ', payload);
-  const notificationTitle = payload.notification?.title || 'MuslimProBastia';
-  const notificationOptions = {
-    body: payload.notification?.body || 'Nuovo avviso orario preghiera',
-    icon: 'icon.png',
-    vibrate: [500, 110, 500]
-  };
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
+});
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+self.addEventListener('activate', (event) => {
+    event.waitUntil(self.clients.claim());
+});
+
+// Gestione messaggi background specifici Firebase FCM
+messaging.onBackgroundMessage((payload) => {
+    console.log('[firebase-messaging-sw.js] Ricevuto messaggio in background FCM:', payload);
+    const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Ultimate';
+    const options = {
+        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.',
+        icon: 'icon.png',
+        badge: 'icon.png',
+        vibrate: [500, 110, 500]
+    };
+    self.registration.showNotification(title, options);
+});
+
+// Gestione dei push generici (fallback)
+self.addEventListener('push', (event) => {
+    if (event.data) {
+        try {
+            const json = event.data.json();
+            if (json.data && (json.data.firebaseMessageId || json.from)) {
+                return; 
+            }
+        } catch (e) {}
+    }
+
+    const data = event.data ? event.data.json() : {};
+    const title = data.title || 'Muslim Pro Ultimate';
+    const options = {
+        body: data.body || 'È arrivato il momento della preghiera.',
+        icon: 'icon.png',
+        badge: 'icon.png',
+        vibrate: [500, 110, 500]
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if ('focus' in client) return client.focus();
+            }
+            if (clients.openWindow) return clients.openWindow('./index.html');
+        })
+    );
 });
