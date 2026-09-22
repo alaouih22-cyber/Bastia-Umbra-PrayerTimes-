@@ -158,7 +158,7 @@
             overflow: hidden;
             box-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
             transition: all 0.2s ease;
-            padding: 2px;
+            padding: 0;
             z-index: 10;
         }
         .header-logo:hover {
@@ -168,8 +168,8 @@
         .header-logo-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
+            object-fit: cover;
+            border-radius: 10px;
             display: block;
         }
 
@@ -660,6 +660,83 @@
         }
         .btn-gold:hover { filter: brightness(1.08); }
 
+        /* IN-APP ATHAN POPUP BANNER */
+        .athan-banner-popup {
+            position: fixed;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 28px);
+            max-width: 480px;
+            background: linear-gradient(135deg, #022319 0%, #01140e 100%);
+            border: 2px solid var(--mp-gold);
+            border-radius: 16px;
+            padding: 14px 16px;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(197, 160, 89, 0.45);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+        }
+        .athan-banner-popup.show {
+            top: 18px;
+        }
+        .athan-banner-icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 12px;
+            background: rgba(197, 160, 89, 0.15);
+            border: 1.5px solid var(--mp-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulseBanner 1.8s infinite;
+        }
+        @keyframes pulseBanner {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(197, 160, 89, 0); }
+            50% { transform: scale(1.08); box-shadow: 0 0 12px rgba(197, 160, 89, 0.6); }
+        }
+        .athan-banner-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .athan-banner-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--mp-gold);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .athan-banner-desc {
+            font-size: 12px;
+            color: #e2e8f0;
+            line-height: 1.35;
+        }
+        .athan-banner-close {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .athan-banner-close:hover {
+            background: rgba(239, 68, 68, 0.6);
+        }
+
         /* MODALS - ELEGANT WHITE CARDS WITH GOLD ACCENTS */
         .modal-overlay { 
             position: fixed; 
@@ -802,6 +879,17 @@
             background: #01140e;
             position: relative;
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            transition: max-width 0.3s ease;
+        }
+        /* Fullscreen Mode for Phone, Tablet and PC */
+        .moshaf-reader-overlay.is-fullscreen .moshaf-reader-container {
+            max-width: 100% !important;
+            width: 100% !important;
+            height: 100vh !important;
+        }
+        .moshaf-btn-icon.active-fullscreen {
+            background: var(--mp-gold);
+            color: var(--mp-dark);
         }
         .moshaf-topbar {
             background: var(--mp-dark);
@@ -1123,7 +1211,7 @@
             <span class="app-title">Muslim Pro Bastia</span>
         </div>
         <div class="header-logo" onclick="toggleMenu()" title="Muslim Pro Bastia">
-            <img src="/icon.png" alt="Muslim Pro Bastia" class="header-logo-img">
+            <img src="./icon.png" alt="Muslim Pro Bastia" class="header-logo-img" onerror="if(this.src.indexOf('icon.png')!==-1&&!this.dataset.tried){this.dataset.tried='1';this.src='icon.png';}">
         </div>
     </div>
     
@@ -1238,7 +1326,9 @@
         <option value="https://cdn.islamic.network/astronomical/adhan.mp3">Stile Maghrebino / Nord Africa (Standard CDN)</option>
     </select>
 
-    <button class="sidebar-btn" id="btn-close-sidebar" style="background:#03261c; border:1px solid rgba(16, 185, 129, 0.3); color:#f8fafc; margin-top:20px;" onclick="toggleMenu()">CHIUDI</button>
+    <button class="sidebar-btn btn-gold" id="btn-test-athan" style="margin-top:16px;" onclick="testAthanAndNotification()">🔔 Prova Athan & Notifica</button>
+
+    <button class="sidebar-btn" id="btn-close-sidebar" style="background:#03261c; border:1px solid rgba(16, 185, 129, 0.3); color:#f8fafc; margin-top:14px;" onclick="toggleMenu()">CHIUDI</button>
 </div>
 
 <!-- Modals -->
@@ -1370,9 +1460,14 @@
                 <div class="moshaf-title">مصحف التجويد الملون • برواية ورش عن نافع</div>
                 <div class="moshaf-subtitle" id="moshaf-header-desc">صفحة 1 • سورة الفاتحة • الحزب 1</div>
             </div>
-            <button class="moshaf-btn-icon" onclick="toggleTajweedGuide()" title="أحكام التجويد / Regole Tajweed" style="font-size: 13px; font-weight: 800; width: auto; padding: 0 10px; font-family: 'Amiri', serif;">
-                🎨 التجويد
-            </button>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <button class="moshaf-btn-icon" id="btn-moshaf-fullscreen" onclick="toggleMoshafFullscreen()" title="Schermo Intero / ملء الشاشة">
+                    ⛶
+                </button>
+                <button class="moshaf-btn-icon" onclick="toggleTajweedGuide()" title="أحكام التجويد / Regole Tajweed" style="font-size: 13px; font-weight: 800; width: auto; padding: 0 10px; font-family: 'Amiri', serif;">
+                    🎨 التجويد
+                </button>
+            </div>
         </div>
 
         <!-- Navigation Sub-Bar -->
@@ -1454,6 +1549,18 @@
     </div>
 </div>
 
+<!-- IN-APP ATHAN NOTIFICATION BANNER POPUP -->
+<div id="athan-banner-popup" class="athan-banner-popup" role="alert">
+    <div class="athan-banner-icon" id="athan-banner-icon">🕌</div>
+    <div class="athan-banner-content">
+        <div class="athan-banner-title">
+            <span id="athan-banner-title-text">حان وقت الصلاة</span>
+            <button class="athan-banner-close" onclick="dismissAthanBanner()" title="Chiudi">✕</button>
+        </div>
+        <div class="athan-banner-desc" id="athan-banner-desc-text">È il momento di pregare a Bastia Umbra.</div>
+    </div>
+</div>
+
 <script>
     // Tabella orari ufficiali Bastia Umbra (12/09/2026 - 11/10/2026 / ربيع الآخر 1448)
     // Associazione Culturale Islamica Arrahma (A.C.I.A)
@@ -1502,11 +1609,39 @@
     alarmAudio.preload = 'auto';
     let isAudioUnlocked = false;
     let lastAthanKey = '';
+    let athanBannerTimer = null;
+
+    function showAthanBannerPopup(title, body, icon) {
+        const popup = document.getElementById('athan-banner-popup');
+        const titleEl = document.getElementById('athan-banner-title-text');
+        const descEl = document.getElementById('athan-banner-desc-text');
+        const iconEl = document.getElementById('athan-banner-icon');
+        if (titleEl) titleEl.innerText = title;
+        if (descEl) descEl.innerText = body;
+        if (iconEl && icon) iconEl.innerText = icon;
+        if (popup) {
+            popup.classList.add('show');
+            if (athanBannerTimer) clearTimeout(athanBannerTimer);
+            athanBannerTimer = setTimeout(() => {
+                dismissAthanBanner();
+            }, 12000);
+        }
+    }
+
+    function dismissAthanBanner() {
+        const popup = document.getElementById('athan-banner-popup');
+        if (popup) popup.classList.remove('show');
+        if (athanBannerTimer) clearTimeout(athanBannerTimer);
+    }
 
     function triggerAthanAlarm(idx) {
         unlockAudio();
-        const mode = document.getElementById('notif-type').value;
-        const voice = document.getElementById('athan-voice').value;
+        const modeEl = document.getElementById('notif-type');
+        const voiceEl = document.getElementById('athan-voice');
+        const mode = modeEl ? modeEl.value : 'athan';
+        const voice = voiceEl ? voiceEl.value : 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3';
+
+        // Play Sound: Bip or Full Athan
         if (mode === 'bip') {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1525,17 +1660,70 @@
                 alarmAudio.pause();
                 alarmAudio.src = voice;
                 alarmAudio.currentTime = 0;
-                alarmAudio.play().catch(e => {});
+                alarmAudio.play().catch(e => {
+                    console.log('Audio autoplay blocked, unlocking on interaction:', e);
+                });
             }
         }
-        if ("Notification" in window && Notification.permission === "granted") {
-            try {
-                new Notification("Ora della Preghiera: " + pNames[idx], {
-                    body: "Bastia Umbra - È il momento di pregare.",
-                    icon: "icon.png"
-                });
-            } catch(e) {}
+
+        // Prayer name and details
+        const prayName = (typeof pNames !== 'undefined' && pNames[idx]) ? pNames[idx] : 'الصلاة';
+        const isArabic = (typeof currentLang !== 'undefined' && currentLang === 'ar');
+        const bannerTitle = isArabic ? `🕌 حان وقت صلاة ${prayName}` : `🕌 Ora della Preghiera: ${prayName}`;
+        const bannerBody = isArabic ? 'حان الآن موعد الصلاة في باستيا أومبرا (A.C.I.A).' : 'Bastia Umbra (A.C.I.A) - È il momento di pregare.';
+
+        // Always show the visually rich In-App Notification Banner Popup
+        showAthanBannerPopup(bannerTitle, bannerBody, '🕌');
+
+        // System Push Notification (Browser / PWA)
+        if ("Notification" in window) {
+            if (Notification.permission === "granted") {
+                try {
+                    new Notification(bannerTitle, {
+                        body: bannerBody,
+                        icon: "icon.png",
+                        badge: "icon.png"
+                    });
+                } catch(e) {}
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(perm => {
+                    if (perm === "granted") {
+                        try {
+                            new Notification(bannerTitle, {
+                                body: bannerBody,
+                                icon: "icon.png"
+                            });
+                        } catch(e) {}
+                    }
+                }).catch(()=>{});
+            }
         }
+
+        // Capacitor Native Local Notification Trigger
+        try {
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) {
+                window.Capacitor.Plugins.LocalNotifications.schedule({
+                    notifications: [{
+                        id: 999000 + (idx || 0),
+                        title: bannerTitle,
+                        body: bannerBody,
+                        schedule: { at: new Date(Date.now() + 500) }
+                    }]
+                }).catch(()=>{});
+            }
+        } catch(e) {}
+    }
+
+    function testAthanAndNotification() {
+        // Unlock audio context on explicit user click
+        unlockAudio();
+        // Request notification permission if not yet decided
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission().catch(()=>{});
+        }
+        // Trigger for current prayer or Fajr (idx 0)
+        const prayerIdx = (typeof currentPIndex !== 'undefined' && currentPIndex >= 0) ? currentPIndex : 0;
+        triggerAthanAlarm(prayerIdx);
     }
 
     function getHijriArabicDate() {
@@ -1777,6 +1965,7 @@
             optNotifAthan: 'Athan Completo + Banner',
             optNotifBip: 'Solo Bip + Banner',
             sidebarVoiceLabel: '🔊 Voce Athan',
+            testAthanBtn: '🔔 Prova Athan & Notifica',
             closeSidebarBtn: 'CHIUDI',
             prayers: [
                 { primary: 'Fajr', sub: 'الفجر (Alba)' },
@@ -1821,6 +2010,7 @@
             optNotifAthan: 'أذان كامل + إشعار',
             optNotifBip: 'تنبيه خفيف + إشعار',
             sidebarVoiceLabel: '🔊 صوت الأذان',
+            testAthanBtn: '🔔 تجربة الأذان والإشعار',
             closeSidebarBtn: 'إغلاق',
             prayers: [
                 { primary: 'الفجر', sub: 'Fajr (Alba)' },
@@ -1900,6 +2090,8 @@
 
         const sVoiceLabel = document.getElementById('sidebar-voice-label');
         if (sVoiceLabel) sVoiceLabel.innerText = d.sidebarVoiceLabel;
+        const bTestAthan = document.getElementById('btn-test-athan');
+        if (bTestAthan && d.testAthanBtn) bTestAthan.innerText = d.testAthanBtn;
         const bCloseSidebar = document.getElementById('btn-close-sidebar');
         if (bCloseSidebar) bCloseSidebar.innerText = d.closeSidebarBtn;
 
@@ -2349,6 +2541,61 @@
         applyWarshZoom();
     }
 
+    function toggleMoshafFullscreen() {
+        const overlay = document.getElementById('moshaf-modal');
+        const fsBtn = document.getElementById('btn-moshaf-fullscreen');
+        if (!overlay) return;
+
+        const isCurrentlyFs = overlay.classList.contains('is-fullscreen');
+        if (!isCurrentlyFs) {
+            // Enter Fullscreen mode (CSS + Fullscreen API if supported)
+            overlay.classList.add('is-fullscreen');
+            if (fsBtn) {
+                fsBtn.classList.add('active-fullscreen');
+                fsBtn.innerText = '🗗';
+                fsBtn.title = 'Esci da Schermo Intero / تصغير الشاشة';
+            }
+            try {
+                if (overlay.requestFullscreen) {
+                    overlay.requestFullscreen().catch(()=>{});
+                } else if (overlay.webkitRequestFullscreen) {
+                    overlay.webkitRequestFullscreen();
+                } else if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(()=>{});
+                }
+            } catch(e) {}
+        } else {
+            // Exit Fullscreen mode
+            overlay.classList.remove('is-fullscreen');
+            if (fsBtn) {
+                fsBtn.classList.remove('active-fullscreen');
+                fsBtn.innerText = '⛶';
+                fsBtn.title = 'Schermo Intero / ملء الشاشة';
+            }
+            try {
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch(()=>{});
+                } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            } catch(e) {}
+        }
+    }
+
+    // Listen for fullscreen change events (e.g. user pressing ESC on PC)
+    document.addEventListener('fullscreenchange', () => {
+        const overlay = document.getElementById('moshaf-modal');
+        const fsBtn = document.getElementById('btn-moshaf-fullscreen');
+        if (!document.fullscreenElement && overlay) {
+            overlay.classList.remove('is-fullscreen');
+            if (fsBtn) {
+                fsBtn.classList.remove('active-fullscreen');
+                fsBtn.innerText = '⛶';
+                fsBtn.title = 'Schermo Intero / ملء الشاشة';
+            }
+        }
+    });
+
     function applyWarshZoom() {
         const wrapper = document.getElementById('moshaf-page-wrapper');
         if (wrapper) {
@@ -2727,12 +2974,30 @@
     async function initPushAndLocalNotifications() {
         // 1. Inizializza Firebase Messaging (Web / PWA)
         try {
+            // Registrazione Service Worker principale sw.js (Cache Offline e Auto-Aggiornamenti)
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').then((reg) => {
+                    // Controlla se c'è un aggiornamento su GitHub
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        if (installingWorker) {
+                            installingWorker.onstatechange = () => {
+                                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('Nuova versione disponibile scaricata da GitHub! Aggiornamento automatico...');
+                                    window.location.reload();
+                                }
+                            };
+                        }
+                    };
+                }).catch(()=>{});
+            }
+
             if (typeof firebase !== 'undefined') {
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
                 }
                 if ('serviceWorker' in navigator && firebase.messaging.isSupported()) {
-                    navigator.serviceWorker.register('firebase-messaging-sw.js').then((reg) => {
+                    navigator.serviceWorker.register('./firebase-messaging-sw.js').then((reg) => {
                         const messaging = firebase.messaging();
                         messaging.useServiceWorker(reg);
                         Notification.requestPermission().then((permission) => {
