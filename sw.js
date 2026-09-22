@@ -1,66 +1,58 @@
-importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
-
-firebase.initializeApp({
-  apiKey: "AIzaSyCHVgzE-tYoKlQlJRHgUHtEP-Q0NCEG6WQ",
-  authDomain: "muslimprobastia-d5d41.firebaseapp.com",
-  projectId: "muslimprobastia-d5d41",
-  storageBucket: "muslimprobastia-d5d41.firebasestorage.app",
-  messagingSenderId: "854739829236",
-  appId: "1:854739829236:web:2ad83ad9c0cdec635ff9a1"
-});
-
-const messaging = firebase.messaging();
+// sw.js - Service Worker per Cache Offline e Auto-Aggiornamento PWA / Capacitor
+const CACHE_NAME = 'muslim-pro-bastia-v2.0';
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png'
+];
 
 self.addEventListener('install', (event) => {
-    self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[sw.js] Pre-caching asset principali completato');
+      return cache.addAll(ASSETS_TO_CACHE);
+    }).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(self.clients.claim());
-});
-
-messaging.onBackgroundMessage((payload) => {
-    console.log('[sw.js] Ricevuto messaggio in background FCM:', payload);
-    const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Bastia';
-    const options = {
-        body: payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.',
-        icon: 'icon.png',
-        badge: 'icon.png',
-        vibrate: [500, 110, 500]
-    };
-    self.registration.showNotification(title, options);
-});
-
-self.addEventListener('push', (event) => {
-    if (event.data) {
-        try {
-            const json = event.data.json();
-            if (json.data && (json.data.firebaseMessageId || json.from)) {
-                return; 
-            }
-        } catch (e) {}
-    }
-
-    const data = event.data ? event.data.json() : {};
-    const title = data.title || 'Muslim Pro Bastia';
-    const options = {
-        body: data.body || 'È arrivato il momento della preghiera.',
-        icon: 'icon.png',
-        badge: 'icon.png',
-        vibrate: [500, 110, 500]
-    };
-    event.waitUntil(self.registration.showNotification(title, options));
-});
-
-self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            for (const client of clientList) {
-                if ('focus' in client) return client.focus();
-            }
-            if (clients.openWindow) return client.openWindow('./index.html');
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((name) => {
+          if (name !== CACHE_NAME) {
+            console.log('[sw.js] Rimozione vecchia cache:', name);
+            return caches.delete(name);
+          }
         })
-    );
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+// Strategia Network-First: scarica sempre la versione più recente da GitHub
+self.addEventListener('fetch', (event) => {
+  if (!event.request.url.startsWith('http')) return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET') {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+        });
+      })
+  );
 });
