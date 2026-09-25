@@ -14,7 +14,6 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
-
 const ATHAN_AUDIO_URL = 'https://ia800203.us.archive.org/8/items/AdhanMorocco/Adhan%20Morocco.mp3';
 
 function getAppIcon() {
@@ -42,6 +41,7 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim());
 });
 
+// Gestione messaggi background specifici Firebase Cloud Messaging (FCM)
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Ricevuto messaggio in background FCM:', payload);
     const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Bastia';
@@ -63,22 +63,33 @@ messaging.onBackgroundMessage((payload) => {
     };
 
     broadcastPlayAthan(title, body);
-    self.registration.showNotification(title, options);
+    return self.registration.showNotification(title, options);
 });
 
+// Gestione dei push generici / fallback Web Push
 self.addEventListener('push', (event) => {
     if (event.data) {
         try {
             const json = event.data.json();
-            if (json.data && (json.data.firebaseMessageId || json.from)) {
-                return; 
+            // Se è già un payload FCM con notifica gestita automaticamente da onBackgroundMessage
+            if (json.notification && (json.from || json.data?.firebaseMessageId)) {
+                return;
             }
         } catch (e) {}
     }
 
-    const data = event.data ? event.data.json() : {};
-    const title = data.title || 'Muslim Pro Bastia';
-    const body = data.body || 'È arrivato il momento della preghiera.';
+    let title = 'Muslim Pro Bastia';
+    let body = 'È arrivato il momento della preghiera.';
+    if (event.data) {
+        try {
+            const json = event.data.json();
+            title = json.title || json.notification?.title || json.data?.title || title;
+            body = json.body || json.notification?.body || json.data?.body || body;
+        } catch (e) {
+            title = event.data.text() || title;
+        }
+    }
+
     const iconUrl = getAppIcon();
     const options = {
         body: body,
@@ -106,7 +117,7 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
             for (const client of clientList) {
                 if ('focus' in client) {
                     client.focus();
@@ -114,7 +125,7 @@ self.addEventListener('notificationclick', (event) => {
                     return;
                 }
             }
-            if (clients.openWindow) return clients.openWindow('./index.html?playAthan=1');
+            if (self.clients.openWindow) return self.clients.openWindow('./index.html?playAthan=1');
         })
     );
 });
