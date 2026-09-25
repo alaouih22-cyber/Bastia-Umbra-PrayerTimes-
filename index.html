@@ -888,7 +888,6 @@
             width: 100%; 
             height: 100%; 
             border-radius: 50%; 
-            transition: transform 0.08s cubic-bezier(0.1, 0.7, 0.1, 1); 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -897,6 +896,10 @@
             color: var(--mp-gold); 
             position: relative; 
             will-change: transform; 
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
         /* MUSHAF WARSH FULL-SCREEN PURE READER - COMPLETE FULLSCREEN TAKEOVER */
@@ -1584,7 +1587,6 @@
             body {
                 align-items: stretch !important;
                 justify-content: stretch !important;
-                background-color: #002b22 !important;
                 background-image: none !important;
                 width: 100vw !important;
                 height: 100vh !important;
@@ -1595,10 +1597,9 @@
             .app-viewport {
                 max-width: 100vw !important;
                 width: 100vw !important;
-                width: 100% !important;
                 height: 100vh !important;
                 height: 100dvh !important;
-                max-height: 100dvh !important;
+                max-height: 100vh !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
@@ -1643,7 +1644,7 @@
                 padding: 12px 16px;
                 border-radius: 20px;
             }
-            /* GRIGLIA A QUADRETTI PERFETTA E RESPONSIVA (3 colonne x 2 righe = 6 orari perfettamente allineati dentro i riquadri) */
+            /* QUADRI DEGLI ORARI DI PREGHIERA (Forme modernizzate, colori originali ripristinati) */
             .prayer-list {
                 width: 62%;
                 flex: 1 1 0px;
@@ -1655,7 +1656,7 @@
                 display: grid !important;
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
                 grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
-                gap: 8px !important;
+                gap: 9px !important;
                 padding: 4px !important;
                 box-sizing: border-box;
             }
@@ -1664,29 +1665,30 @@
                 flex-direction: column !important;
                 justify-content: space-between !important;
                 align-items: stretch !important;
-                text-align: center !important;
-                padding: 7px 9px !important;
-                border-radius: 14px !important;
+                text-align: start !important;
+                padding: 8px 10px !important;
+                border-radius: 18px !important;
                 height: 100% !important;
-                min-height: 76px !important;
+                min-height: 74px !important;
                 position: relative !important;
                 box-sizing: border-box !important;
-                background: #ffffff;
-                border: 1.5px solid #e2e8f0;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-                transition: transform 0.15s ease, box-shadow 0.15s ease;
+                background: var(--white) !important;
+                border: 1.2px solid #edf2f7 !important;
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03) !important;
+                transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
                 overflow: hidden !important;
             }
             .prayer-card:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+                border-color: var(--mp-gold) !important;
+                box-shadow: 0 4px 12px rgba(197, 160, 89, 0.12) !important;
             }
             .prayer-card-left {
                 display: flex !important;
                 flex-direction: row !important;
                 align-items: center !important;
                 justify-content: flex-start !important;
-                gap: 6px !important;
+                gap: 7px !important;
                 width: 100% !important;
                 min-width: 0 !important;
             }
@@ -1694,17 +1696,19 @@
                 justify-content: flex-start !important;
             }
             .prayer-icon-badge {
-                width: 26px !important;
-                height: 26px !important;
-                min-width: 26px !important;
-                font-size: 14px !important;
+                width: 30px !important;
+                height: 30px !important;
+                min-width: 30px !important;
+                font-size: 15px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                background: rgba(0, 79, 63, 0.07) !important;
-                border-radius: 7px !important;
+                background: #f8fcfb !important;
+                border: 1px solid rgba(197, 160, 89, 0.3) !important;
+                border-radius: 11px !important;
                 margin-bottom: 0 !important;
                 flex-shrink: 0 !important;
+                color: var(--mp-dark) !important;
             }
             .prayer-names-col {
                 display: flex !important;
@@ -1719,9 +1723,9 @@
                 align-items: flex-end !important;
             }
             .p-name {
-                font-size: clamp(11.5px, 1.3vw, 13px) !important;
+                font-size: clamp(12px, 1.35vw, 13.5px) !important;
                 font-weight: 800 !important;
-                color: #004F3F !important;
+                color: var(--mp-dark) !important;
                 line-height: 1.15 !important;
                 white-space: nowrap !important;
                 overflow: hidden !important;
@@ -1729,9 +1733,9 @@
                 max-width: 100% !important;
             }
             .p-name-ar {
-                font-size: clamp(10.5px, 1.2vw, 12px) !important;
+                font-size: clamp(11px, 1.25vw, 12.5px) !important;
                 font-weight: 700 !important;
-                color: #C5A059 !important;
+                color: var(--mp-gold) !important;
                 font-family: 'Amiri', serif !important;
                 line-height: 1.1 !important;
                 white-space: nowrap !important;
@@ -1746,7 +1750,7 @@
                 gap: 6px !important;
                 width: 100% !important;
                 margin-top: auto !important;
-                padding-top: 3px !important;
+                padding-top: 4px !important;
                 box-sizing: border-box !important;
             }
             .p-time {
@@ -1754,89 +1758,100 @@
                 min-width: 0 !important;
                 display: flex !important;
                 align-items: center !important;
-                justify-content: center !important;
-                font-size: clamp(14px, 1.8vw, 18px) !important;
+                justify-content: flex-start !important;
+                font-size: clamp(16px, 2vw, 21px) !important;
                 font-weight: 900 !important;
-                color: #0f172a !important;
+                color: #1a1a1a !important;
                 font-variant-numeric: tabular-nums !important;
-                letter-spacing: -0.2px !important;
-                background: rgba(0, 79, 63, 0.05) !important;
-                border: 1.5px solid rgba(0, 79, 63, 0.14) !important;
-                border-radius: 8px !important;
-                padding: 4px 6px !important;
-                line-height: 1.15 !important;
+                letter-spacing: -0.3px !important;
+                background: transparent !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                line-height: 1 !important;
                 box-sizing: border-box !important;
                 white-space: nowrap !important;
-                text-align: center !important;
+                text-align: start !important;
                 overflow: hidden !important;
             }
+            [dir="rtl"] .p-time {
+                justify-content: flex-end !important;
+                text-align: end !important;
+            }
             .p-audio-btn {
-                background: rgba(0, 79, 63, 0.06) !important;
-                border: 1px solid rgba(197, 160, 89, 0.3) !important;
-                border-radius: 7px !important;
-                width: 26px !important;
-                height: 26px !important;
-                min-width: 26px !important;
+                background: #f8fcfb !important;
+                border: 1px solid var(--mp-gold) !important;
+                border-radius: 50% !important;
+                width: 28px !important;
+                height: 28px !important;
+                min-width: 28px !important;
                 padding: 0 !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                font-size: 11px !important;
+                font-size: 12px !important;
+                color: var(--mp-dark) !important;
                 cursor: pointer !important;
                 transition: all 0.2s ease !important;
                 flex-shrink: 0 !important;
             }
             .p-audio-btn:hover {
-                background: #C5A059 !important;
-                color: #002b22 !important;
+                background: var(--mp-gold) !important;
+                color: var(--mp-dark) !important;
             }
             .next-pill-badge {
                 position: absolute !important;
-                top: 4px !important;
-                right: 6px !important;
+                top: 5px !important;
+                right: 7px !important;
                 font-size: 7.5px !important;
                 font-weight: 900 !important;
-                padding: 1.5px 5px !important;
-                border-radius: 5px !important;
+                padding: 2px 6px !important;
+                border-radius: 9999px !important;
                 z-index: 5 !important;
                 line-height: 1.1 !important;
-                background: #C5A059 !important;
-                color: #002b22 !important;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.12) !important;
-                max-width: 60px !important;
+                background: var(--mp-gold) !important;
+                color: var(--mp-dark) !important;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+                max-width: 65px !important;
                 white-space: nowrap !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
             }
             [dir="rtl"] .next-pill-badge {
                 right: auto !important;
-                left: 6px !important;
+                left: 7px !important;
             }
+            /* Quadro attivo con sfondo originale e bordo dorato */
             .prayer-card.active {
-                background: linear-gradient(135deg, #004F3F 0%, #00251d 100%) !important;
-                border-color: #C5A059 !important;
-                box-shadow: 0 4px 16px rgba(0, 79, 63, 0.35) !important;
+                background: #FFFCF5 !important;
+                border: 1.8px solid var(--mp-gold) !important;
+                box-shadow: 0 2px 10px rgba(197, 160, 89, 0.16) !important;
+                transform: scale(1.012) !important;
             }
             .prayer-card.active .prayer-icon-badge {
-                background: rgba(255, 255, 255, 0.15) !important;
-                color: #ffffff !important;
+                background: var(--mp-gold) !important;
+                border-color: var(--mp-gold) !important;
+                color: var(--mp-dark) !important;
             }
             .prayer-card.active .p-name {
-                color: #ffffff !important;
+                color: var(--mp-dark) !important;
             }
             .prayer-card.active .p-name-ar {
-                color: #F0D290 !important;
+                color: var(--mp-gold) !important;
             }
             .prayer-card.active .p-time {
-                color: #ffffff !important;
-                background: rgba(255, 255, 255, 0.2) !important;
-                border-color: rgba(255, 255, 255, 0.35) !important;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+                color: var(--mp-dark) !important;
+                background: transparent !important;
+                border: none !important;
             }
             .prayer-card.active .p-audio-btn {
-                background: rgba(255, 255, 255, 0.2) !important;
-                border-color: rgba(255, 255, 255, 0.35) !important;
-                color: #ffffff !important;
+                background: #f8fcfb !important;
+                border-color: var(--mp-gold) !important;
+                color: var(--mp-dark) !important;
+            }
+            .prayer-card.active .p-audio-btn:hover {
+                background: var(--mp-gold) !important;
+                color: var(--mp-dark) !important;
             }
             .hadith-footer {
                 padding-left: 20px;
@@ -1850,6 +1865,20 @@
                 width: 44px;
                 height: 44px;
                 font-size: 20px;
+            }
+        }
+
+        /* Compact Landscape Modals for phones & short displays */
+        @media (orientation: landscape) and (max-height: 520px) {
+            .modal-card {
+                max-height: 94vh !important;
+                overflow-y: auto !important;
+                padding: 12px 16px !important;
+                border-radius: 16px !important;
+            }
+            .compass-ui {
+                width: 170px !important;
+                height: 170px !important;
             }
         }
         
@@ -2423,11 +2452,14 @@
     </select>
 
     <button class="sidebar-btn btn-gold" id="btn-test-athan" style="margin-top:16px;" onclick="testAthanAndNotification()">🔔 Prova Athan & Notifica</button>
+    <button class="sidebar-btn" id="btn-universal-consent" style="margin-top:8px; background:linear-gradient(135deg, #10b981, #059669); color:#ffffff; font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="requestUniversalNotificationConsent()">
+        <span>🔔</span> <span id="btn-universal-consent-text">Consenso Notifiche (iOS & Android)</span>
+    </button>
     <button class="sidebar-btn" id="btn-standby-guide" style="margin-top:8px; background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; font-weight:800; font-size:12.5px; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="openModal('notif-test-modal'); updateNotifModalStatus();">
-        <span>📱</span> <span id="btn-standby-guide-text">Allarme a Telefono Spento (Standby)</span>
+        <span>📱</span> <span id="btn-standby-guide-text">Gestione Notifiche & Firebase FCM</span>
     </button>
     <button class="sidebar-btn" id="btn-test-fcm" style="margin-top:8px; background:#047857; color:#ffffff; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="testFirebaseWebPush()">
-        <span>📡</span> <span id="btn-test-fcm-text">Prova Notifica Push Web (Firebase)</span>
+        <span>📡</span> <span id="btn-test-fcm-text">Prova Notifica Push (Firebase FCM)</span>
     </button>
 
     <button class="sidebar-btn" id="btn-copy-code" style="margin-top:10px; background:#10b981; color:#ffffff; font-weight:700;" onclick="copyAppCode()">📋 Copia Tutto il Codice (HTML)</button>
@@ -2708,13 +2740,19 @@
 
         <!-- Microphone Consent Banner -->
         <div id="ai-mic-permission-banner" style="display:none; background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:8px 12px; margin-bottom:8px; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0;">
-            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#1e40af; font-weight:600;">
-                <span style="font-size:18px;">🎙️</span>
-                <span id="ai-mic-permission-text">Consenti l'uso del microfono per parlare direttamente con Gemini</span>
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#1e40af; font-weight:600; min-width:0; flex:1;">
+                <span style="font-size:18px; flex-shrink:0;">🎙️</span>
+                <span id="ai-mic-permission-text" style="line-height:1.3;">Consenti l'uso del microfono per parlare direttamente con Gemini</span>
             </div>
-            <button onclick="requestMicrophoneConsent(true)" style="background:#2563eb; color:#ffffff; border:none; border-radius:8px; font-size:11.5px; font-weight:700; padding:6px 12px; cursor:pointer; white-space:nowrap; box-shadow:0 2px 4px rgba(37,99,235,0.2);">
-                Consenti Microfono
-            </button>
+            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                <button id="ai-mic-perm-btn" onclick="requestMicrophoneConsent(true)" style="background:#2563eb; color:#ffffff; border:none; border-radius:8px; font-size:11.5px; font-weight:700; padding:6px 12px; cursor:pointer; white-space:nowrap; box-shadow:0 2px 4px rgba(37,99,235,0.2);">
+                    Consenti Microfono
+                </button>
+                <button id="ai-mic-switch-chat-btn" onclick="switchAITab('chat')" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-weight:700; padding:6px 10px; cursor:pointer; white-space:nowrap;">
+                    💬 Scrivi
+                </button>
+                <button onclick="dismissMicBanner()" style="background:none; border:none; color:#64748b; font-size:18px; font-weight:bold; cursor:pointer; padding:0 4px; line-height:1;" title="Chiudi">✕</button>
+            </div>
         </div>
 
         <!-- Mode Tabs: Chat vs Live Voce -->
@@ -2803,58 +2841,71 @@
 <!-- TEST NOTIFICHE & GUIDA ALLARME STANDBY (SCHERMO SPENTO) -->
 <div class="modal-overlay" id="notif-test-modal" style="display:none;">
     <div class="modal-card" style="max-width: 500px; width: 94%; padding: 20px; text-align: center; border-radius: 22px; max-height:88vh; overflow-y:auto;">
-        <div style="font-size: 38px; margin-bottom: 4px;">⏰</div>
+        <div style="font-size: 38px; margin-bottom: 4px;">🔔</div>
+        <div id="notif-device-badge" style="display:inline-block; font-size:11px; font-weight:800; background:#e0f2fe; color:#0369a1; padding:3px 10px; border-radius:12px; margin-bottom:8px;">
+            📱 Dispositivo: Rilevamento in corso...
+        </div>
         <h3 id="notif-test-title" style="color:var(--mp-dark); font-size: 18px; font-weight: 800; margin-bottom: 4px;">
-            Guida Notifiche & Allarme a Telefono Spento
+            Gestione Notifiche Push (Firebase FCM)
         </h3>
         <p id="notif-test-desc" style="font-size: 12.5px; color: #64748b; line-height: 1.4; margin-bottom: 14px;">
-            Configurazione completa per suonare l'Adhan anche in standby, schermo bloccato e risparmio energetico.
+            Notifiche push attive su Android, iPhone (iOS) e Web. Ricezione messaggi da Firebase e avvisi Adhan.
         </p>
 
-        <!-- Standby Notification Guide Boxes -->
+        <!-- Status & Permission Controls -->
         <div style="display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 14px;">
+            <!-- Consent Card -->
+            <div style="display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:20px;">🛡️</span>
+                    <div>
+                        <div style="font-size:12px; font-weight:800; color:#14532d;">Consenso Notifiche Dispositivo</div>
+                        <div id="notif-status-browser" style="font-size:11px; color:#166534;">Controllo permessi...</div>
+                    </div>
+                </div>
+                <button id="btn-request-perm" onclick="requestUniversalNotificationConsent()" class="ai-action-btn" style="background:#059669; color:#ffffff; border:none; padding:6px 12px; font-weight:bold; border-radius:8px; cursor:pointer;">
+                    Abilita Ora
+                </button>
+            </div>
+
+            <!-- Firebase FCM Status Card -->
+            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:18px;">📡</span>
+                        <div>
+                            <div style="font-size:12px; font-weight:800; color:#0f172a;">Firebase Cloud Messaging (FCM)</div>
+                            <div id="fcm-status-text" style="font-size:11px; color:#059669; font-weight:700;">Inizializzazione...</div>
+                        </div>
+                    </div>
+                    <button onclick="copyFCMToken()" style="background:#e2e8f0; color:#0f172a; border:none; border-radius:6px; padding:4px 8px; font-size:10.5px; font-weight:bold; cursor:pointer;">
+                        📋 Copia Token
+                    </button>
+                </div>
+                <div id="fcm-token-preview" style="font-size:10px; font-family:monospace; color:#64748b; background:#ffffff; border:1px dashed #cbd5e1; border-radius:6px; padding:5px 8px; word-break:break-all; max-height:48px; overflow-y:auto;">
+                    Token FCM in attesa di autorizzazione...
+                </div>
+            </div>
+
+            <!-- Battery Guidance -->
             <div style="display:flex; align-items:flex-start; gap:10px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
                 <span style="font-size:20px;">🔋</span>
                 <div style="font-size:11.5px; color:#334155; line-height:1.4;">
-                    <b style="color:#004F3F;">1. Risparmio Batteria (Doze Mode Android):</b><br>
-                    Nelle impostazioni del telefono &gt; App &gt; <i>Muslim Pro Bastia</i> &gt; <b>Batteria</b>, imposta su <b>"Nessuna restrizione"</b> o disattiva l'ottimizzazione batteria.
+                    <b style="color:#004F3F;">Risparmio Batteria (Standby):</b><br>
+                    Su Android e iPhone, mantieni l'app consentita in background per ricevere le notifiche anche a schermo spento.
                 </div>
-            </div>
-
-            <div style="display:flex; align-items:flex-start; gap:10px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
-                <span style="font-size:20px;">🔔</span>
-                <div style="font-size:11.5px; color:#334155; line-height:1.4;">
-                    <b style="color:#004F3F;">2. Canale Notifiche & Volume:</b><br>
-                    Assicurati che il volume delle Notifiche/Allarmi sia attivo e che i permessi di notifica siano concessi.
-                </div>
-            </div>
-
-            <div style="display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:18px;">🌐</span>
-                    <div>
-                        <div style="font-size:12px; font-weight:800; color:#0f172a;">Permessi Notifiche</div>
-                        <div id="notif-status-browser" style="font-size:11px; color:#64748b;">Controllo in corso...</div>
-                    </div>
-                </div>
-                <button id="btn-request-perm" onclick="requestBrowserNotifPermission()" class="ai-action-btn" style="display:none; background:#004F3F; color:#ffffff; border:none; padding:5px 10px;">
-                    Abilita
-                </button>
             </div>
         </div>
 
-        <!-- Standby 5-Second Test Button -->
-        <div style="background: linear-gradient(135deg, rgba(0, 79, 63, 0.08), rgba(197, 160, 89, 0.12)); padding: 12px; border-radius: 14px; border: 1px solid rgba(197, 160, 89, 0.35); margin-bottom: 14px;">
-            <div style="font-size:12.5px; font-weight:800; color:#004F3F; margin-bottom:4px;">
-                🧪 Prova Allarme Schermo Spento (5 Secondi)
-            </div>
-            <div style="font-size:11px; color:#475569; margin-bottom:8px;">
-                Premi il pulsante qui sotto, poi <b>spegni subito lo schermo del telefono</b> per testare la notifica in standby.
-            </div>
-            <button onclick="testStandbyAlarm5Seconds()" class="sidebar-btn btn-gold" style="padding:10px 16px; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; margin:0 auto;">
-                <span>⏱️</span> <span>Avvia Test Standby (5s)</span>
+        <!-- Push Test & Standby Actions -->
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom: 14px;">
+            <button onclick="testFirebaseWebPush()" class="sidebar-btn btn-gold" style="padding:10px 14px; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; margin:0 auto; width:100%;">
+                <span>📡</span> <span>Invia Prova Notifica Push Firebase</span>
             </button>
-            <div id="standby-test-countdown" style="font-size:11px; font-weight:800; color:#b45309; margin-top:6px; min-height:16px;"></div>
+            <button onclick="testStandbyAlarm5Seconds()" class="sidebar-btn" style="background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; padding:9px 14px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px; margin:0 auto; width:100%;">
+                <span>⏱️</span> <span>Test Allarme Schermo Spento (5s)</span>
+            </button>
+            <div id="standby-test-countdown" style="font-size:11px; font-weight:800; color:#b45309; min-height:16px;"></div>
         </div>
 
         <!-- Controls Action -->
@@ -3487,6 +3538,28 @@ const ayatList = [
             if (cDua) cDua.innerText = '🤲 أدعية الصحة والسكينة';
             if (cWudu) cWudu.innerText = '💧 أحكام الوضوء والصلاة';
             if (cZakat) cZakat.innerText = '💰 نصاب وطريقة حساب الزكاة';
+
+            const tabChat = document.getElementById('tab-ai-chat-text');
+            const tabLive = document.getElementById('tab-ai-live-text');
+            const btnStopSpeech = document.getElementById('gemini-stop-speech-text');
+            const btnResetLive = document.getElementById('gemini-reset-live-text');
+            const btnClearChat = document.getElementById('ai-clear-chat-text');
+            const micPermText = document.getElementById('ai-mic-permission-text');
+            const micPermBtn = document.getElementById('ai-mic-perm-btn');
+            const micSwitchChatBtn = document.getElementById('ai-mic-switch-chat-btn');
+            const liveStatus = document.getElementById('gemini-live-status');
+            const liveSub = document.getElementById('gemini-live-subtitles');
+
+            if (tabChat) tabChat.innerText = 'محادثة كتابية';
+            if (tabLive) tabLive.innerText = 'التحدث المباشر (Live)';
+            if (btnStopSpeech) btnStopSpeech.innerText = 'إيقاف الصوت';
+            if (btnResetLive) btnResetLive.innerText = 'محادثة جديدة';
+            if (btnClearChat) btnClearChat.innerText = 'محادثة جديدة';
+            if (micPermText) micPermText.innerText = 'يرجى السماح باستخدام الميكروفون للحديث المباشر مع جيميناي';
+            if (micPermBtn) micPermBtn.innerText = 'السماح بالميكروفون';
+            if (micSwitchChatBtn) micSwitchChatBtn.innerText = '💬 محادثة كتابية';
+            if (liveStatus && !isRecordingSTT) liveStatus.innerText = 'اضغط للتحدث';
+            if (liveSub && !liveSub.querySelector('span[style*="#b91c1c"]')) liveSub.innerText = '💬 تحدث بالعربية أو الإيطالية. جيميناي يستمع ويجيبك مباشرة بالصوت.';
         } else {
             if (sAiSec) sAiSec.innerText = 'Funzionalità Intelligenti AI';
             if (bAiAss) bAiAss.innerText = 'Gemini: Chat & Scrittura';
@@ -3507,6 +3580,28 @@ const ayatList = [
             if (cDua) cDua.innerText = '🤲 Du\'a per serenità e salute';
             if (cWudu) cWudu.innerText = '💧 Regole Wudu & Preghiera';
             if (cZakat) cZakat.innerText = '💰 Regole e Nisab Zakat';
+
+            const tabChat = document.getElementById('tab-ai-chat-text');
+            const tabLive = document.getElementById('tab-ai-live-text');
+            const btnStopSpeech = document.getElementById('gemini-stop-speech-text');
+            const btnResetLive = document.getElementById('gemini-reset-live-text');
+            const btnClearChat = document.getElementById('ai-clear-chat-text');
+            const micPermText = document.getElementById('ai-mic-permission-text');
+            const micPermBtn = document.getElementById('ai-mic-perm-btn');
+            const micSwitchChatBtn = document.getElementById('ai-mic-switch-chat-btn');
+            const liveStatus = document.getElementById('gemini-live-status');
+            const liveSub = document.getElementById('gemini-live-subtitles');
+
+            if (tabChat) tabChat.innerText = 'Scrivi a Gemini';
+            if (tabLive) tabLive.innerText = 'Parla con Gemini (Live)';
+            if (btnStopSpeech) btnStopSpeech.innerText = 'Ferma Voce';
+            if (btnResetLive) btnResetLive.innerText = 'Nuova Conversazione';
+            if (btnClearChat) btnClearChat.innerText = 'Nuova Chat';
+            if (micPermText) micPermText.innerText = 'Consenti l\'uso del microfono per parlare direttamente con Gemini';
+            if (micPermBtn) micPermBtn.innerText = 'Consenti Microfono';
+            if (micSwitchChatBtn) micSwitchChatBtn.innerText = '💬 Scrivi';
+            if (liveStatus && !isRecordingSTT) liveStatus.innerText = 'Tocca l\'Orb per iniziare a parlare con Gemini';
+            if (liveSub && !liveSub.querySelector('span[style*="#b91c1c"]')) liveSub.innerText = '💬 Parla in italiano o arabo. Gemini ascolta e risponde direttamente a voce.';
         }
 
         if (bCloseSidebar) bCloseSidebar.innerText = d.closeSidebarBtn;
@@ -3629,6 +3724,9 @@ const ayatList = [
         }
         if (id === 'qibla-modal') {
             startQiblaTracking();
+            if (typeof requestIOSCompass === 'function') {
+                requestIOSCompass();
+            }
         }
         const el = document.getElementById(id);
         if (el) el.style.display = 'flex'; 
@@ -4466,15 +4564,18 @@ const eveningAzkar = [
         });
     }
 
-    // ================= DYNAMIC QIBLA & COMPASS ENGINE =================
+    // ================= DYNAMIC QIBLA & COMPASS ENGINE (ULTRA-HIGH PERFORMANCE) =================
     const KAABA_LAT = 21.422487;
     const KAABA_LON = 39.826206;
     let smoothedCompassHeading = 0;
+    let targetCompassHeading = 0;
     let currentQiblaAngle = 131; // Default fallback (Bastia Umbra)
     let qiblaGeoWatchId = null;
     let hasCompassSensorDetected = false;
     let isQiblaTrackingActive = false;
     let wasCompassAligned = false;
+    let compassRafId = null;
+    let absoluteOrientationSensor = null;
 
     // Great-circle bearing calculation to the Holy Kaaba in Mecca
     function calculateQiblaBearing(lat, lon) {
@@ -4489,6 +4590,18 @@ const eveningAzkar = [
         return qibla;
     }
 
+    // Haversine distance in km
+    function calculateDistanceToKaaba(lat, lon) {
+        const R = 6371; // Earth radius in km
+        const dLat = ((KAABA_LAT - lat) * Math.PI) / 180;
+        const dLon = ((KAABA_LON - lon) * Math.PI) / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos((lat * Math.PI) / 180) * Math.cos((KAABA_LAT * Math.PI) / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round(R * c);
+    }
+
     function getCardinalDirection(angle) {
         const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
         const idx = Math.round((angle % 360) / 22.5) % 16;
@@ -4500,13 +4613,14 @@ const eveningAzkar = [
         currentQiblaAngle = Math.round(angle * 10) / 10;
         const rounded = Math.round(currentQiblaAngle);
         const cardinal = getCardinalDirection(rounded);
+        const distanceKm = calculateDistanceToKaaba(lat, lon);
 
         const targetLabel = document.getElementById('qibla-target-label');
         const targetDeg = document.getElementById('qibla-target-deg');
         const kaabaPointer = document.getElementById('qibla-kaaba-pointer');
         const kaabaBadge = document.getElementById('qibla-kaaba-badge');
 
-        if (targetLabel && labelText) targetLabel.innerText = labelText;
+        if (targetLabel && labelText) targetLabel.innerText = `${labelText} (${distanceKm.toLocaleString()} km)`;
         if (targetDeg) targetDeg.innerText = `${rounded}° ${cardinal}`;
         if (kaabaPointer) kaabaPointer.style.transform = `translate(-50%, -50%) rotate(${rounded}deg)`;
         if (kaabaBadge) kaabaBadge.innerText = `القبلة ${rounded}°`;
@@ -4530,7 +4644,7 @@ const eveningAzkar = [
                 const lon = pos.coords.longitude;
                 const acc = pos.coords.accuracy ? ` (±${Math.round(pos.coords.accuracy)}m)` : '';
                 if (statusText) statusText.innerText = `GPS Attivo: ${lat.toFixed(2)}°, ${lon.toFixed(2)}°${acc}`;
-                updateQiblaTargetUI(lat, lon, 'QIBLA (GPS)');
+                updateQiblaTargetUI(lat, lon, 'QIBLA');
             },
             function(err) {
                 console.log('Qibla GPS info:', err);
@@ -4549,7 +4663,7 @@ const eveningAzkar = [
                     const lat = pos.coords.latitude;
                     const lon = pos.coords.longitude;
                     if (statusText) statusText.innerText = `GPS Attivo: ${lat.toFixed(2)}°, ${lon.toFixed(2)}°`;
-                    updateQiblaTargetUI(lat, lon, 'QIBLA (GPS)');
+                    updateQiblaTargetUI(lat, lon, 'QIBLA');
                 },
                 function(err) {},
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
@@ -4563,18 +4677,24 @@ const eveningAzkar = [
         const statusElem = document.getElementById('qibla-align-status');
         const ringElem = document.getElementById('compass-ring');
 
-        if (disk) disk.style.transform = `rotate(${-smoothedCompassHeading}deg)`;
-        if (headingElem) headingElem.innerText = Math.round(smoothedCompassHeading) + '°';
+        const roundedHeading = Math.round(smoothedCompassHeading);
+        if (disk) {
+            disk.style.transform = `rotate(${-smoothedCompassHeading.toFixed(1)}deg) translateZ(0)`;
+        }
+        if (headingElem) {
+            headingElem.innerText = `${roundedHeading}° ${getCardinalDirection(roundedHeading)}`;
+        }
 
         const angleDelta = Math.abs(((smoothedCompassHeading - currentQiblaAngle + 540) % 360) - 180);
-        const isAligned = angleDelta <= 6;
+        const isAligned = angleDelta <= 4; // High precision alignment within ±4°
 
         if (statusElem) {
             if (isAligned) {
-                statusElem.innerText = '✓ ALLINEATO';
+                statusElem.innerText = '✓ ALLINEATO (مضبوط)';
                 statusElem.style.color = '#16a34a';
             } else {
-                statusElem.innerText = 'Ruota';
+                const turnRight = ((currentQiblaAngle - smoothedCompassHeading + 360) % 360) < 180;
+                statusElem.innerText = turnRight ? 'Ruota a Destra ➔' : 'Ruota a Sinistra ⬅';
                 statusElem.style.color = '#ca8a04';
             }
         }
@@ -4586,46 +4706,139 @@ const eveningAzkar = [
 
         if (isAligned && !wasCompassAligned) {
             if (navigator.vibrate) {
-                try { navigator.vibrate(40); } catch(e){}
+                try { navigator.vibrate([35, 45, 35]); } catch(e){}
+            }
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics) {
+                try { window.Capacitor.Plugins.Haptics.impact({ style: 'LIGHT' }); } catch(e){}
             }
         }
         wasCompassAligned = isAligned;
     }
 
-    function handleDeviceOrientationEvent(e) {
-        let heading = null;
-        if (typeof e.webkitCompassHeading !== 'undefined' && e.webkitCompassHeading !== null) {
-            heading = e.webkitCompassHeading;
-        } else if (e.alpha !== null && e.alpha !== undefined) {
-            heading = (360 - e.alpha) % 360;
+    // High performance 60fps/120fps animation loop
+    function compassAnimationLoop() {
+        if (!isQiblaTrackingActive) {
+            compassRafId = null;
+            return;
         }
 
+        // Shortest arc angular difference
+        let diff = targetCompassHeading - smoothedCompassHeading;
+        while (diff < -180) diff += 360;
+        while (diff > 180) diff -= 360;
+
+        // Adaptive smoothing: fast response during turns, ultra-steady when held
+        const absDiff = Math.abs(diff);
+        const lerpFactor = absDiff > 25 ? 0.35 : (absDiff > 5 ? 0.22 : 0.14);
+        smoothedCompassHeading = (smoothedCompassHeading + diff * lerpFactor + 360) % 360;
+
+        renderCompassUI();
+        compassRafId = requestAnimationFrame(compassAnimationLoop);
+    }
+
+    // High precision sensor heading calculator for Android & iOS
+    function calculateHeadingFromEvent(e) {
+        // 1. iOS Safari native hardware compass heading
+        if (typeof e.webkitCompassHeading !== 'undefined' && e.webkitCompassHeading !== null) {
+            let heading = e.webkitCompassHeading;
+            const screenAngle = (window.orientation !== undefined)
+                ? window.orientation
+                : (screen.orientation && typeof screen.orientation.angle === 'number' ? screen.orientation.angle : 0);
+            return (heading + screenAngle + 360) % 360;
+        }
+
+        // 2. Android absolute device orientation with 3D tilt compensation
+        const alpha = e.alpha;
+        const beta = e.beta;
+        const gamma = e.gamma;
+
+        if (alpha === null || typeof alpha === 'undefined' || isNaN(alpha)) return null;
+
+        const degToRad = Math.PI / 180;
+        const radToDeg = 180 / Math.PI;
+
+        const screenAngle = (window.orientation !== undefined)
+            ? window.orientation
+            : (screen.orientation && typeof screen.orientation.angle === 'number' ? screen.orientation.angle : 0);
+
+        // When phone is tilted in hand (pitch or roll > 3°), apply 3D Euler projection
+        if (beta !== null && gamma !== null && (Math.abs(beta) > 3 || Math.abs(gamma) > 3)) {
+            const _x = beta * degToRad; // pitch
+            const _y = gamma * degToRad; // roll
+            const _z = alpha * degToRad; // yaw
+
+            const cX = Math.cos(_x);
+            const cY = Math.cos(_y);
+            const cZ = Math.cos(_z);
+            const sX = Math.sin(_x);
+            const sY = Math.sin(_y);
+            const sZ = Math.sin(_z);
+
+            // Vector pointing towards the top of the phone projected into horizontal plane
+            const Vx = -cZ * sY - sZ * sX * cY;
+            const Vy = -sZ * sY + cZ * sX * cY;
+
+            let heading = Math.atan2(Vx, Vy) * radToDeg;
+            if (heading < 0) heading += 360;
+
+            return (heading + screenAngle + 360) % 360;
+        } else {
+            // Flat device: standard inverted azimuth
+            let heading = (360 - alpha) % 360;
+            return (heading + screenAngle + 360) % 360;
+        }
+    }
+
+    function handleDeviceOrientationEvent(e) {
+        const heading = calculateHeadingFromEvent(e);
         if (heading !== null && !isNaN(heading)) {
             hasCompassSensorDetected = true;
-            let diff = heading - smoothedCompassHeading;
-            while (diff < -180) diff += 360;
-            while (diff > 180) diff -= 360;
-            smoothedCompassHeading = (smoothedCompassHeading + diff * 0.35 + 360) % 360;
-            renderCompassUI();
+            targetCompassHeading = heading;
+            if (!compassRafId && isQiblaTrackingActive) {
+                compassRafId = requestAnimationFrame(compassAnimationLoop);
+            }
         }
     }
 
     function requestIOSCompass() {
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
             DeviceOrientationEvent.requestPermission().then(function(res) {
+                console.log('iOS Compass permission result:', res);
                 if (res === 'granted') {
                     const btn = document.getElementById('ios-compass-btn-wrap');
                     if (btn) btn.style.display = 'none';
                     initCompassEvents();
                 }
             }).catch(console.error);
+        } else {
+            initCompassEvents();
         }
     }
 
     function initCompassEvents() {
         if (window.DeviceOrientationEvent) {
-            window.addEventListener('deviceorientation', handleDeviceOrientationEvent, true);
+            window.removeEventListener('deviceorientation', handleDeviceOrientationEvent, true);
+            window.removeEventListener('deviceorientationabsolute', handleDeviceOrientationEvent, true);
             window.addEventListener('deviceorientationabsolute', handleDeviceOrientationEvent, true);
+            window.addEventListener('deviceorientation', handleDeviceOrientationEvent, true);
+        }
+
+        // Modern Android Generic Sensor API fallback
+        if ('AbsoluteOrientationSensor' in window && !absoluteOrientationSensor) {
+            try {
+                const sensor = new AbsoluteOrientationSensor({ frequency: 60 });
+                sensor.addEventListener('reading', () => {
+                    const q = sensor.quaternion;
+                    if (q) {
+                        const heading = Math.atan2(2 * (q[0] * q[1] + q[2] * q[3]), 1 - 2 * (q[1] * q[1] + q[2] * q[2])) * (180 / Math.PI);
+                        const normHeading = (360 - heading + 360) % 360;
+                        hasCompassSensorDetected = true;
+                        targetCompassHeading = normHeading;
+                    }
+                });
+                sensor.start();
+                absoluteOrientationSensor = sensor;
+            } catch(e) {}
         }
     }
 
@@ -4633,13 +4846,24 @@ const eveningAzkar = [
         isQiblaTrackingActive = true;
         requestQiblaLocation(false);
         initCompassEvents();
+        if (!compassRafId) {
+            compassRafId = requestAnimationFrame(compassAnimationLoop);
+        }
     }
 
     function stopQiblaTracking() {
         isQiblaTrackingActive = false;
+        if (compassRafId) {
+            cancelAnimationFrame(compassRafId);
+            compassRafId = null;
+        }
         if (qiblaGeoWatchId !== null && navigator.geolocation) {
             try { navigator.geolocation.clearWatch(qiblaGeoWatchId); } catch(e){}
             qiblaGeoWatchId = null;
+        }
+        if (absoluteOrientationSensor) {
+            try { absoluteOrientationSensor.stop(); } catch(e){}
+            absoluteOrientationSensor = null;
         }
     }
 
@@ -4777,69 +5001,172 @@ let hArr = [
         return null;
     }
 
-    async function initPushAndLocalNotifications() {
+    function getCapacitorPushNotifications() {
         try {
-            // Register unified Service Worker
-            if ('serviceWorker' in navigator) {
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications) {
+                return window.Capacitor.Plugins.PushNotifications;
+            }
+            if (window.PushNotifications) {
+                return window.PushNotifications;
+            }
+        } catch(e) {}
+        return null;
+    }
+
+    async function initCapacitorPushListeners() {
+        const Push = getCapacitorPushNotifications();
+        if (!Push) return;
+
+        try {
+            // Android notification channel setup unified with Athan sound
+            if (Push.createChannel) {
                 try {
-                    const reg = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
-                    console.log('Service Worker registrato con successo:', reg.scope);
-                    
-                    reg.onupdatefound = () => {
-                        const installingWorker = reg.installing;
-                        if (installingWorker) {
-                            installingWorker.onstatechange = () => {
-                                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('Nuova versione applicazione pronta.');
-                                }
-                            };
-                        }
-                    };
+                    await Push.createChannel({
+                        id: 'prayer_times_athan_push_v7',
+                        name: 'Orari di Preghiera Bastia (Allarmi Adhan & Push)',
+                        description: 'Notifiche e allarmi Adhan da Firebase Cloud Messaging e notifiche locali',
+                        importance: 5,
+                        visibility: 1,
+                        sound: 'res_athan',
+                        vibration: true,
+                        lights: true,
+                        lightColor: '#C5A059'
+                    });
                 } catch(e) {
-                    console.warn('Registrazione firebase-messaging-sw.js fallback a sw.js:', e);
-                    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+                    console.log('Push createChannel skipped/unsupported:', e);
                 }
             }
 
-            // Inizializzazione Firebase Web SDK
+            // Push registration listeners
+            if (Push.addListener && !window._capPushListenersSet) {
+                window._capPushListenersSet = true;
+
+                Push.addListener('registration', (token) => {
+                    console.log('FCM Token (Capacitor Nativo iOS/Android):', token.value);
+                    if (token && token.value) {
+                        localStorage.setItem('fcm_token', token.value);
+                        localStorage.setItem('fcm_platform', 'capacitor_native');
+                        updateNotifModalStatus();
+                    }
+                });
+
+                Push.addListener('registrationError', (err) => {
+                    console.warn('Errore registrazione Push Capacitor:', err);
+                });
+
+                Push.addListener('pushNotificationReceived', (notification) => {
+                    console.log('Notifica push Firebase ricevuta (in-app):', notification);
+                    const title = notification.title || notification.data?.title || 'Muslim Pro Bastia';
+                    const body = notification.body || notification.data?.body || 'È arrivato il momento della preghiera.';
+                    const pIdx = notification.data?.prayerIndex !== undefined ? parseInt(notification.data.prayerIndex, 10) : 0;
+                    const voice = notification.data?.athanVoice || localStorage.getItem('athanVoice');
+                    showAthanBannerPopup(title, body, 'icon.png');
+                    triggerAthanAlarm(pIdx, voice);
+                });
+
+                Push.addListener('pushNotificationActionPerformed', (action) => {
+                    console.log('Notifica push Firebase cliccata dall\'utente:', action);
+                    const pIdx = action.notification?.data?.prayerIndex !== undefined ? parseInt(action.notification.data.prayerIndex, 10) : 0;
+                    const voice = action.notification?.data?.athanVoice || localStorage.getItem('athanVoice');
+                    unlockAudio();
+                    setTimeout(() => {
+                        triggerAthanAlarm(pIdx, voice);
+                    }, 350);
+                });
+            }
+
+            // Check permissions & auto-register if already granted
+            const status = await Push.checkPermissions();
+            if (status.receive === 'granted') {
+                await Push.register();
+            }
+        } catch(err) {
+            console.warn('Capacitor Push setup error:', err);
+        }
+    }
+
+    async function initPushAndLocalNotifications() {
+        try {
+            // 1. Inizializzazione Capacitor Native Push (se in ambiente app Capacitor iOS/Android)
+            await initCapacitorPushListeners();
+
+            // 2. Registrazione Service Worker Unificato (PWA / Web Push)
+            let swReg = null;
+            if ('serviceWorker' in navigator) {
+                try {
+                    swReg = await navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: './' });
+                    console.log('Service Worker registrato con successo:', swReg.scope);
+                } catch(e) {
+                    console.warn('Registrazione firebase-messaging-sw.js fallback a sw.js:', e);
+                    try {
+                        swReg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+                    } catch(err){}
+                }
+            }
+
+            // 3. Inizializzazione Firebase Web SDK (Compatibile con iOS Safari 16.4+ e Android Chrome)
             if (typeof firebase !== 'undefined') {
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
                 }
-                if ('serviceWorker' in navigator && firebase.messaging && firebase.messaging.isSupported()) {
-                    navigator.serviceWorker.ready.then((reg) => {
-                        try {
+
+                if ('serviceWorker' in navigator && firebase.messaging) {
+                    try {
+                        const supportedPromise = (typeof firebase.messaging.isSupported === 'function') 
+                            ? firebase.messaging.isSupported() 
+                            : Promise.resolve(true);
+
+                        const isSupported = await Promise.resolve(supportedPromise);
+                        if (isSupported) {
+                            const reg = swReg || (await Promise.race([
+                                navigator.serviceWorker.ready,
+                                new Promise((resolve) => setTimeout(() => resolve(null), 3000))
+                            ]));
                             const messaging = firebase.messaging();
-                            messaging.useServiceWorker(reg);
 
-                            Notification.requestPermission().then((permission) => {
-                                if (permission === 'granted') {
-                                    messaging.getToken().then((token) => {
-                                        if (token) {
-                                            console.log('FCM Token generato con successo:', token);
-                                            localStorage.setItem('fcm_token', token);
+                            // If permission already granted, retrieve token safely
+                            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                                (async () => {
+                                    let token = null;
+                                    if (reg) {
+                                        try {
+                                            token = await messaging.getToken({ serviceWorkerRegistration: reg });
+                                        } catch (swErr) {
+                                            console.warn('FCM getToken con swReg fallito, riprovo senza:', swErr);
                                         }
-                                    }).catch((err) => {
-                                        console.log('Info token FCM:', err);
-                                    });
-                                }
-                            }).catch(()=>{});
+                                    }
+                                    if (!token) {
+                                        try {
+                                            token = await messaging.getToken();
+                                        } catch (fallbackErr) {
+                                            console.log('Info token FCM:', fallbackErr);
+                                        }
+                                    }
+                                    if (token) {
+                                        console.log('FCM Token generato con successo:', token);
+                                        localStorage.setItem('fcm_token', token);
+                                        localStorage.setItem('fcm_platform', 'web_fcm');
+                                        updateNotifModalStatus();
+                                    }
+                                })().catch((err) => console.log('Info token FCM:', err));
+                            }
 
+                            // Foreground message handler
                             messaging.onMessage((payload) => {
-                                console.log('Messaggio ricevuto in foreground:', payload);
+                                console.log('Messaggio Firebase ricevuto in foreground:', payload);
                                 const title = payload.notification?.title || payload.data?.title || 'Muslim Pro Bastia';
                                 const body = payload.notification?.body || payload.data?.body || 'È arrivato il momento della preghiera.';
                                 showAthanBannerPopup(title, body, 'icon.png');
                                 triggerAthanAlarm();
                             });
-                        } catch(err) {
-                            console.warn('Setup FCM listener:', err);
                         }
-                    }).catch(()=>{});
+                    } catch(fcmErr) {
+                        console.warn('Firebase Messaging init skipped/failed:', fcmErr);
+                    }
                 }
             }
 
-            // Ascolta comandi PLAY_ATHAN dal Service Worker
+            // 4. Ascolta comandi PLAY_ATHAN dal Service Worker
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.addEventListener('message', (event) => {
                     if (event.data && event.data.type === 'PLAY_ATHAN') {
@@ -4860,7 +5187,7 @@ let hArr = [
                 }, 500);
             }
         } catch(e) {
-            console.warn('Firebase Messaging init skipped/failed:', e);
+            console.warn('Notification init skipped/failed:', e);
         }
 
         scheduleAllCapacitorPrayers();
@@ -4886,9 +5213,9 @@ let hArr = [
             try {
                 if (LN.createChannel) {
                     await LN.createChannel({
-                        id: 'prayer_times_urgent_v5',
-                        name: 'Orari di Preghiera Bastia (Allarmi Alta Priorità)',
-                        description: 'Notifiche e allarmi per Fajr, Dhuhr, Asr, Maghrib e Ishaa anche a schermo spento',
+                        id: 'prayer_times_athan_push_v7',
+                        name: 'Orari di Preghiera Bastia (Allarmi Adhan & Push)',
+                        description: 'Notifiche e allarmi Adhan per Fajr, Dhuhr, Asr, Maghrib e Ishaa anche a schermo spento',
                         importance: 5,
                         visibility: 1,
                         sound: 'res_athan',
@@ -4910,14 +5237,14 @@ let hArr = [
             if (LN.addListener && !window._capAthanListenersSet) {
                 window._capAthanListenersSet = true;
                 LN.addListener('localNotificationReceived', (notification) => {
-                    console.log('Notifica locale Capacitor ricevuta:', notification);
+                    console.log('Notifica locale Capacitor ricevuta con Adhan:', notification);
                     const pIdx = notification.extra?.prayerIndex ?? 0;
                     const voice = notification.extra?.athanVoice || localStorage.getItem('athanVoice');
                     triggerAthanAlarm(pIdx, voice);
                 });
 
                 LN.addListener('localNotificationActionPerformed', (action) => {
-                    console.log('Notifica Capacitor cliccata dall\'utente:', action);
+                    console.log('Notifica Capacitor cliccata dall\'utente con Adhan:', action);
                     const pIdx = action.notification?.extra?.prayerIndex ?? 0;
                     const voice = action.notification?.extra?.athanVoice || localStorage.getItem('athanVoice');
                     unlockAudio();
@@ -4961,8 +5288,8 @@ let hArr = [
                             body: body,
                             id: notifIdCounter++,
                             schedule: { at: schedDate, allowWhileIdle: true },
-                            sound: 'res_athan',
-                            channelId: 'prayer_times_urgent_v5',
+                            sound: 'res_athan.wav',
+                            channelId: 'prayer_times_athan_push_v7',
                             smallIcon: 'ic_stat_icon',
                             largeIcon: 'icon',
                             extra: {
@@ -4970,7 +5297,8 @@ let hArr = [
                                 prayerName: pInfo.it,
                                 prayerTime: timeStr,
                                 date: dayItem.date,
-                                athanVoice: currentSelectedVoice
+                                athanVoice: currentSelectedVoice,
+                                isPushSound: true
                             }
                         });
                     }
@@ -5744,9 +6072,9 @@ let hArr = [
             if (LN && LN.schedule) {
                 if (LN.createChannel) {
                     LN.createChannel({
-                        id: 'prayer_times_urgent_v5',
-                        name: 'Orari di Preghiera Bastia (Allarmi Alta Priorità)',
-                        description: 'Notifiche e allarmi per Fajr, Dhuhr, Asr, Maghrib e Ishaa anche a schermo spento',
+                        id: 'prayer_times_athan_push_v7',
+                        name: 'Orari di Preghiera Bastia (Allarmi Adhan & Push)',
+                        description: 'Notifiche e allarmi Adhan per Fajr, Dhuhr, Asr, Maghrib e Ishaa anche a schermo spento',
                         importance: 5,
                         visibility: 1,
                         sound: 'res_athan',
@@ -5761,11 +6089,11 @@ let hArr = [
                         title: title,
                         body: body,
                         schedule: { at: targetTime, allowWhileIdle: true },
-                        sound: 'res_athan',
-                        channelId: 'prayer_times_urgent_v5',
+                        sound: 'res_athan.wav',
+                        channelId: 'prayer_times_athan_push_v7',
                         smallIcon: 'ic_stat_icon',
                         largeIcon: 'icon',
-                        extra: { prayerIndex: 0 }
+                        extra: { prayerIndex: 0, athanVoice: localStorage.getItem('athanVoice'), isPushSound: true }
                     }]
                 }).catch(e => console.warn(e));
             }
@@ -5834,10 +6162,99 @@ let hArr = [
         stopCurrentSpeech();
     }
 
+    function detectUserDevicePlatform() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(ua);
+        const isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+
+        if (isCapacitor) {
+            return isIOS ? '📱 Apple iPhone (App Capacitor)' : '🤖 Android (App Capacitor)';
+        }
+        if (isIOS) return '📱 Apple iPhone / iPad (Safari / PWA)';
+        if (isAndroid) return '🤖 Android (Chrome / PWA)';
+        return '💻 Computer / Web Browser';
+    }
+
+    function copyFCMToken() {
+        const token = localStorage.getItem('fcm_token');
+        const isAr = (typeof currentLang !== "undefined" && currentLang === "ar");
+        if (!token) {
+            const msg = isAr ? 'لم يتم العثور على رمز FCM بعد. اضغط تفعيل للحصول عليه.' : 'Nessun Token FCM salvato. Premi "Abilita Ora" per autorizzare.';
+            showAthanBannerPopup('FCM Token', msg, 'icon.png');
+            return;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(token).then(() => {
+                const msg = isAr ? 'تم نسخ رمز FCM بنجاح!' : 'Token FCM copiato negli appunti con successo!';
+                showAthanBannerPopup('Firebase FCM', msg, 'icon.png');
+            }).catch(() => {
+                prompt(isAr ? 'انسخ الرمز يدويا:' : 'Copia il token FCM manualmente:', token);
+            });
+        } else {
+            prompt(isAr ? 'انسخ الرمز يدويا:' : 'Copia il token FCM manualmente:', token);
+        }
+    }
+
     function updateNotifModalStatus() {
+        const deviceBadge = document.getElementById("notif-device-badge");
         const statusEl = document.getElementById("notif-status-browser");
+        const fcmStatusEl = document.getElementById("fcm-status-text");
+        const tokenPreview = document.getElementById("fcm-token-preview");
         const permBtn = document.getElementById("btn-request-perm");
         const isAr = (typeof currentLang !== "undefined" && currentLang === "ar");
+
+        // 1. Device badge
+        if (deviceBadge) {
+            deviceBadge.innerText = detectUserDevicePlatform();
+        }
+
+        // 2. FCM Token & Status
+        const storedToken = localStorage.getItem('fcm_token');
+        if (tokenPreview) {
+            if (storedToken) {
+                tokenPreview.innerText = storedToken;
+                tokenPreview.style.color = '#0f172a';
+            } else {
+                tokenPreview.innerText = isAr ? 'في انتظار الإذن لتوليد رمز FCM...' : 'In attesa di consenso per generare il Token FCM...';
+                tokenPreview.style.color = '#64748b';
+            }
+        }
+
+        if (fcmStatusEl) {
+            if (storedToken) {
+                fcmStatusEl.innerText = isAr ? '✅ متصل وجاهز لاستقبال الرسائل' : '✅ Connesso & Pronto a ricevere messaggi';
+                fcmStatusEl.style.color = '#059669';
+            } else {
+                fcmStatusEl.innerText = isAr ? '⏳ في انتظار تفعيل الإشعارات' : '⏳ In attesa di autorizzazione notifiche';
+                fcmStatusEl.style.color = '#d97706';
+            }
+        }
+
+        // 3. Permission Status (Capacitor or Web)
+        const Push = getCapacitorPushNotifications();
+        if (Push) {
+            Push.checkPermissions().then((status) => {
+                if (status.receive === 'granted') {
+                    if (statusEl) {
+                        statusEl.innerText = isAr ? "✅ مسموح بها (Capacitor)" : "✅ Consenso Attivo (Capacitor Nativo)";
+                        statusEl.style.color = "#16a34a";
+                    }
+                    if (permBtn) permBtn.style.display = "none";
+                } else {
+                    if (statusEl) {
+                        statusEl.innerText = isAr ? "⚠️ مطلوب إذن المستخدم" : "⚠️ Richiesta autorizzazione in attesa";
+                        statusEl.style.color = "#d97706";
+                    }
+                    if (permBtn) {
+                        permBtn.style.display = "inline-block";
+                        permBtn.innerText = isAr ? "تفعيل" : "Abilita Ora";
+                    }
+                }
+            }).catch(() => {});
+            return;
+        }
 
         if (!("Notification" in window)) {
             if (statusEl) {
@@ -5850,13 +6267,13 @@ let hArr = [
 
         if (Notification.permission === "granted") {
             if (statusEl) {
-                statusEl.innerText = isAr ? "✅ مسموح بها في المتصفح" : "✅ Permessi attivi nel browser";
+                statusEl.innerText = isAr ? "✅ مسموح بها في المتصفح" : "✅ Permessi attivi nel sistema";
                 statusEl.style.color = "#16a34a";
             }
             if (permBtn) permBtn.style.display = "none";
         } else if (Notification.permission === "denied") {
             if (statusEl) {
-                statusEl.innerText = isAr ? "⚠️ محظورة في إعدادات المتصفح" : "⚠️ Bloccate nelle impostazioni del browser";
+                statusEl.innerText = isAr ? "⚠️ محظورة في إعدادات الجهاز" : "⚠️ Bloccate nelle impostazioni";
                 statusEl.style.color = "#ef4444";
             }
             if (permBtn) permBtn.style.display = "none";
@@ -5867,31 +6284,121 @@ let hArr = [
             }
             if (permBtn) {
                 permBtn.style.display = "inline-block";
-                permBtn.innerText = isAr ? "تفعيل" : "Abilita";
+                permBtn.innerText = isAr ? "تفعيل" : "Abilita Ora";
             }
+        }
+    }
+
+    async function requestUniversalNotificationConsent() {
+        let granted = false;
+        let tokenFound = null;
+
+        // 1. Capacitor Native Push & Local (iOS / Android)
+        const Push = getCapacitorPushNotifications();
+        const Local = getCapacitorLocalNotifications();
+
+        if (Push) {
+            try {
+                let perm = await Push.requestPermissions();
+                if (perm.receive === 'granted') {
+                    granted = true;
+                    await Push.register();
+                }
+            } catch(e) {
+                console.warn('Capacitor Push permission request:', e);
+            }
+        }
+
+        if (Local) {
+            try {
+                await Local.requestPermissions();
+                scheduleAllCapacitorPrayers();
+            } catch(e){}
+        }
+
+        // 2. Web / PWA / Safari iOS / Chrome Android
+        if ("Notification" in window) {
+            try {
+                const res = await Notification.requestPermission();
+                if (res === "granted") {
+                    granted = true;
+
+                    // Retrieve Firebase Web Push token
+                    if (typeof firebase !== 'undefined' && firebase.messaging && 'serviceWorker' in navigator) {
+                        try {
+                            const reg = await Promise.race([
+                                navigator.serviceWorker.ready,
+                                new Promise((resolve) => setTimeout(() => resolve(null), 3000))
+                            ]);
+                            const messaging = firebase.messaging();
+                            let token = null;
+                            if (reg) {
+                                try {
+                                    token = await messaging.getToken({ serviceWorkerRegistration: reg });
+                                } catch(swErr) {
+                                    console.warn('FCM getToken con swReg fallito, riprovo senza:', swErr);
+                                }
+                            }
+                            if (!token) {
+                                try {
+                                    token = await messaging.getToken();
+                                } catch(fallbackErr) {
+                                    console.warn('FCM token fetch:', fallbackErr);
+                                }
+                            }
+                            if (token) {
+                                tokenFound = token;
+                                localStorage.setItem('fcm_token', token);
+                                localStorage.setItem('fcm_platform', 'web_fcm');
+                            }
+                        } catch(tokenErr) {
+                            console.warn('FCM token fetch error:', tokenErr);
+                        }
+                    }
+                }
+            } catch(e) {
+                console.warn("Errore richiesta permessi notifiche:", e);
+            }
+        }
+
+        updateNotifModalStatus();
+
+        const isAr = (typeof currentLang !== "undefined" && currentLang === "ar");
+        if (granted) {
+            const title = isAr ? "🕌 مسلم برو باستيا" : "🕌 Muslim Pro Bastia";
+            const body = isAr ? "تم تفعيل إشعارات Firebase بنجاح على هذا الجهاز!" : "Notifiche Firebase abilitate con successo su questo dispositivo!";
+            showAthanBannerPopup(title, body, "icon.png");
+            triggerBrowserPushIfPossible(title, body);
         }
     }
 
     async function requestBrowserNotifPermission() {
-        if (!("Notification" in window)) return;
-        try {
-            const res = await Notification.requestPermission();
-            updateNotifModalStatus();
-            if (res === "granted") {
-                const isAr = (typeof currentLang !== "undefined" && currentLang === "ar");
-                triggerBrowserPushIfPossible(
-                    isAr ? "🕌 مسلم برو باستيا" : "🕌 Muslim Pro Bastia", 
-                    isAr ? "تم تفعيل إشعارات الويب بنجاح!" : "Notifiche Web abilitate con successo!"
-                );
-            }
-        } catch(e) {
-            console.warn("Errore richiesta permessi notifiche:", e);
-        }
+        return requestUniversalNotificationConsent();
     }
 
     function triggerBrowserPushIfPossible(title, body) {
-        if (!("Notification" in window) || Notification.permission !== "granted") return;
         const sysIcon = (window.location && window.location.origin) ? (window.location.origin + "/icon.png") : "icon.png";
+
+        // Capacitor Native Push trigger if available
+        const Local = getCapacitorLocalNotifications();
+        if (Local) {
+            try {
+                Local.schedule({
+                    notifications: [{
+                        title: title,
+                        body: body,
+                        id: Math.floor(Math.random() * 90000) + 10000,
+                        schedule: { at: new Date(Date.now() + 100) },
+                        sound: 'res_athan',
+                        channelId: 'prayer_times_athan_push_v7',
+                        extra: { athanVoice: localStorage.getItem('athanVoice') }
+                    }]
+                }).catch(()=>{});
+            } catch(e){}
+        }
+
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
+
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.ready.then(function(reg) {
                 if (reg && reg.showNotification) {
@@ -5936,6 +6443,8 @@ let hArr = [
     window.testFirebaseWebPush = testFirebaseWebPush;
     window.stopAthanTest = stopAthanTest;
     window.requestBrowserNotifPermission = requestBrowserNotifPermission;
+    window.requestUniversalNotificationConsent = requestUniversalNotificationConsent;
+    window.copyFCMToken = copyFCMToken;
     window.updateNotifModalStatus = updateNotifModalStatus;
 
     // Mobile input focus scroll listener
