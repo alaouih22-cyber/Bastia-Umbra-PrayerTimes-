@@ -1,23 +1,29 @@
 // sw.js - Service Worker per Cache Offline e Auto-Aggiornamento PWA / Capacitor
-const CACHE_NAME = 'muslim-pro-bastia-v2.1';
+const CACHE_NAME = 'muslim-pro-bastia-v2.2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png',
-  './icon-192.png',
-  './icon-512.png'
+  './icon.png'
 ];
 
+// Installazione: scarica e memorizza le risorse principali in cache
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[sw.js] Pre-caching asset completato');
-      return cache.addAll(ASSETS_TO_CACHE);
+    caches.open(CACHE_NAME).then(async (cache) => {
+      console.log('[sw.js] Pre-caching asset principali avviato');
+      for (const url of ASSETS_TO_CACHE) {
+        try {
+          await cache.add(url);
+        } catch (err) {
+          console.warn('[sw.js] Caching asset saltato per ' + url, err);
+        }
+      }
     }).then(() => self.skipWaiting())
   );
 });
 
+// Attivazione: rimuove le vecchie versioni della cache per aggiornare all'istante
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -33,7 +39,9 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Strategia Network-First: scarica sempre da rete se connesso, usa la cache se offline
+// Fetch: Strategia Network-First con fallback alla Cache
+// Se c'è connessione scarica SEMPRE la versione aggiornata
+// Se non c'è internet, usa i file salvati in cache
 self.addEventListener('fetch', (event) => {
   if (!event.request.url.startsWith('http')) return;
 
