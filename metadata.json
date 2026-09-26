@@ -1,0 +1,6 @@
+{
+  "name": "Muslim Pro Bastia",
+  "description": "Orari delle preghiere e calendario islamico per Bastia Umbra (Settembre - Ottobre 2026 / ربيع الآخر 1448).",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
